@@ -37,16 +37,16 @@ Each phase is pushed to its own branch; Vercel builds a preview URL the owner re
 
 ### Phase D — Playable game
 ```bash
-pnpm test           # Vitest: all 343 combinations evaluated against the paytable
+pnpm test           # Vitest: all 512 combinations evaluated against the paytable
 pnpm test:e2e       # Playwright: spin flows with mocked /api/spin at 4 viewports
 ```
 Manual:
 1. Press PLAY; chips fall. Press SPIN; reels stop left to right.
-2. Set `FORCE_REELS=keith,keith,keith` in `.env.local`; spin; confirm blink animation + "25% off" popup, win reference, call and form options. Repeat with `neos,neos,neos`: heat-pulse rings + "10% off".
+2. Set `FORCE_REELS=keith,keith,keith` in `.env.local`; spin; confirm blink animation + "15% off" popup, win reference, call and form options. Repeat with `gia,gia,gia`: blink + "20% off"; `scott,scott,keith`: two-plus-one + "15% off"; and `neos,neos,neos`: heat-pulse rings + "10% off".
 3. Set `FORCE_REELS=seven,cherry,sweets`; confirm "spin again", counter drops 3 → 2 → 1 → 0, then the Last Chance screen; take the bonus spin; then the game-over thank-you. Reload: still game over; `POST /api/spin` returns 403.
 4. Win, submit the claim form; confirm a `leads` row in Neon (`crm_status` becomes `synced`) and the lead in SharpSpring with discount and win reference.
 5. Set a wrong `SHARPSPRING_SECRET_KEY`; submit; player still sees success; row stays `pending`. Fix the key, call `/api/cron/crm-sync` with `CRON_SECRET` (or play a spin, which triggers a traffic-driven retry once the lead is due); row becomes `synced`.
-6. Unset `FORCE_REELS`; run `pnpm test`, which includes a 100k-spin simulation asserting win rate ≈ 8.16% ± 0.3%.
+6. Unset `FORCE_REELS`; run `pnpm test`, which includes a 100k-spin simulation asserting win rate ≈ 10.35% ± 0.3% and each of the 8 symbols at ≈ 1/8 per reel.
 7. In devtools, block `/api/spin`; spin; expect "Machine hiccup, try again", never a win.
 
 ### Phase E — Atmosphere polish

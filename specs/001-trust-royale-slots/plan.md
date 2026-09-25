@@ -6,7 +6,7 @@
 
 ## Summary
 
-A full-screen, free-to-play slot machine for Trust Electric Heating, branded "Trust Royale". Three reels carry animated face medallions (Scott, Fiona, Keith), the Trust 'T' emblem (Neos) and never-winning fillers (cherry, seven, sweets). Face combinations award 10–25% order discounts; anything else invites another spin. Each customer gets 3 spins (plus one Last Chance bonus spin if all 3 lose) with pure random reels. Winners claim by phone or a form; every form lead is saved in Neon Postgres, then sent to SharpSpring CRM. The look is a realistic red-and-gold casino cabinet with chasing marquee bulbs, levitating chips that fall on PLAY, and casino audio.
+A full-screen, free-to-play slot machine for Trust Electric Heating, branded "Trust Royale". Three reels carry animated face medallions (Scott, Fiona, Gia and Keith), the Trust 'T' emblem (Neos) and never-winning fillers (cherry, seven, sweets). Winning combinations award 10–20% order discounts; anything else invites another spin. Each customer gets 3 spins (plus one Last Chance bonus spin if all 3 lose) with pure random reels. Winners claim by phone or a form; every form lead is saved in Neon Postgres, then sent to SharpSpring CRM. The look is a realistic red-and-gold casino cabinet with chasing marquee bulbs, levitating chips that fall on PLAY, and casino audio.
 
 Technical approach (see [research.md](./research.md)): a **2.5D** build — pre-rendered, layered cabinet art plus a **PixiJS v8** WebGL layer for reels, faces, lights and particles, animated with **GSAP**, audio via **Howler.js**, shell in **Vite + TypeScript** with HTML overlays. A few **Vercel Functions** decide spins server-side, enforce the 3-spin limit, and store sessions, spins and leads in **Neon Postgres**; leads are forwarded to **SharpSpring** with automatic retry, so no lead is lost. Real-time 3D was assessed and rejected for v1: it does not cost anything on Vercel, but it costs download size, phone frame rate and modelling effort for a fixed-camera scene.
 
@@ -30,7 +30,7 @@ Delivery runs in six gated phases (A–F). The owner sees the mood board, then t
 
 **Constraints**: JS ≤ 250 KB gzip; first visit ≤ 4 MB; no audio before user gesture; no scroll at any viewport; `prefers-reduced-motion` honoured; 3 spins + 1 bonus per session enforced server-side; leads written to Neon before any CRM call; UK GDPR consent
 
-**Scale/Scope**: One screen (+ moodboard and asset-board review pages); 7 symbols; 7 paytable rules; ~60 art files (incl. one rebuilt SVG emblem), ~12 sounds; expected traffic within tens of thousands of visits/month
+**Scale/Scope**: One screen (+ moodboard and asset-board review pages); 8 symbols; 7 paytable rules; ~64 art files (incl. one rebuilt SVG emblem), ~12 sounds; expected traffic within tens of thousands of visits/month
 
 ## Constitution Check
 
@@ -125,14 +125,14 @@ Each phase ends with a Vercel preview URL and an explicit owner sign-off before 
 |---|---|---|---|
 | **A. Mood board** | `moodboard.html`: 2–3 directions (e.g. "Monte Carlo Velvet", "Vegas Neon Gold", "Art Deco Royale"), palettes built on brand reds + gold, title type tests, material refs, one sample face medallion (Scott) and the rebuilt Neos 'T' emblem medallion, chip + filler style tests | Look options side by side | Direction chosen |
 | **B. Look & feel mock** | Static full-screen composition of the chosen direction at portrait and landscape; placeholder art allowed | "This is how the game will look" | Layout approved at 4 viewports |
-| **C. Asset production + asset board** | Every asset in [asset-manifest](./contracts/asset-manifest.md), in group order, with status/licence; faces with 4 blink frames; Neos emblem SVG + pulse overlay; audio playable | All assets in order | All `approved` |
+| **C. Asset production + asset board** | Every asset in [asset-manifest](./contracts/asset-manifest.md), in group order, with status/licence; Scott, Fiona, Gia and Keith with 4 face frames; Neos emblem SVG + pulse overlay; audio playable | All assets in order | All `approved` |
 | **D. Playable game + leads** | Reels, evaluator, Neon schema, `/api/session` + `/api/spin` with 3-spin limit, win/retry/Last Chance/game-over popups, call + claim form, `/api/lead`, SharpSpring sync + cron retry, staff lookup | Working game on preview URL | Tests green; forced-outcome checks pass |
 | **E. Atmosphere polish** | Bulb chase, chip levitate/fall physics, confetti/coin burst, blink, sound design, reduced-motion, perf tuning | Full "casino feel" | 60 fps target met; audio/mute checks pass |
 | **F. Launch** | Production Neon branch + SharpSpring credentials, phone number, privacy link, Lighthouse pass, production domain, Vercel plan decision | Live site | Owner go-live |
 
 ## Owner decisions (confirmed 2026-09-25)
 
-Keith = cat mascot (always "Keith"); Neos = Trust 'T' emblem; claim by phone or form; leads to Neon then SharpSpring; 3 spins per customer + 1 Last Chance bonus spin if all lose, play stops at first win; one voucher per order; Vercel Hobby (free); Fiona × 2 + Scott pays 15%; odds pure random (≈ 8.2% per spin, ≈ 28.9% per player).
+Keith = cat mascot (always "Keith") and counts as an eligible face in the two-plus-one rule; Gia joins the face symbols using `reference/gia.png` as reference only; Neos = Trust 'T' emblem; claim by phone or form; leads to Neon then SharpSpring; 3 spins per customer + 1 Last Chance bonus spin if all lose, play stops at first win; one voucher per order; Vercel Hobby (free); paytable v2 has no 25% prize and tops out at 20%; odds pure random (≈ 10.35% per spin, ≈ 35.41% per player across up to 4 spins).
 
 ## Deferred owner inputs (asked only at the stage that needs them)
 

@@ -42,9 +42,9 @@ Each section resolves one unknown from the Technical Context in [plan.md](./plan
 
 ## R4. Animated faces (blink on win)
 
-**Decision**: Each face symbol is a **4-frame sprite set**: `idle` (eyes open, neutral smile), `half` (eyelids half closed), `closed` (eyes closed), `win` (big smile/excited). Blink = `idle → half → closed → half → idle` over ~180 ms, played 2–3 times on a win. Idle life comes from a gentle breathing scale and occasional random blink when not spinning (can be disabled if the owner prefers blink only on wins).
+**Decision**: Each face symbol (Scott, Fiona, Gia and Keith) is a **4-frame sprite set**: `idle` (eyes open, neutral smile), `half` (eyelids half closed), `closed` (eyes closed), `win` (big smile/excited). Blink = `idle → half → closed → half → idle` over ~180 ms, played 2–3 times on a win. Idle life comes from a gentle breathing scale and occasional random blink when not spinning (can be disabled if the owner prefers blink only on wins).
 
-**Production**: Crop head-and-shoulders from the supplied photos, cut out background, place in a round **gold-rimmed medallion** on a red velvet disc so every face reads as a matching casino token. Eyelid frames are produced by photo editing (manual retouch or image-generation inpainting on the eye region), keeping the real likeness. Keith (mascot) gets the same treatment from the mascot sheet.
+**Production**: Use the supplied photos only as reference/seed input to gpt-image-2, then place each generated casino portrait in a round **gold-rimmed medallion** on a red velvet disc so every face reads as a matching casino token. Gia uses `reference/gia.png` under the same rules as Scott and Fiona. Eyelid frames are image edits of the generated idle art, keeping the likeness stable. Keith (mascot) gets the same treatment from the mascot sheet.
 
 **Neos (Trust 'T' emblem)**: no file was supplied, so it is rebuilt as an SVG from the emblem construction page in the brand guidelines (circle head; crossbar and stem as rounded capsules). It is rendered in the same gold-rimmed medallion as the faces (red emblem on cream, or gold emblem on brand red — chosen in the mood board). With no eyes to blink, its win animation is a **heat pulse**: concentric rings radiating outward, taken from the brand's own ring motif, plus a warm glow.
 
@@ -54,24 +54,26 @@ Each section resolves one unknown from the Technical Context in [plan.md](./plan
 
 ## R5. Outcome authority, odds and anti-tamper
 
-**Decision**: A **Vercel Function `POST /api/spin`** decides each spin. **Odds are pure random**: each of the three reels independently lands on one of the 7 symbols with equal chance, using `crypto.randomInt`. The server evaluates the payline against the paytable, records the spin in Neon, and returns the result. The client only animates what the server sent.
+**Decision**: A **Vercel Function `POST /api/spin`** decides each spin. **Odds are pure random**: each of the three reels independently lands on one of 8 symbols (Scott, Fiona, Gia, Keith, Neos, Cherry, Seven, Sweets) with equal chance, using `crypto.randomInt(8)`. The server evaluates the payline against the paytable, records the spin in Neon, and returns the result. The client only animates what the server sent.
 
-**Resulting odds** (uniform, 7 symbols, 343 equally likely combinations):
+**Resulting odds** (uniform, independent reels; 8³ = 512 equally likely ordered outcomes):
 
 | Rule | Combinations | Chance per spin |
 |---|---|---|
-| Keith × 3 (25%) | 1 | 0.29% |
-| Scott × 3 (20%) | 1 | 0.29% |
-| Fiona × 3 (20%) | 1 | 0.29% |
-| Scott × 2 + Fiona (15%) | 3 | 0.87% |
-| Fiona × 2 + Scott (15%) | 3 | 0.87% |
-| Keith × 2 + any other (15%) | 18 | 5.25% |
-| Neos × 3 (10%) | 1 | 0.29% |
-| **Any win** | **28** | **8.16%** |
+| Scott × 3 (20%) | 1 | 0.1953% |
+| Fiona × 3 (20%) | 1 | 0.1953% |
+| Gia × 3 (20%) | 1 | 0.1953% |
+| Keith × 3 (15%) | 1 | 0.1953% |
+| Keith × 2 + any other symbol (15%; evaluated before the general two-plus-one rule) | 21 | 4.1016% |
+| Two of one face + one different face, among Scott/Fiona/Gia/Keith (15%; excluding the 9 Keith × 2 + person outcomes already counted above) | 27 | 5.2734% |
+| Neos × 3 (10%) | 1 | 0.1953% |
+| **Any win** | **53** | **10.3516%** |
 
-With 3 spins plus the Last Chance bonus spin, about **28.9%** of players win something (1 − 0.9184⁴). Most wins (≈ 64%) will be the Keith × 2 15% prize.
+Counting: three 20% triples contribute 3 outcomes. Keith × 3 contributes 1. Keith × 2 + any other has 7 choices for the third symbol × 3 positions = 21. Across all four eligible faces, the two-plus-one set has 4 choices for the repeated face × 3 choices for the other face × 3 positions for the singleton = 36 outcomes; 9 of those have Keith repeated with Scott, Fiona or Gia and are already assigned to `keith-2-any`, leaving 27 outcomes for `people-2-plus-1`. Neos × 3 contributes 1. Total = 3 + 1 + 21 + 27 + 1 = 53. Precedence is exact triples, then `keith-2-any`, then `people-2-plus-1`, then Neos × 3. Thus Keith × 3 is counted once, overlapping 15% patterns are assigned once, and every outcome pays at most one rule.
 
-**Rationale**: A pure client-side game lets anyone force a 25% win from the browser console, and win records must match leads. Server-side RNG plus the Neon spin record makes every win verifiable.
+Expected prize per spin, including losses, is `((3 × 20) + (1 × 15) + (21 × 15) + (27 × 15) + (1 × 10)) / 512 = 805 / 512 = 1.5723%` off. Conditional on winning, the average prize is `805 / 53 = 15.1887%` off. With 3 spins plus the Last Chance bonus spin, about **35.41%** of players win something (`1 − (459/512)⁴`).
+
+**Rationale**: A pure client-side game lets anyone force the top 20% win from the browser console, and win records must match leads. Server-side RNG plus the Neon spin record makes every win verifiable.
 
 **Tuning later (optional)**: if the business wants a different win rate, change the reel strips (e.g. more cherries on each reel) rather than rigging outcomes. That keeps results random and needs only a config change. Not built in v1.
 
@@ -119,7 +121,7 @@ Canvas resized with `100dvh`/`100dvw`, safe-area insets respected. Layout comput
 
 ## R11. Testing
 
-**Decision**: **Vitest** for the paytable evaluator, reel RNG and API handlers (exhaustive test over all 7³ = 343 combinations); **Playwright** for end-to-end spins against a mocked `/api/spin` and screenshot checks at phone portrait, phone landscape, tablet and desktop viewports.
+**Decision**: **Vitest** for the paytable evaluator, reel RNG and API handlers (exhaustive test over all 8³ = 512 combinations); **Playwright** for end-to-end spins against a mocked `/api/spin` and screenshot checks at phone portrait, phone landscape, tablet and desktop viewports.
 
 ## R12. Legal note
 
@@ -132,7 +134,7 @@ A free-to-play game with no purchase needed to play is generally a free prize pr
 1. Keith = the cat mascot from `reference/keith the mascot.png`. Always called **Keith** in game and docs.
 2. Claim = phone call or website form; form leads saved to Neon first, then sent to SharpSpring (R13).
 3. 3 spins per customer; play stops at first win; one bonus Last Chance spin if all 3 lose.
-4. Fiona × 2 + Scott × 1 pays 15%.
+4. Paytable v2: Gia joins as the fourth face symbol; Scott/Fiona/Gia triples pay 20%; Keith × 3 pays 15%; any two-plus-one mix among Scott/Fiona/Gia/Keith pays 15%; Keith × 2 + any other symbol pays 15%; Neos × 3 pays 10%; top prize is 20% and there is no 25% prize. Owner correction: Keith counts in the two-plus-one rule, so Scott × 2 + Keith pays 15%.
 5. Odds are pure random (R5).
 6. Stay on Vercel **Hobby (free)**; this is not a public launch. Owner upgrades manually when needed.
 7. Vouchers are one per order. Privacy policy, terms and claim phone number are added at the end.

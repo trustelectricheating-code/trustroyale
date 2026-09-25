@@ -3,7 +3,7 @@
 **Feature Branch**: `001-trust-royale-slots`
 **Created**: 2026-09-25
 **Status**: Draft
-**Input**: User description: "Casino-style slot machine game hosted on Vercel. Visitors land on a full-screen page (phone and desktop) and play a realistic, heavily animated, gold-and-red slot machine called Trust Royale. Reels contain animated faces of real people (Scott, Fiona, Keith, Neos) plus never-winning filler symbols (cherry, 7, sweets). Specific face combinations award order discounts (10–25%); everything else asks the player to spin again. Winners claim by phone or a form; leads are saved in Neon then sent to SharpSpring. 3 spins per customer. Spin is a button, not a lever. Paytable shown at the top. Floating casino chips levitate until the player presses Play, then fall. Casino lights, casino sounds. No Chinese styling. Odds are pure random. Delivery is phased: mood board first, then look-and-feel, then all assets in order, before the game is built."
+**Input**: User description: "Casino-style slot machine game hosted on Vercel. Visitors land on a full-screen page (phone and desktop) and play a realistic, heavily animated, gold-and-red slot machine called Trust Royale. Reels contain animated faces of real people (Scott, Fiona, Gia), the cat mascot Keith, the Neos emblem and never-winning filler symbols (cherry, 7, sweets). Specific face combinations award order discounts (10–20%); everything else asks the player to spin again. Winners claim by phone or a form; leads are saved in Neon then sent to SharpSpring. 3 spins per customer. Spin is a button, not a lever. Paytable shown at the top. Floating casino chips levitate until the player presses Play, then fall. Casino lights, casino sounds. No Chinese styling. Odds are pure random. Delivery is phased: mood board first, then look-and-feel, then all assets in order, before the game is built."
 
 ## Clarifications
 
@@ -16,7 +16,7 @@
 - **Spins**: **3 spins per customer** from the moment they open the link. If all 3 lose, the player is offered **one bonus "Last Chance" spin** (once only). If that also loses, the game ends with a thank-you.
 - **Terms**: vouchers are **one per order**. Privacy policy, full terms, claim phone number and SharpSpring details are added at the end of the project.
 - **Hosting**: Vercel **Hobby (free)** plan. This is not a public launch; the owner upgrades manually if needed.
-- **Fiona × 2 + Scott × 1** also pays **15%** (mirror of Scott × 2 + Fiona × 1).
+- **Paytable v2**: Gia joins Scott, Fiona and Keith as an eligible face in the two-plus-one rule. Scott × 3, Fiona × 3 and Gia × 3 pay 20%; Keith × 3 pays 15%; any two-plus-one mix of Scott, Fiona, Gia and Keith pays 15%; Keith × 2 + any other symbol pays 15%; Neos × 3 pays 10%. Everything else loses. Owner corrections: "please note there is no 25% off the highest is 20% off", "3 keith is also 15% otherwise pricing table is good", and Keith counts in the two-plus-one rule, so Scott × 2 + Keith pays 15%.
 - Brand = Trust Electric Heating ("heating for humans"). Palette sampled from the brand PDF: primary red `#E81E2C`, deep red `#B91526`, dark red `#8C111E`, navy `#233073`, grey `#6D7176`, white. Casino gold is added on top of this palette.
 
 ## User Scenarios & Testing *(mandatory)*
@@ -33,8 +33,8 @@ A visitor opens the link on a phone or desktop, sees the Trust Royale machine fi
 
 1. **Given** the machine is idle, **When** the player taps SPIN, **Then** the reels spin, stop left to right, and the SPIN button is disabled until the result is shown.
 2. **Given** the reels land Scott–Scott–Scott, **When** they stop, **Then** all three faces blink and a popup states "You've won 20% off your order".
-3. **Given** the reels land Keith–Keith–Cherry (any order), **When** they stop, **Then** a 15% win popup is shown.
-4. **Given** the reels land any combination not in the paytable (e.g. 7–Cherry–Sweets, or Scott–Keith–Neos), **When** they stop, **Then** a "So close — spin again!" message appears and SPIN re-enables.
+3. **Given** the reels land Keith–Keith–Keith or Keith–Keith–Cherry (any order), **When** they stop, **Then** a 15% win popup is shown; the three-Keith result also plays the blink animation.
+4. **Given** the reels land any combination not in the paytable (e.g. 7–Cherry–Sweets, Scott–Fiona–Gia, or Scott–Keith–Neos), **When** they stop, **Then** a "So close — spin again!" message appears and SPIN re-enables.
 
 ---
 
@@ -77,7 +77,7 @@ At the top of the screen the player can read what wins what, shown with face ico
 
 **Why this priority**: Players must know the odds of reward exist before spinning.
 
-**Independent Test**: Visually verify the paytable at top on portrait phone and landscape desktop, all seven rules readable.
+**Independent Test**: Visually verify the paytable at top on portrait phone and landscape desktop, every paytable row readable.
 
 **Acceptance Scenarios**:
 
@@ -118,23 +118,25 @@ The owner reviews, in order: (1) a mood board, (2) a full-screen visual mock of 
 
 - **FR-001**: The game MUST run as a single full-screen page with no scrollbars on phone (portrait and landscape) and desktop, filling the viewport edge to edge.
 - **FR-002**: The machine MUST have three reels showing a 3-row window with one horizontal payline (middle row).
-- **FR-003**: Reel symbols MUST be: Scott, Fiona, Keith (face symbols), Neos (the Trust 'T' emblem, rebuilt as vector art) and Cherry, Seven, Sweets (filler symbols that never win).
+- **FR-003**: Reel symbols MUST be: Scott, Fiona and Gia (person/face symbols); Keith (cat mascot face symbol); Neos (the Trust 'T' emblem, rebuilt as vector art); and Cherry, Seven and Sweets (filler symbols that never win). Gia's `reference/gia.png` is reference/seed only; shipped Gia art MUST be a gpt-image-2 casino medallion generated under the same rules as Scott and Fiona.
 - **FR-004**: Wins MUST be evaluated on the payline, order-independent, using this paytable (highest match wins, one prize per spin):
 
   | Combination | Discount |
   |---|---|
-  | Keith × 3 | 25% |
   | Scott × 3 | 20% |
   | Fiona × 3 | 20% |
-  | Scott × 2 + Fiona × 1 | 15% |
-  | Fiona × 2 + Scott × 1 | 15% |
+  | Gia × 3 | 20% |
+  | Keith × 3 | 15% |
+  | Two of one face + one different face, among Scott, Fiona, Gia and Keith | 15% |
   | Keith × 2 + any other symbol | 15% |
   | Neos × 3 | 10% |
   | Anything else | Spin again |
 
-- **FR-005**: Three-of-a-kind face wins (Scott, Fiona, Keith) MUST trigger an eye-blink animation on all three faces plus a win popup. Three Neos MUST trigger a heat-pulse animation (concentric rings radiating from the emblem, as in the brand guidelines) plus the popup. Two-symbol wins MUST trigger a glow/celebration on the contributing symbols plus the popup.
+  Precedence for the overlapping 15% rows is: exact triples first, then Keith × 2 + any other symbol, then the general two-plus-one face rule. For example, Keith–Keith–Scott is recorded as the Keith × 2 rule; Scott–Scott–Keith is recorded as the two-plus-one rule. Both pay 15%, and each outcome is counted once.
+
+- **FR-005**: Three-of-a-kind face wins (Scott, Fiona, Gia and Keith) MUST trigger an eye-blink animation on all three faces plus a win popup. Scott × 3, Fiona × 3 and Gia × 3 pay 20%; Keith × 3 pays 15% while keeping the same blink treatment. Three Neos MUST trigger a heat-pulse animation (concentric rings radiating from the emblem, as in the brand guidelines) plus the popup. Two-plus-one person wins and Keith × 2 wins MUST trigger a glow/celebration on the contributing symbols plus the popup.
 - **FR-006**: Spinning MUST be triggered by a SPIN button (no lever). Keyboard (Space/Enter) MUST also spin on desktop.
-- **FR-007**: Outcomes MUST be decided by the server with pure random reels: each reel lands on each of the 7 symbols with equal chance, using a cryptographic RNG. (≈ 8.2% win chance per spin, ≈ 28.9% across 3 spins + the bonus spin.)
+- **FR-007**: Outcomes MUST be decided by the server with pure random reels: each reel lands on each of the 8 symbols with equal chance, using a cryptographic RNG. (≈ 10.35% win chance per spin, ≈ 35.41% across 3 spins + the bonus spin.)
 - **FR-008**: The paytable MUST be displayed at the top of the screen.
 - **FR-009**: The title "TRUST ROYALE" MUST appear in an animated light-bulb marquee.
 - **FR-010**: Casino chips MUST levitate on arrival and fall when PLAY is pressed.
@@ -166,7 +168,7 @@ The owner reviews, in order: (1) a mood board, (2) a full-screen visual mock of 
 
 - **SC-001**: First interactive screen appears within 3 seconds on a mid-range phone over 4G.
 - **SC-002**: Animation holds a steady 60 fps on a 2021-era mid-range phone (e.g. iPhone 12, Pixel 6) during spin and win.
-- **SC-003**: 100% of spin results shown match the paytable (verified by automated test over all 343 symbol combinations).
+- **SC-003**: 100% of spin results shown match the paytable (verified by automated test over all 512 symbol combinations).
 - **SC-004**: No blank bars or scrollbars at any viewport from 320×568 to 3440×1440.
 - **SC-005**: Owner approves mood board, visual mock and asset board before game logic work starts.
 - **SC-006**: 100% of submitted claim forms are stored in Neon; ≥ 99% appear in SharpSpring within 15 minutes while SharpSpring is reachable. During a SharpSpring outage, pending leads reach SharpSpring within 24 hours of it recovering (within 15 minutes if the optional external pinger is enabled). This fits the Vercel Hobby limit of one cron run per day.

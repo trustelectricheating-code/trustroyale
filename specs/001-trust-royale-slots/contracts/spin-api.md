@@ -69,5 +69,5 @@ On a win, `spinsLeft` is always 0 (play stops at first win).
 | `SESSION_SECRET` | 32+ random bytes | Signs `tr_sid` cookie |
 | `IP_HASH_SALT` | random | Hashes IPs for the soft cap |
 | `DAILY_SESSIONS_PER_IP` | `20` | Soft abuse cap: max new sessions per IP per day before `/api/spin` returns 429. `0` turns the cap off |
-| `FORCE_REELS` | `keith,keith,keith` | Preview/dev only; ignored in production. Forces the payline for demos and tests |
+| `FORCE_REELS` | `gia,gia,gia` | Preview/dev only; ignored in production. Forces the payline for demos and tests; expects a 20% `gia-3` win |
 | `CLAIM_PHONE` | `+44…` | Number shown on "Call to claim" |

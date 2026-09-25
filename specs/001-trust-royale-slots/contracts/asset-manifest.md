@@ -34,7 +34,7 @@ Field rules are in [data-model.md → AssetEntry](../data-model.md#assetentry).
 | 1 | background | `bg.portrait`, `bg.landscape`, `bg.bokeh` (light specks), `bg.curtain.left/right` | generated |
 | 2 | cabinet | `cabinet.body`, `cabinet.glass`, `cabinet.reelWindow.mask`, `cabinet.trim.gold`, `cabinet.marquee` (TRUST ROYALE panel), `cabinet.bulb.on/off`, `cabinet.spinButton.up/down/disabled` | generated or rendered, layered |
 | 3 | symbols | `sym.cherry`, `sym.seven`, `sym.sweets` (each + `.shine`), `sym.frame` (gold medallion rim) | generated / CC0, restyled to match |
-| 4 | faces | `face.{scott,fiona,keith}.{idle,half,closed,win}` (12 files) | supplied photos / mascot sheet, retouched |
+| 4 | faces | `face.{scott,fiona,gia,keith}.{idle,half,closed,win}` (16 files) | gpt-image-2 casino medallions generated from supplied reference/seed images; Gia uses `reference/gia.png`; source images are never shipped as-is |
 | 4b | emblem | `emblem.neos.svg` (master vector), `emblem.neos.idle` (gold-on-red medallion render), `emblem.neos.pulse` (concentric heat rings overlay) | **built**: redrawn from the emblem construction page of `reference/Brand Guidelines.pdf` (circle head, rounded crossbar, rounded stem) |
 | 5 | fx | `fx.chip.{red,gold,navy,white}` (4 colours × 2 angles), `fx.coin`, `fx.sparkle`, `fx.confetti` atlas, `fx.glow`, `fx.lightbeam` | generated / CC0 |
 | 6 | ui | `ui.paytable.panel`, `ui.popup.win`, `ui.popup.retry`, `ui.mute.on/off`, `ui.play`, `logo.trust.white` | custom |

@@ -12,7 +12,7 @@ A reel icon. Defined in `src/config/symbols.ts` (shared by client and `/api/spin
 
 | Field | Type | Rules |
 |---|---|---|
-| `id` | `'scott' \| 'fiona' \| 'keith' \| 'neos' \| 'cherry' \| 'seven' \| 'sweets'` | Unique, lowercase |
+| `id` | `'scott' \| 'fiona' \| 'gia' \| 'keith' \| 'neos' \| 'cherry' \| 'seven' \| 'sweets'` | Unique, lowercase |
 | `name` | string | Display name, e.g. "Scott" |
 | `kind` | `'face' \| 'emblem' \| 'filler'` | `neos` is the only `emblem` (Trust 'T'). Filler symbols can never be part of a winning rule, except as the "any other" slot in the Keith ×2 rule |
 | `frames` | `{ idle, half?, closed?, win?, pulse? }` asset keys | Faces require `idle/half/closed/win`; emblem requires `idle` + `pulse` (ring overlay); fillers require `idle` only (plus optional `shine`) |
@@ -26,22 +26,22 @@ Defined in `src/config/paytable.ts`. Evaluated highest `discount` first; first m
 | `id` | string | e.g. `keith-3` |
 | `label` | string | Text shown in paytable, e.g. "3 × Keith" |
 | `pattern` | `Record<SymbolId, number>` + optional `anyOther: number` | Counts must total 3; order-independent |
-| `discount` | `10 \| 15 \| 20 \| 25` | Percent off |
+| `discount` | `10 \| 15 \| 20` | Percent off; database columns storing a non-null discount use `CHECK (discount IN (10, 15, 20))` |
 | `celebration` | `'blink' \| 'pulse' \| 'glow'` | `blink` for three-of-a-kind faces, `pulse` for three Neos, `glow` for mixed |
 
 Initial rules (from spec FR-004):
 
 | id | pattern | discount | celebration |
 |---|---|---|---|
-| `keith-3` | keith:3 | 25 | blink |
 | `scott-3` | scott:3 | 20 | blink |
 | `fiona-3` | fiona:3 | 20 | blink |
-| `scott-2-fiona-1` | scott:2, fiona:1 | 15 | glow |
-| `fiona-2-scott-1` | fiona:2, scott:1 | 15 | glow |
+| `gia-3` | gia:3 | 20 | blink |
+| `keith-3` | keith:3 | 15 | blink |
 | `keith-2-any` | keith:2, anyOther:1 | 15 | glow |
+| `people-2-plus-1` | two of one + one different from scott/fiona/gia/keith | 15 | glow |
 | `neos-3` | neos:3 | 10 | pulse |
 
-Validation: exhaustive test over all 343 combinations confirms each maps to exactly one rule or none, and that no combination wins unless it contains a face (Scott, Fiona, Keith) or three Neos. Neos × 3 is the only winning combination with no face.
+Validation: exhaustive test over all 512 combinations confirms each maps to exactly one rule or none. Keith counts in the two-plus-one rule, so Scott × 2 + Keith wins. Apply exact triples first, then `keith-2-any`, then `people-2-plus-1`, then `neos-3`; this assigns Keith × 2 + Scott/Fiona/Gia to `keith-2-any` once despite the semantic overlap. Keith × 3 matches only `keith-3`. Filler symbols never win except as the third symbol beside Keith × 2. Neos × 3 is the only winning combination with no face.
 
 ## SpinResult
 
@@ -59,7 +59,7 @@ Returned by `/api/spin` (see [contracts/spin-api.md](./contracts/spin-api.md)).
 | `spinsLeft` | 0–3 | Regular spins left after this spin; forced to 0 on a win |
 | `bonusAvailable` | boolean | True only when the 3 regular spins all lost and the bonus is unused |
 | `isBonus` | boolean | This spin was the Last Chance spin |
-| `nearMiss` | boolean | True only on a losing spin where the payline holds two Scott/Fiona faces in any mix (Scott+Scott, Fiona+Fiona or Scott+Fiona) or exactly two Neos. A single Keith is never a near miss, because a second Keith always wins. Drives the "so close" tease (display only) |
+| `nearMiss` | boolean | True only on a losing spin where the payline holds exactly two eligible faces among Scott/Fiona/Gia/Keith but does not satisfy the two-plus-one rule, or exactly two Neos. A second Keith always wins through `keith-2-any`. Drives the "so close" tease (display only) |
 
 State transitions (client game state):
 
@@ -98,7 +98,7 @@ Accessed from Vercel Functions with `@neondatabase/serverless`. Schema in `db/mi
 | `spin_no` | smallint | 1–4 (4 = bonus), `UNIQUE (session_id, spin_no)` |
 | `reels` | text[3] | |
 | `rule_id` | text null | |
-| `discount` | smallint null | |
+| `discount` | smallint null | `CHECK (discount IS NULL OR discount IN (10, 15, 20))` |
 | `win_ref` | text null UNIQUE | Only on win; 6 chars from an unambiguous alphabet (no 0/O/1/I), prefixed `TR-` |
 | `created_at` | timestamptz | |
 
@@ -130,7 +130,7 @@ RETURNING spin_no;
 |---|---|---|
 | `id` | uuid PK | |
 | `spin_id` | uuid FK → spins, UNIQUE | One lead per winning spin; must reference a spin with `rule_id IS NOT NULL` |
-| `win_ref`, `discount` | copied from `spins` on insert | Never taken from the form |
+| `win_ref`, `discount` | copied from `spins` on insert | Never taken from the form; `CHECK (discount IN (10, 15, 20))` |
 | `first_name`, `last_name` | text | Required, 1–80 chars |
 | `phone` | text | Required, UK format validated |
 | `email` | text | Required, validated |
@@ -157,7 +157,7 @@ Send attempts come from four places, all free on the Vercel Hobby plan (see [con
 
 ## Reel RNG
 
-No weights. Each reel picks one of the 7 symbol IDs with `crypto.randomInt(7)`. The rows above and below the payline are also random and purely cosmetic. Preview-only override: env `FORCE_REELS` (ignored when `VERCEL_ENV === 'production'`).
+No weights. Each reel picks one of the 8 symbol IDs with `crypto.randomInt(8)`. The rows above and below the payline are also random and purely cosmetic. Preview-only override: env `FORCE_REELS` (ignored when `VERCEL_ENV === 'production'`).
 
 ## AssetEntry
 
@@ -182,4 +182,3 @@ One row per file in `assets/manifest.json` (schema in [contracts/asset-manifest.
 | `leads`, winning `spins` and their `sessions` | `LEAD_RETENTION_DAYS` (owner confirms at Phase F; placeholder 730 days) | Same cleanup step, only for leads with `crm_status = 'synced'` |
 
 Leads in `pending` or `failed` are never auto-deleted, so no lead is lost before it reaches SharpSpring or staff. SharpSpring holds its own copy under Trust's CRM retention policy.
-
