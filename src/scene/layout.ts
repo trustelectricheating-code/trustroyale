@@ -1,4 +1,4 @@
-import { CABINET_ART, CABINET_DESIGN } from "./cabinetArt";
+import { CABINET_ART, CABINET_DESIGN, DEFAULT_TITLE_PLACEMENT, type TitlePlacement } from "./cabinetArt";
 
 export interface SafeAreaInsets { top: number; right: number; bottom: number; left: number }
 export interface LayoutRect { x: number; y: number; width: number; height: number }
@@ -25,9 +25,9 @@ function scaled(frame: LayoutRect, designWidth: number, designHeight: number) {
   return { ...frame, scale: Math.min(frame.width / designWidth, frame.height / designHeight) };
 }
 
-function overlays(machine: SceneLayout["machine"]): Pick<SceneLayout, "marquee" | "spinButton"> {
+function overlays(machine: SceneLayout["machine"], titlePlacement: TitlePlacement): Pick<SceneLayout, "marquee" | "spinButton"> {
   const scale = machine.scale;
-  const marqueeArt = CABINET_ART.marqueeFrame;
+  const marqueeArt = CABINET_ART.titlePlacements[titlePlacement];
   const marquee = scaled(rect(
     machine.x + marqueeArt.x * scale,
     machine.y + marqueeArt.y * scale,
@@ -51,7 +51,7 @@ function overlays(machine: SceneLayout["machine"]): Pick<SceneLayout, "marquee" 
   return { marquee, spinButton };
 }
 
-export function computeLayout(width: number, height: number, safeAreaInsets: SafeAreaInsets): SceneLayout {
+export function computeLayout(width: number, height: number, safeAreaInsets: SafeAreaInsets, titlePlacement: TitlePlacement = DEFAULT_TITLE_PLACEMENT): SceneLayout {
   const viewport = rect(0, 0, Math.max(1, width), Math.max(1, height));
   const safeBounds = rect(
     Math.max(0, safeAreaInsets.left),
@@ -75,7 +75,7 @@ export function computeLayout(width: number, height: number, safeAreaInsets: Saf
     const paytable = scaled(rect(content.x, content.y, content.width, paytableHeight), 960, 150);
     const wheelSize = Math.min(content.width * 0.48, machine.height * 0.27);
     const chipTray = scaled(rect(content.x + content.width - wheelSize, machine.y + machine.height * 0.1, wheelSize, wheelSize), 560, 560);
-    return { orientation, viewport, safeBounds, background, paytable, machine, chipTray, ...overlays(machine) };
+    return { orientation, viewport, safeBounds, background, paytable, machine, chipTray, ...overlays(machine, titlePlacement) };
   }
 
   const machineHeight = content.height;
@@ -89,5 +89,5 @@ export function computeLayout(width: number, height: number, safeAreaInsets: Saf
     : Math.min(content.height * 0.72, panelWidth * 1.9);
   const paytable = scaled(rect(content.x, content.y + (content.height - panelHeight) / 2, panelWidth, panelHeight), 390, 620);
   const chipTray = scaled(rect(content.x + content.width - panelWidth, content.y + (content.height - panelHeight) / 2, panelWidth, panelHeight), 390, 620);
-  return { orientation, viewport, safeBounds, background, paytable, machine, chipTray, ...overlays(machine) };
+  return { orientation, viewport, safeBounds, background, paytable, machine, chipTray, ...overlays(machine, titlePlacement) };
 }

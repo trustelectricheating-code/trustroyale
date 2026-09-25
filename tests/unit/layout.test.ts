@@ -63,4 +63,9 @@ describe("computeLayout", () => {
     expect(layout.spinButton.width).toBeLessThan(openingFrame.width);
     expect(layout.spinButton.height).toBeLessThan(openingFrame.height);
   });
+
+  it.each(["topper", "belly"] as const)("keeps the %s title placement inside the cabinet", (placement) => {
+    const layout = computeLayout(1920, 1080, NONE, placement);
+    expectInside(layout.marquee, layout.machine);
+  });
 });

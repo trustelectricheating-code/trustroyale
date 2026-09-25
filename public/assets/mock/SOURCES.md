@@ -42,3 +42,7 @@ The eight `chip-{red,gold,navy,white}-{far,near}.webp` depth derivatives were re
 ## Round 9 correction — photoreal marquee bulbs
 
 `marquee-bulb-lit.webp` and `marquee-bulb-unlit.webp` were generated separately with OpenAI's built-in image tool (`gpt-image-2`) as front-on transparent cutouts. Untouched sources are `reference/_work/generated/marquee-bulb-lit.png` and `reference/_work/generated/marquee-bulb-unlit.png`; exact prompts are in `reference/_work/generated/marquee-bulb-prompts.txt`. Delivery processing only resizes each to 128×128, strips metadata, and encodes WebP.
+
+## Ghost-halo correction
+
+The four `chip-*-near.webp` derivatives and `coin-near.webp` were rebuilt from their clean transparent source faces with a reduced ImageMagick Gaussian blur (`0x2.6`). This removes the previous wide near-field alpha fringe while retaining baked depth softness. No generative model or new artwork was used.

@@ -38,13 +38,11 @@ test("full-screen mock fits all required viewports", async ({ page }, testInfo) 
     ]);
     await expect(page.locator("#paytable > .paytable__rule img"), `${viewport.name} paytable medallions`).toHaveCount(21);
     await expect(page.locator('#paytable img[src="/assets/mock/gia-medallion.webp"]'), `${viewport.name} Gia paytable medallions`).toHaveCount(4);
-    await expect(page.locator(".marquee__bulb"), `${viewport.name} real title bulbs`).toHaveCount(62);
+    await expect(page.locator(".marquee__frame-bulb"), `${viewport.name} framing bulbs`).toHaveCount(34);
     const dimensions = await page.evaluate(() => {
       const bounds = document.querySelector("canvas")?.getBoundingClientRect();
       const marquee = document.querySelector("#marquee")?.getBoundingClientRect();
-      const marqueePlate = document.querySelector("#marquee svg > rect")?.getBoundingClientRect();
       const marqueeTitle = document.querySelector(".marquee__title")?.getBoundingClientRect();
-      const marqueeSubtitle = document.querySelector(".marquee__subtitle")?.getBoundingClientRect();
       return {
         scrollWidth: document.documentElement.scrollWidth,
         scrollHeight: document.documentElement.scrollHeight,
@@ -52,9 +50,7 @@ test("full-screen mock fits all required viewports", async ({ page }, testInfo) 
         innerHeight,
         canvas: bounds && { left: bounds.left, top: bounds.top, right: bounds.right, bottom: bounds.bottom },
         marquee: marquee && { left: marquee.left, top: marquee.top, right: marquee.right, bottom: marquee.bottom },
-        marqueePlate: marqueePlate && { left: marqueePlate.left, top: marqueePlate.top, right: marqueePlate.right, bottom: marqueePlate.bottom },
         marqueeTitle: marqueeTitle && { left: marqueeTitle.left, top: marqueeTitle.top, right: marqueeTitle.right, bottom: marqueeTitle.bottom },
-        marqueeSubtitle: marqueeSubtitle && { left: marqueeSubtitle.left, top: marqueeSubtitle.top, right: marqueeSubtitle.right, bottom: marqueeSubtitle.bottom },
       };
     });
     expect(dimensions.scrollWidth, `${viewport.name} horizontal overflow`).toBeLessThanOrEqual(dimensions.innerWidth);
@@ -68,18 +64,14 @@ test("full-screen mock fits all required viewports", async ({ page }, testInfo) 
     expect(dimensions.marqueeTitle!.top, `${viewport.name} title top inset`).toBeGreaterThan(dimensions.marquee!.top);
     expect(dimensions.marqueeTitle!.right, `${viewport.name} title right inset`).toBeLessThan(dimensions.marquee!.right);
     expect(dimensions.marqueeTitle!.bottom, `${viewport.name} title bottom inset`).toBeLessThan(dimensions.marquee!.bottom);
-    expect(dimensions.marqueeTitle!.left, `${viewport.name} title inside plate left`).toBeGreaterThan(dimensions.marqueePlate!.left);
-    expect(dimensions.marqueeTitle!.top, `${viewport.name} title inside plate top`).toBeGreaterThan(dimensions.marqueePlate!.top);
-    expect(dimensions.marqueeTitle!.right, `${viewport.name} title inside plate right`).toBeLessThan(dimensions.marqueePlate!.right);
-    expect(dimensions.marqueeTitle!.bottom, `${viewport.name} title inside plate bottom`).toBeLessThan(dimensions.marqueePlate!.bottom);
-    if (dimensions.marqueeSubtitle!.bottom > dimensions.marqueeSubtitle!.top) {
-      expect(dimensions.marqueeSubtitle!.left, `${viewport.name} subtitle inside plate left`).toBeGreaterThan(dimensions.marqueePlate!.left);
-      expect(dimensions.marqueeSubtitle!.right, `${viewport.name} subtitle inside plate right`).toBeLessThan(dimensions.marqueePlate!.right);
-      expect(dimensions.marqueeSubtitle!.bottom, `${viewport.name} subtitle inside plate bottom`).toBeLessThan(dimensions.marqueePlate!.bottom);
-    }
     await page.screenshot({
       path: path.join(process.cwd(), "tests/e2e/__screenshots__", `${viewport.name}-${viewport.width}x${viewport.height}.png`),
       animations: "disabled",
     });
   }
+
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.goto("/?title=topper");
+  await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
+  await expect(page.locator(".marquee__frame-bulbs"), "topper reuses cabinet arch bulbs").toBeHidden();
 });

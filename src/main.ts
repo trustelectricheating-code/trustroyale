@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 import "./styles/main.css";
 import { animateBackground, createBackground, drawBackground } from "./scene/background";
 import { animateCabinet, createCabinet, layoutCabinet } from "./scene/cabinet";
+import { DEFAULT_TITLE_PLACEMENT, type TitlePlacement } from "./scene/cabinetArt";
 import { computeLayout, type LayoutRect, type SafeAreaInsets } from "./scene/layout";
 
 function readSafeAreaInsets(): SafeAreaInsets {
@@ -48,6 +49,11 @@ async function boot(): Promise<void> {
   host.appendChild(app.canvas);
 
   const [environment, cabinet] = await Promise.all([createBackground(), createCabinet()]);
+  const requestedPlacement = new URLSearchParams(window.location.search).get("title");
+  const titlePlacement: TitlePlacement = requestedPlacement === "topper" || requestedPlacement === "belly"
+    ? requestedPlacement
+    : DEFAULT_TITLE_PLACEMENT;
+  document.documentElement.dataset.titlePlacement = titlePlacement;
   app.stage.addChild(environment.back, cabinet.machine, environment.front);
   (window as Window & { __trustRoyaleDebug?: { reelSymbols: typeof cabinet.reelSymbols } }).__trustRoyaleDebug = {
     reelSymbols: cabinet.reelSymbols,
@@ -89,7 +95,7 @@ async function boot(): Promise<void> {
   let pendingFrame = 0;
   const renderLayout = () => {
     pendingFrame = 0;
-    const layout = computeLayout(window.innerWidth, window.innerHeight, readSafeAreaInsets());
+    const layout = computeLayout(window.innerWidth, window.innerHeight, readSafeAreaInsets(), titlePlacement);
     document.documentElement.dataset.orientation = layout.orientation;
     document.documentElement.style.setProperty("--ui-scale", String(Math.max(0.62, Math.min(1.25, layout.machine.scale))));
     placeElement(marquee, layout.marquee);

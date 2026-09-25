@@ -37,7 +37,6 @@ interface FloatingItem {
   baseY: number;
   kind: FloatingKind;
   face?: Container;
-  edge?: Graphics;
 }
 
 export interface EnvironmentScene {
@@ -74,31 +73,6 @@ function chip(texture: Texture): Container {
   node.addChild(sprite(texture, 120));
   node.addChild(neosMark(38, 0xffe6a0));
   return node;
-}
-
-function edgeBand(kind: "chip" | "coin", index: number): Graphics {
-  const edge = new Graphics();
-  if (kind === "coin") {
-    edge.circle(0, 0, 55).fill({ color: 0xbd7b18 }).stroke({ color: 0xffe7a0, width: 3 });
-    edge.circle(0, 0, 48).stroke({ color: 0x754308, width: 3, alpha: 0.8 });
-    for (let mark = 0; mark < 24; mark += 1) {
-      const angle = (mark / 24) * Math.PI * 2;
-      edge.moveTo(Math.cos(angle) * 48, Math.sin(angle) * 48)
-        .lineTo(Math.cos(angle) * 54, Math.sin(angle) * 54)
-        .stroke({ color: 0x754308, width: 2, alpha: 0.82 });
-    }
-    return edge;
-  }
-  const colours = [0x9f0d1e, 0xc89528, 0x10295b, 0xe7ddc8];
-  edge.circle(0, 0, 58).fill({ color: colours[index % colours.length] }).stroke({ color: 0xffe7a0, width: 3 });
-  edge.circle(0, 0, 48).stroke({ color: 0xf2dfbd, width: 4, alpha: 0.88 });
-  for (let mark = 0; mark < 12; mark += 1) {
-    const angle = (mark / 12) * Math.PI * 2;
-    edge.moveTo(Math.cos(angle) * 49, Math.sin(angle) * 49)
-      .lineTo(Math.cos(angle) * 57, Math.sin(angle) * 57)
-      .stroke({ color: 0xf2dfbd, width: 5, alpha: 0.9 });
-  }
-  return edge;
 }
 
 function card(index: number): Container {
@@ -160,22 +134,20 @@ export async function createBackground(): Promise<EnvironmentScene> {
     const kind: FloatingKind = index % 7 === 0 ? "card" : index % 4 === 3 ? "coin" : "chip";
     let node: Container;
     let face: Container | undefined;
-    let edge: Graphics | undefined;
     if (kind === "card") {
       node = card(index);
     } else {
       node = new Container();
-      edge = edgeBand(kind, index);
       face = kind === "coin"
         ? new Container({ children: [sprite(depth === "mid" ? textures.coin : depth === "near" ? textures.coinNear : textures.coinFar, 110)] })
         : depth === "mid"
           ? chip(itemTextures[index % itemTextures.length])
           : new Container({ children: [sprite(depthTextures[index % depthTextures.length], 120)] });
-      node.addChild(edge, face);
+      node.addChild(face);
     }
     (depth === "near" ? nearLayer : depth === "far" ? farLayer : midLayer).addChild(node);
     const baseRotation = kind === "card" ? node.rotation : ((index % 5) - 2) * 0.12;
-    items.push({ node, depth, kind, face, edge, nx, ny, phase: index * 0.71, baseRotation, baseSize: depth === "near" ? 1.15 : depth === "far" ? 0.52 : 0.82, baseX: 0, baseY: 0 });
+    items.push({ node, depth, kind, face, nx, ny, phase: index * 0.71, baseRotation, baseSize: depth === "near" ? 1.15 : depth === "far" ? 0.52 : 0.82, baseX: 0, baseY: 0 });
   });
 
   return {
@@ -242,7 +214,6 @@ export function animateBackground(scene: EnvironmentScene, timeSeconds: number):
     if (item.face) {
       const perspective = floatingFaceScaleY(timeSeconds, speed, item.phase);
       item.face.scale.set(1, perspective);
-      if (item.edge) item.edge.alpha = 0.22;
     }
   });
 }

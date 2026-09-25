@@ -72,6 +72,8 @@ body {
   filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .8)) drop-shadow(0 0 9px rgba(255, 199, 74, .28));
 }
 
+html[data-title-placement="topper"] .marquee__frame-bulbs { display: none; }
+
 .marquee svg {
   display: block;
   width: 100%;
@@ -80,19 +82,25 @@ body {
 }
 
 .marquee__title {
-  filter: drop-shadow(0 2px 1px #1b0004) drop-shadow(0 0 7px rgba(255, 98, 88, .25));
+  filter: drop-shadow(0 1px 1px rgba(255, 245, 205, .65)) drop-shadow(0 0 9px rgba(255, 196, 72, .72)) drop-shadow(0 0 18px rgba(229, 7, 70, .5));
 }
 
 .marquee__wordmark {
-  filter: drop-shadow(-1px 0 #d4a437) drop-shadow(1px 0 #ffe9a1) drop-shadow(0 -1px #d4a437) drop-shadow(0 1px #6b3607) drop-shadow(0 0 6px rgba(229, 7, 70, .5));
+  filter: drop-shadow(-2px 0 #4b2206) drop-shadow(2px 0 #ffe9a1) drop-shadow(0 -2px #d4a437) drop-shadow(0 2px #180003) drop-shadow(0 0 10px rgba(255, 83, 91, .72));
 }
 
+.marquee__wordmark-bulbs,
+.marquee__royale-bulbs { display: none; }
+
+.marquee__reflection { mix-blend-mode: screen; }
+
 .marquee__royale {
-  font: 700 52px/1 Georgia, serif;
-  letter-spacing: 4px;
+  font: 700 68px/1 Georgia, serif;
+  letter-spacing: 2px;
   paint-order: stroke fill;
-  stroke: #6b3607;
-  stroke-width: 3px;
+  stroke: #321500;
+  stroke-width: 4px;
+  filter: drop-shadow(0 0 9px rgba(255, 209, 94, .7));
 }
 
 .marquee__bulb-unlit { opacity: .94; }
@@ -104,6 +112,8 @@ body {
   animation: wordmark-bulb-pattern 12s ease-in-out infinite;
   animation-delay: calc(var(--i) * -80ms);
 }
+
+.marquee__frame-bulb .marquee__bulb-unlit { opacity: .82; }
 
 @keyframes wordmark-bulb-pattern {
   0%, 2%, 22%, 48%, 72% { opacity: .2; }
