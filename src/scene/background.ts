@@ -24,6 +24,7 @@ const ASSETS = {
 } as const;
 
 type Depth = "far" | "mid" | "near";
+type FloatingKind = "chip" | "coin" | "card";
 
 interface FloatingItem {
   node: Container;
@@ -35,6 +36,9 @@ interface FloatingItem {
   baseSize: number;
   baseX: number;
   baseY: number;
+  kind: FloatingKind;
+  face?: Container;
+  edge?: Graphics;
 }
 
 export interface EnvironmentScene {
@@ -65,6 +69,25 @@ function chip(texture: Texture, emblem: Texture): Container {
   mark.tint = 0xffe8a3;
   node.addChild(mark);
   return node;
+}
+
+function edgeBand(kind: "chip" | "coin", index: number): Graphics {
+  const edge = new Graphics();
+  if (kind === "coin") {
+    edge.circle(0, 0, 55).fill({ color: 0xbd7b18 }).stroke({ color: 0xffe7a0, width: 3 });
+    edge.circle(0, 0, 48).stroke({ color: 0x754308, width: 3, alpha: 0.8 });
+    for (let mark = 0; mark < 24; mark += 1) {
+      const angle = (mark / 24) * Math.PI * 2;
+      edge.moveTo(Math.cos(angle) * 48, Math.sin(angle) * 48)
+        .lineTo(Math.cos(angle) * 54, Math.sin(angle) * 54)
+        .stroke({ color: 0x754308, width: 2, alpha: 0.82 });
+    }
+    return edge;
+  }
+  const colours = [0x9f0d1e, 0xc89528, 0x10295b, 0xe7ddc8];
+  edge.roundRect(-14, -56, 28, 112, 8).fill({ color: colours[index % colours.length] }).stroke({ color: 0xffe7a0, width: 2 });
+  for (let y = -46; y <= 42; y += 22) edge.rect(-13, y, 26, 8).fill({ color: 0xf2dfbd, alpha: 0.88 });
+  return edge;
 }
 
 function card(index: number): Container {
@@ -107,8 +130,7 @@ export async function createBackground(): Promise<EnvironmentScene> {
   const farLayer = new Container();
   const midLayer = new Container();
   const nearLayer = new Container();
-  back.addChild(farLayer, midLayer);
-  front.addChild(nearLayer);
+  back.addChild(farLayer, midLayer, nearLayer);
 
   const itemTextures = [textures.chipRed, textures.chipGold, textures.chipNavy, textures.chipWhite];
   const farTextures = [textures.chipRedFar, textures.chipGoldFar, textures.chipNavyFar, textures.chipWhiteFar];
@@ -126,15 +148,25 @@ export async function createBackground(): Promise<EnvironmentScene> {
   pattern.forEach(([nx, ny], index) => {
     const depth: Depth = index % 5 === 0 ? "near" : index % 3 === 0 ? "far" : "mid";
     const depthTextures = depth === "near" ? nearTextures : farTextures;
-    const node = index % 7 === 0
-      ? card(index)
-      : index % 4 === 3
+    const kind: FloatingKind = index % 7 === 0 ? "card" : index % 4 === 3 ? "coin" : "chip";
+    let node: Container;
+    let face: Container | undefined;
+    let edge: Graphics | undefined;
+    if (kind === "card") {
+      node = card(index);
+    } else {
+      node = new Container();
+      edge = edgeBand(kind, index);
+      face = kind === "coin"
         ? new Container({ children: [sprite(depth === "mid" ? textures.coin : depth === "near" ? textures.coinNear : textures.coinFar, 110)] })
         : depth === "mid"
           ? chip(itemTextures[index % itemTextures.length], textures.neos)
           : new Container({ children: [sprite(depthTextures[index % depthTextures.length], 120)] });
+      node.addChild(edge, face);
+    }
     (depth === "near" ? nearLayer : depth === "far" ? farLayer : midLayer).addChild(node);
-    items.push({ node, depth, nx, ny, phase: index * 0.71, baseRotation: node.rotation + index * 0.13, baseSize: depth === "near" ? 1.15 : depth === "far" ? 0.52 : 0.82, baseX: 0, baseY: 0 });
+    const baseRotation = kind === "card" ? node.rotation : ((index % 5) - 2) * 0.16;
+    items.push({ node, depth, kind, face, edge, nx, ny, phase: index * 0.71, baseRotation, baseSize: depth === "near" ? 1.15 : depth === "far" ? 0.52 : 0.82, baseX: 0, baseY: 0 });
   });
 
   return {
@@ -192,9 +224,17 @@ export function animateBackground(scene: EnvironmentScene, timeSeconds: number):
     const parallax = item.depth === "near" ? 22 : item.depth === "far" ? 5 : 11;
     item.node.x = item.baseX + scene.pointer.x * parallax;
     item.node.y = item.baseY + Math.sin(timeSeconds * speed + item.phase) * (5 + parallax * 0.2) + scene.pointer.y * parallax;
-    item.node.rotation = item.baseRotation + Math.sin(timeSeconds * speed * 0.7 + item.phase) * 0.24;
-    const flip = Math.max(0.12, Math.abs(Math.cos(timeSeconds * speed * 0.55 + item.phase)));
-    const scale = item.node.scale.y;
-    item.node.scale.x = scale * flip;
+    const rotationRange = item.kind === "chip" ? 0.08 : item.kind === "coin" ? 0.14 : 0.24;
+    item.node.rotation = item.baseRotation + Math.sin(timeSeconds * speed * 0.7 + item.phase) * rotationRange;
+    if (item.face) {
+      const flip = Math.max(0.3, Math.abs(Math.cos(timeSeconds * speed * 0.55 + item.phase)));
+      if (item.kind === "coin") {
+        const coinScale = 0.72 + flip * 0.28;
+        item.face.scale.set(coinScale);
+      } else {
+        item.face.scale.set(flip, 1);
+      }
+      if (item.edge) item.edge.alpha = Math.max(0, Math.min(1, (0.58 - flip) * 2.8));
+    }
   });
 }

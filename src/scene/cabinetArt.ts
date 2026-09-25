@@ -5,6 +5,6 @@ export const CABINET_ART = {
   source: { width: 1024, height: 1536 },
   reelWindow: { x: 143, y: 312, width: 434, height: 242 },
   spinButton: { x: 284, y: 628, width: 152, height: 82 },
-  leftReadout: { x: 145, y: 651 },
-  rightReadout: { x: 575, y: 651 },
+  leftReadout: { x: 205, y: 660 },
+  rightReadout: { x: 515, y: 660 },
 } as const;

@@ -1045,8 +1045,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1790343494.7588222,
-    "ast_hash": "4746e26d806d030970a037745666a35c",
+    "mtime": 1790344752.2525547,
+    "ast_hash": "f3b15ccb54cbd94569d2e2ab93fec227",
     "semantic_hash": ""
   },
   "moodboard.html": {
@@ -1140,33 +1140,33 @@
     "semantic_hash": ""
   },
   "src/scene/background.ts": {
-    "mtime": 1790344210.1686025,
-    "ast_hash": "10683cb89d21eb8809c84718c678579c",
+    "mtime": 1790345228.6124246,
+    "ast_hash": "8350841f567ceb4b6d83ea0adb9907d6",
     "semantic_hash": ""
   },
   "src/scene/cabinet.ts": {
-    "mtime": 1790343265.8181922,
-    "ast_hash": "c02457239ba00ddb866cc1debeb50fb9",
+    "mtime": 1790345193.8347692,
+    "ast_hash": "944cfcf72103a8ff3583f040f919ad92",
     "semantic_hash": ""
   },
   "src/scene/layout.ts": {
-    "mtime": 1790343533.8615787,
-    "ast_hash": "e050f03fba50e985210265ca82d3996c",
+    "mtime": 1790345212.571953,
+    "ast_hash": "909d789a8441f7dcdb29883f947d39fe",
     "semantic_hash": ""
   },
   "tests/e2e/layout.spec.ts": {
-    "mtime": 1790341739.9763937,
-    "ast_hash": "2172d94b3b42dc5518cdc7054f2d85de",
+    "mtime": 1790344787.0973542,
+    "ast_hash": "8665e3d254c34b15cc0c84dff12a3dc3",
     "semantic_hash": ""
   },
   "tests/unit/layout.test.ts": {
-    "mtime": 1790341739.9551065,
-    "ast_hash": "67b8a255fe9756e802bf3d74fe11c8a2",
+    "mtime": 1790345212.7007556,
+    "ast_hash": "666c4fc8c6fd3a2646069176c23cbabf",
     "semantic_hash": ""
   },
   "public/assets/mock/SOURCES.md": {
-    "mtime": 1790344349.4966812,
-    "ast_hash": "8f09294f8361e8e1c80c264c7b3b85d7",
+    "mtime": 1790345239.410418,
+    "ast_hash": "8b843dd69994296bff5edff9bc91931f",
     "semantic_hash": ""
   },
   "specs/001-trust-royale-slots/decisions.md": {
@@ -1195,8 +1195,8 @@
     "semantic_hash": ""
   },
   "src/scene/cabinetArt.ts": {
-    "mtime": 1790343223.485732,
-    "ast_hash": "39d6abfbbea07176e0115bc234eae1bc",
+    "mtime": 1790344676.7911851,
+    "ast_hash": "ddff8df08153d5eba5c6cbce07fadbe3",
     "semantic_hash": ""
   },
   "public/assets/mock/cabinet.webp": {
@@ -1314,14 +1314,19 @@
     "ast_hash": "eb5d6c76af5221b16b398dc5abb5ed0a",
     "semantic_hash": ""
   },
-  "test-results/gate-b-video/page@39f2fe08caf332b2e1e98d7d24c24542.webm": {
-    "mtime": 1790344307.5759594,
-    "ast_hash": "13c6ecee8375f891122656fb5ae22bfc",
+  "public/assets/mock/cherry-reel.webp": {
+    "mtime": 1790345162.53886,
+    "ast_hash": "00da640ddb514376a507ed2bc83a2e10",
     "semantic_hash": ""
   },
-  "test-results/gate-b-video/page@dce05779c7797130fc2b61db73faad33.webm": {
-    "mtime": 1790344297.1884983,
-    "ast_hash": "dc1642a73fc7ba4d842aa228c407ae27",
+  "public/assets/mock/seven-reel.webp": {
+    "mtime": 1790345162.5717382,
+    "ast_hash": "34852061035e838f974c52dae600197f",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/sweets-reel.webp": {
+    "mtime": 1790345162.6034808,
+    "ast_hash": "226e66d6ad93402296be7f68d9a38175",
     "semantic_hash": ""
   }
 }

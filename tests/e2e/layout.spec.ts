@@ -18,6 +18,7 @@ test("full-screen mock fits all required viewports", async ({ page }, testInfo) 
     await page.waitForFunction(() => document.documentElement.dataset.ready === "true" || Boolean(document.documentElement.dataset.error));
     expect(await page.evaluate(() => document.documentElement.dataset.error), `${viewport.name} boot error`).toBeUndefined();
     await expect(page.locator("#paytable > span:not(.paytable__label)"), `${viewport.name} paytable rules`).toHaveCount(7);
+    await expect(page.locator("#paytable > .paytable__rule img"), `${viewport.name} paytable medallions`).toHaveCount(20);
     const dimensions = await page.evaluate(() => {
       const bounds = document.querySelector("canvas")?.getBoundingClientRect();
       const marquee = document.querySelector("#marquee")?.getBoundingClientRect();

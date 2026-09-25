@@ -27,10 +27,10 @@ function scaled(frame: LayoutRect, designWidth: number, designHeight: number) {
 
 function overlays(machine: SceneLayout["machine"]): Pick<SceneLayout, "marquee" | "spinButton"> {
   const marquee = scaled(rect(
-    machine.x + machine.width * 0.13,
-    machine.y + machine.height * 0.055,
-    machine.width * 0.74,
-    machine.height * 0.145,
+    machine.x + machine.width * 0.18,
+    machine.y + machine.height * 0.066,
+    machine.width * 0.64,
+    machine.height * 0.12,
   ), 800, 170);
   const scale = machine.scale;
   const button = CABINET_ART.spinButton;
@@ -75,8 +75,10 @@ export function computeLayout(width: number, height: number, safeAreaInsets: Saf
   const machine = scaled(rect(content.x + (content.width - machineWidth) / 2, content.y, machineWidth, machineHeight), CABINET_DESIGN.width, CABINET_DESIGN.height);
   const sideGap = Math.max(8, Math.min(28, content.width * 0.014));
   const sideWidth = Math.max(0, (content.width - machineWidth) / 2 - sideGap * 2);
-  const panelWidth = Math.min(sideWidth, content.height * 0.58);
-  const panelHeight = Math.min(content.height * 0.72, panelWidth * 1.35);
+  const panelWidth = Math.min(sideWidth * 0.72, content.height * 0.36);
+  const panelHeight = panelWidth >= 260
+    ? Math.min(500, panelWidth * 1.25)
+    : Math.min(content.height * 0.72, panelWidth * 1.9);
   const paytable = scaled(rect(content.x, content.y + (content.height - panelHeight) / 2, panelWidth, panelHeight), 390, 620);
   const chipTray = scaled(rect(content.x + content.width - panelWidth, content.y + (content.height - panelHeight) / 2, panelWidth, panelHeight), 390, 620);
   return { orientation, viewport, safeBounds, background, paytable, machine, chipTray, ...overlays(machine) };

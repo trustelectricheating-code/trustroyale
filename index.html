@@ -43,25 +43,27 @@
                 <animate attributeName="x2" values=".2;1.8" dur="3.2s" repeatCount="indefinite"/>
               </linearGradient>
             </defs>
+            <rect x="42" y="18" width="716" height="132" rx="30" fill="#130307" fill-opacity=".92" stroke="#8f5c12" stroke-width="5"/>
+            <rect x="51" y="27" width="698" height="114" rx="24" fill="none" stroke="#e4b94f" stroke-width="2" stroke-opacity=".75"/>
             <g fill="#ffd66d">
-              <circle cx="65" cy="30" r="7"><animate attributeName="fill-opacity" values=".35;1;.35" dur="1.6s" repeatCount="indefinite"/></circle>
-              <circle cx="735" cy="30" r="7"><animate attributeName="fill-opacity" values="1;.35;1" dur="1.6s" repeatCount="indefinite"/></circle>
-              <circle cx="35" cy="87" r="6"><animate attributeName="fill-opacity" values=".5;1;.5" dur="1.3s" repeatCount="indefinite"/></circle>
-              <circle cx="765" cy="87" r="6"><animate attributeName="fill-opacity" values="1;.5;1" dur="1.3s" repeatCount="indefinite"/></circle>
+              <circle cx="28" cy="45" r="6"><animate attributeName="fill-opacity" values=".35;1;.35" dur="1.6s" repeatCount="indefinite"/></circle>
+              <circle cx="772" cy="45" r="6"><animate attributeName="fill-opacity" values="1;.35;1" dur="1.6s" repeatCount="indefinite"/></circle>
+              <circle cx="28" cy="120" r="6"><animate attributeName="fill-opacity" values=".5;1;.5" dur="1.3s" repeatCount="indefinite"/></circle>
+              <circle cx="772" cy="120" r="6"><animate attributeName="fill-opacity" values="1;.5;1" dur="1.3s" repeatCount="indefinite"/></circle>
             </g>
-            <text class="marquee__title" x="400" y="96" text-anchor="middle" fill="url(#title-gold)">Trust Royale</text>
-            <text class="marquee__subtitle" x="400" y="137" text-anchor="middle">Heating for Humans</text>
+            <text class="marquee__title" x="400" y="88" text-anchor="middle" fill="url(#title-gold)">Trust Royale</text>
+            <text class="marquee__subtitle" x="400" y="126" text-anchor="middle">Heating for Humans</text>
           </svg>
         </header>
         <section id="paytable" class="paytable" aria-label="Prize paytable">
           <span class="paytable__label">Prize table</span>
-          <span><b>25%</b> Keith × 3</span>
-          <span><b>20%</b> Scott × 3</span>
-          <span><b>20%</b> Fiona × 3</span>
-          <span><b>15%</b> Scott × 2 + Fiona</span>
-          <span><b>15%</b> Fiona × 2 + Scott</span>
-          <span><b>15%</b> Keith × 2 + any</span>
-          <span><b>10%</b> Neos × 3</span>
+          <span class="paytable__rule" aria-label="Keith times three, 25 percent"><span class="paytable__icons"><img src="/assets/mock/keith-medallion.webp" alt=""><img src="/assets/mock/keith-medallion.webp" alt=""><img src="/assets/mock/keith-medallion.webp" alt=""></span><b>25%</b></span>
+          <span class="paytable__rule" aria-label="Scott times three, 20 percent"><span class="paytable__icons"><img src="/assets/mock/scott-medallion.webp" alt=""><img src="/assets/mock/scott-medallion.webp" alt=""><img src="/assets/mock/scott-medallion.webp" alt=""></span><b>20%</b></span>
+          <span class="paytable__rule" aria-label="Fiona times three, 20 percent"><span class="paytable__icons"><img src="/assets/mock/fiona-medallion.webp" alt=""><img src="/assets/mock/fiona-medallion.webp" alt=""><img src="/assets/mock/fiona-medallion.webp" alt=""></span><b>20%</b></span>
+          <span class="paytable__rule" aria-label="Scott times two plus Fiona, 15 percent"><span class="paytable__icons"><img src="/assets/mock/scott-medallion.webp" alt=""><img src="/assets/mock/scott-medallion.webp" alt=""><img src="/assets/mock/fiona-medallion.webp" alt=""></span><b>15%</b></span>
+          <span class="paytable__rule" aria-label="Fiona times two plus Scott, 15 percent"><span class="paytable__icons"><img src="/assets/mock/fiona-medallion.webp" alt=""><img src="/assets/mock/fiona-medallion.webp" alt=""><img src="/assets/mock/scott-medallion.webp" alt=""></span><b>15%</b></span>
+          <span class="paytable__rule" aria-label="Keith times two plus any, 15 percent"><span class="paytable__icons"><img src="/assets/mock/keith-medallion.webp" alt=""><img src="/assets/mock/keith-medallion.webp" alt=""><i>ANY</i></span><b>15%</b></span>
+          <span class="paytable__rule" aria-label="Neos times three, 10 percent"><span class="paytable__icons"><img class="paytable__neos" src="/assets/emblem/neos.svg" alt=""><img class="paytable__neos" src="/assets/emblem/neos.svg" alt=""><img class="paytable__neos" src="/assets/emblem/neos.svg" alt=""></span><b>10%</b></span>
         </section>
         <button id="spin" class="spin" type="button" aria-label="Spin the reels">Spin</button>
       </div>

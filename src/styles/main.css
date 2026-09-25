@@ -80,8 +80,8 @@ body {
 }
 
 .marquee__title {
-  font: 700 78px/1 Georgia, serif;
-  letter-spacing: 4px;
+  font: 700 66px/1 Georgia, serif;
+  letter-spacing: 3px;
   paint-order: stroke fill;
   stroke: #6b3607;
   stroke-width: 4px;
@@ -105,7 +105,7 @@ body {
   border: clamp(1px, .25vmin, 4px) solid var(--gold);
   border-radius: clamp(7px, 1.2vmin, 18px);
   color: #f5e9d7;
-  background: linear-gradient(115deg, rgba(9, 7, 8, .94), rgba(77, 7, 20, .9));
+  background: linear-gradient(115deg, rgba(9, 7, 8, .78), rgba(77, 7, 20, .72));
   box-shadow: inset 0 0 1.5rem #000, 0 .6rem 1.4rem rgba(0, 0, 0, .48), 0 0 1.4rem rgba(255, 191, 63, .12);
   backdrop-filter: blur(8px);
   font-size: clamp(.5rem, 2.05vw, .76rem);
@@ -124,6 +124,47 @@ body {
 }
 
 .paytable b { color: var(--gold-light); }
+
+.paytable__rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(3px, .55vmin, 8px);
+  min-width: 0;
+}
+
+.paytable__icons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  min-width: 0;
+}
+
+.paytable__icons img,
+.paytable__icons i {
+  width: clamp(13px, calc(23px * var(--ui-scale)), 28px);
+  height: clamp(13px, calc(23px * var(--ui-scale)), 28px);
+  flex: 0 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.paytable__icons i {
+  display: grid;
+  place-items: center;
+  border: 1px solid #d4a437;
+  color: #ffe8a3;
+  background: #370711;
+  font-size: .48em;
+  font-style: normal;
+}
+
+.paytable__icons .paytable__neos {
+  padding: 3px;
+  border: 1px solid #d4a437;
+  background: #fff3d1;
+}
 
 .spin {
   pointer-events: auto;
@@ -169,18 +210,24 @@ html[data-orientation="landscape"] .paytable {
   grid-template-rows: repeat(8, minmax(0, 1fr));
   align-content: stretch;
   padding: clamp(5px, 1.4vmin, 18px) clamp(7px, 1.5vmin, 22px);
-  font-size: clamp(.45rem, 1.35vmin, 1rem);
+  font-size: clamp(.55rem, 1.1vw, 1.3rem);
   line-height: 1.12;
 }
 
-html[data-orientation="landscape"] .paytable span {
+html[data-orientation="landscape"] .paytable > .paytable__rule {
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid rgba(212, 164, 55, .22);
 }
 
-html[data-orientation="landscape"] .paytable span:last-child { border-bottom: 0; }
+html[data-orientation="landscape"] .paytable__icons img,
+html[data-orientation="landscape"] .paytable__icons i {
+  width: clamp(20px, 2.35vw, 46px);
+  height: clamp(20px, 2.35vw, 46px);
+}
+
+html[data-orientation="landscape"] .paytable > .paytable__rule:last-child { border-bottom: 0; }
 html[data-orientation="landscape"] .paytable__label { justify-content: center; }
 
 @media (max-height: 430px) and (orientation: landscape) {

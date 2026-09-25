@@ -28,3 +28,5 @@ Every raster below was generated with OpenAI's built-in image tool (`gpt-image-2
 | `sweets.webp` | `reference/_work/generated/round3/sweets.png` |
 
 Depth-of-field delivery derivatives are also generated from those recorded sources: `roulette-wheel-soft.webp` from `roulette-wheel.png`; `chip-{red,gold,navy,white}-{far,near}.webp` from the corresponding blank chip plus the vector Neos emblem; and `coin-{far,near}.webp` from `coin.png`. ImageMagick applies only resizing, emblem compositing, WebP compression, alpha cutting, and depth blur; it does not introduce ungenerated raster artwork.
+
+Round 5 adds alpha-trimmed reel derivatives `cherry-reel.webp`, `seven-reel.webp`, and `sweets-reel.webp` from their recorded generated sources. ImageMagick trims transparent padding, scales the visible bounds, centres each result on a transparent 256×256 canvas, and writes WebP; no new artwork is introduced.

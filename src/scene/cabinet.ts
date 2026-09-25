@@ -8,9 +8,9 @@ const ASSETS = {
   fiona: "/assets/mock/fiona-medallion.webp",
   keith: "/assets/mock/keith-medallion.webp",
   neos: "/assets/emblem/neos.svg",
-  cherry: "/assets/mock/cherry.webp",
-  seven: "/assets/mock/seven.webp",
-  sweets: "/assets/mock/sweets.webp",
+  cherry: "/assets/mock/cherry-reel.webp",
+  seven: "/assets/mock/seven-reel.webp",
+  sweets: "/assets/mock/sweets-reel.webp",
 } as const;
 
 export interface CabinetScene { machine: Container }
@@ -34,8 +34,25 @@ function maskedMedallion(texture: Texture, x: number, y: number, size: number): 
   return holder;
 }
 
-function reelSymbol(texture: Texture, masked: boolean, x: number, y: number, size: number, scaleX: number, scaleY: number): Container | Sprite {
-  const node = masked ? maskedMedallion(texture, x, y, size) : centredSprite(texture, x, y, size);
+function enamelNeos(x: number, y: number, size: number): Container {
+  const node = new Container();
+  node.position.set(x, y);
+  const radius = size * 0.46;
+  const emblemScale = size * 0.0048;
+  const emblemX = -80 * emblemScale;
+  const emblemY = -80 * emblemScale;
+  node.addChild(new Graphics()
+    .circle(0, 0, radius).fill({ color: 0xd6a83b }).stroke({ color: 0xffe8a3, width: 2 })
+    .circle(0, 0, radius - 4).fill({ color: 0x9f0d1e })
+    .ellipse(-radius * 0.22, -radius * 0.24, radius * 0.48, radius * 0.2).fill({ color: 0xffffff, alpha: 0.24 })
+    .circle(emblemX + 80 * emblemScale, emblemY + 18 * emblemScale, 12 * emblemScale).fill({ color: 0xffe6a0 })
+    .roundRect(emblemX + 35 * emblemScale, emblemY + 42 * emblemScale, 90 * emblemScale, 18 * emblemScale, 9 * emblemScale).fill({ color: 0xffe6a0 })
+    .roundRect(emblemX + 71 * emblemScale, emblemY + 42 * emblemScale, 18 * emblemScale, 112 * emblemScale, 9 * emblemScale).fill({ color: 0xffe6a0 }));
+  return node;
+}
+
+function reelSymbol(texture: Texture, masked: boolean, neos: boolean, x: number, y: number, size: number, scaleX: number, scaleY: number): Container | Sprite {
+  const node = neos ? enamelNeos(x, y, size) : masked ? maskedMedallion(texture, x, y, size) : centredSprite(texture, x, y, size);
   node.scale.set(scaleX, scaleY);
   return node;
 }
@@ -58,45 +75,69 @@ function createDrum(textures: Record<keyof typeof ASSETS, Texture>, index: numbe
     .rect(width * 0.88, 0, width * 0.12, height).fill({ color: 0x5b250e, alpha: 0.17 }));
 
   const sets = [
-    [[textures.seven, false], [textures.scott, true], [textures.cherry, false]],
-    [[textures.fiona, true], [textures.neos, false], [textures.sweets, false]],
-    [[textures.keith, true], [textures.cherry, false], [textures.seven, false]],
+    [[textures.seven, false, false], [textures.scott, true, false], [textures.cherry, false, false]],
+    [[textures.fiona, true, false], [textures.neos, false, true], [textures.sweets, false, false]],
+    [[textures.keith, true, false], [textures.cherry, false, false], [textures.seven, false, false]],
   ] as const;
   const positions = [
-    { y: 11, size: 89, sx: 0.82, sy: 0.43 },
-    { y: height * 0.5, size: 116, sx: 1, sy: 1 },
-    { y: height - 8, size: 89, sx: 0.82, sy: 0.43 },
+    { y: -5, size: 82, sx: 0.88, sy: 0.55 },
+    { y: height * 0.5, size: 82, sx: 1, sy: 1 },
+    { y: height + 5, size: 82, sx: 0.88, sy: 0.55 },
   ];
-  sets[index].forEach(([texture, masked], row) => {
+  sets[index].forEach(([texture, masked, neos], row) => {
     const position = positions[row];
-    drum.addChild(reelSymbol(texture, masked, width * 0.5, position.y, position.size, position.sx, position.sy));
+    drum.addChild(reelSymbol(texture, masked, neos, width * 0.5, position.y, position.size, position.sx, position.sy));
   });
 
-  drum.addChild(new Graphics()
-    .rect(0, 0, width, 42).fill({ color: 0x230b07, alpha: 0.64 })
-    .rect(0, height - 42, width, 42).fill({ color: 0x230b07, alpha: 0.64 })
-    .ellipse(width * 0.5, height * 0.48, width * 0.39, height * 0.42).fill({ color: 0xffffff, alpha: 0.07 })
-    .rect(width * 0.22, 0, width * 0.13, height).fill({ color: 0xffffff, alpha: 0.11 })
-    .roundRect(1, 1, width - 2, height - 2, 18).stroke({ color: 0xffda78, width: 3, alpha: 0.7 }));
+  const curvature = new Graphics()
+    .rect(0, height * 0.32, width, height * 0.36).fill({ color: 0xffffff, alpha: 0.1 })
+    .rect(0, 0, width * 0.1, height).fill({ color: 0x4a3625, alpha: 0.15 })
+    .rect(width * 0.9, 0, width * 0.1, height).fill({ color: 0x4a3625, alpha: 0.15 })
+    .rect(width * 0.26, 0, width * 0.08, height).fill({ color: 0xffffff, alpha: 0.055 });
+  const shadeBands = 9;
+  const bandHeight = height * 0.045;
+  for (let band = 0; band < shadeBands; band += 1) {
+    const alpha = 0.29 * ((shadeBands - band) / shadeBands) ** 2;
+    curvature.rect(0, band * bandHeight, width, bandHeight + 1).fill({ color: 0x3d3024, alpha });
+    curvature.rect(0, height - (band + 1) * bandHeight, width, bandHeight + 1).fill({ color: 0x3d3024, alpha });
+  }
+  curvature.roundRect(1, 1, width - 2, height - 2, 18).stroke({ color: 0xffda78, width: 3, alpha: 0.7 });
+  drum.addChild(curvature);
   return drum;
 }
 
-function readout(text: string, x: number, y: number): Text {
-  const node = new Text({
-    text,
+function readout(label: string, value: string, x: number, y: number): Container {
+  const node = new Container();
+  node.position.set(x, y);
+  const labelNode = new Text({
+    text: label,
     style: new TextStyle({
-      fill: 0xffe8a3,
-      fontFamily: "Arial, sans-serif",
-      fontSize: 15,
+      fill: 0xffb746,
+      fontFamily: "Courier New, monospace",
+      fontSize: 10,
       fontWeight: "700",
       align: "center",
-      letterSpacing: 1.2,
-      lineHeight: 18,
-      dropShadow: { color: 0xff9d24, alpha: 0.65, blur: 4, distance: 0 },
+      letterSpacing: 0.7,
+      dropShadow: { color: 0xff601c, alpha: 0.8, blur: 3, distance: 0 },
     }),
   });
-  node.anchor.set(0.5);
-  node.position.set(x, y);
+  labelNode.anchor.set(0.5);
+  labelNode.y = -9;
+  const valueNode = new Text({
+    text: value,
+    style: new TextStyle({
+      fill: 0xffd76a,
+      fontFamily: "Courier New, monospace",
+      fontSize: 19,
+      fontWeight: "700",
+      align: "center",
+      letterSpacing: 1.4,
+      dropShadow: { color: 0xff4218, alpha: 0.95, blur: 5, distance: 0 },
+    }),
+  });
+  valueNode.anchor.set(0.5);
+  valueNode.y = 9;
+  node.addChild(labelNode, valueNode);
   return node;
 }
 
@@ -119,17 +160,23 @@ export async function createCabinet(): Promise<CabinetScene> {
   machine.addChild(new Graphics()
     .roundRect(reelWindow.x - 3, reelWindow.y - 3, reelWindow.width + 6, reelWindow.height + 6, 28)
       .stroke({ color: 0xffe3a0, width: 4, alpha: 0.86 })
-    .rect(reelWindow.x + 5, reelWindow.y + reelWindow.height * 0.48, reelWindow.width - 10, 3)
-      .fill({ color: 0xe32935, alpha: 0.82 })
     .moveTo(reelWindow.x + 18, reelWindow.y + 9)
       .lineTo(reelWindow.x + reelWindow.width * 0.42, reelWindow.y + 9)
       .lineTo(reelWindow.x + reelWindow.width * 0.24, reelWindow.y + reelWindow.height - 9)
       .lineTo(reelWindow.x + 7, reelWindow.y + reelWindow.height - 9)
-      .closePath().fill({ color: 0xffffff, alpha: 0.085 }));
+      .closePath().fill({ color: 0xffffff, alpha: 0.055 })
+    .moveTo(reelWindow.x + 4, reelWindow.y + reelWindow.height * 0.5)
+      .lineTo(reelWindow.x + 17, reelWindow.y + reelWindow.height * 0.44)
+      .lineTo(reelWindow.x + 17, reelWindow.y + reelWindow.height * 0.56)
+      .closePath().fill({ color: 0xffd66d })
+    .moveTo(reelWindow.x + reelWindow.width - 4, reelWindow.y + reelWindow.height * 0.5)
+      .lineTo(reelWindow.x + reelWindow.width - 17, reelWindow.y + reelWindow.height * 0.44)
+      .lineTo(reelWindow.x + reelWindow.width - 17, reelWindow.y + reelWindow.height * 0.56)
+      .closePath().fill({ color: 0xffd66d }));
 
   machine.addChild(
-    readout("SPINS LEFT\n3", CABINET_ART.leftReadout.x, CABINET_ART.leftReadout.y),
-    readout("TOP PRIZE\n25%", CABINET_ART.rightReadout.x, CABINET_ART.rightReadout.y),
+    readout("SPINS LEFT", "3", CABINET_ART.leftReadout.x, CABINET_ART.leftReadout.y),
+    readout("TOP PRIZE", "25%", CABINET_ART.rightReadout.x, CABINET_ART.rightReadout.y),
   );
   return { machine };
 }
