@@ -30,7 +30,7 @@ Delivery runs in six gated phases (A–F). The owner sees the mood board, then t
 
 **Constraints**: JS ≤ 250 KB gzip; first visit ≤ 4 MB; no audio before user gesture; no scroll at any viewport; `prefers-reduced-motion` honoured; 3 spins + 1 bonus per session enforced server-side; leads written to Neon before any CRM call; UK GDPR consent
 
-**Scale/Scope**: One screen (+ moodboard and asset-board review pages); 7 symbols; 6 paytable rules; ~60 art files (incl. one rebuilt SVG emblem), ~12 sounds; expected traffic within tens of thousands of visits/month
+**Scale/Scope**: One screen (+ moodboard and asset-board review pages); 7 symbols; 7 paytable rules; ~60 art files (incl. one rebuilt SVG emblem), ~12 sounds; expected traffic within tens of thousands of visits/month
 
 ## Constitution Check
 
@@ -43,10 +43,10 @@ Self-imposed checks used instead, from the spec and user brief:
 | Check | Pre-design | Post-design |
 |---|---|---|
 | Phased delivery with owner sign-off (mood → look → assets → build) | ✅ | ✅ Phases A–F below, each a Vercel preview |
-| Fits Vercel hosting | ✅ | ✅ Static + a few functions + 1 cron + Neon free tier; Hobby (free) plan, owner decision — see research R6 |
+| Fits Vercel hosting | ✅ | ✅ Static + a few functions + 1 daily cron (Hobby limit) + traffic-driven retries + Neon free tier; Hobby (free) plan, owner decision — see research R6 |
 | No unnecessary complexity | ✅ | ✅ No framework, no ORM, no 3D runtime; one DB, only because leads and spin limits need it |
 | Prize logic tamper-resistant | ✅ | ✅ Server-side RNG, spin limit and win records in Neon (contract: spin-api) |
-| No lead loss | ✅ | ✅ Write-first to Neon, cron retry to SharpSpring (contract: lead-api) |
+| No lead loss | ✅ | ✅ Write-first to Neon, layered retry to SharpSpring that fits the once-a-day Hobby cron (contract: lead-api) |
 
 Recommend running `/speckit-constitution` before `/speckit-tasks` if the owner wants these made binding.
 
@@ -79,7 +79,7 @@ api/
 ├── session.ts             # GET /api/session
 ├── spin.ts                # POST /api/spin
 ├── lead.ts                # POST /api/lead
-├── cron/crm-sync.ts       # Vercel Cron retry to SharpSpring
+├── cron/crm-sync.ts       # Retry to SharpSpring (daily Vercel Cron + optional external pinger)
 ├── admin/                 # win lookup, phone claim, leads.csv
 └── _lib/                  # db.ts (Neon), session.ts (signed cookie), sharpspring.ts, validate.ts
 db/migrations/             # Plain SQL: sessions, spins, leads

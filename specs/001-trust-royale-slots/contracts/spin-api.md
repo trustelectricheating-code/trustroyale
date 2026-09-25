@@ -52,12 +52,12 @@ On a win, `spinsLeft` is always 0 (play stops at first win).
 |---|---|---|
 | 403 | `{ "error": "no_spins_left", "state": "won" \| "game_over" }` | Show WON or GAME_OVER screen |
 | 429 | `{ "error": "rate_limited" }` | Soft per-IP daily cap hit; show "Come back tomorrow" |
-| 500 | `{ "error": "server_error" }` | Stop reels on a non-winning arrangement, "Machine hiccup, try again"; spin is not counted (transaction rolled back) |
+| 500 | `{ "error": "server_error" }` | Stop reels on a non-winning arrangement, "Machine hiccup, try again"; spin is not counted (the single statement rolled back) |
 
 ### Guarantees
 
 1. A session can never exceed 4 spins (3 + 1 bonus) or win twice (atomic update, DB `CHECK` and `UNIQUE` constraints).
-2. Session increment and spin insert happen in one transaction.
+2. Session increment, win marking and spin insert happen in **one SQL statement** (see [data-model.md → spin counting](../data-model.md#spins)), so they succeed or fail together without an interactive transaction.
 3. `reels` evaluated with the shared paytable evaluator always yields exactly `ruleId` (or none). Server asserts before responding.
 4. p95 < 300 ms (Neon serverless driver over HTTP, same region as the function).
 
@@ -68,6 +68,6 @@ On a win, `spinsLeft` is always 0 (play stops at first win).
 | `DATABASE_URL` | set by Vercel ↔ Neon integration | Neon connection (pooled) |
 | `SESSION_SECRET` | 32+ random bytes | Signs `tr_sid` cookie |
 | `IP_HASH_SALT` | random | Hashes IPs for the soft cap |
-| `DAILY_SESSIONS_PER_IP` | `20` | Soft abuse cap |
+| `DAILY_SESSIONS_PER_IP` | `20` | Soft abuse cap: max new sessions per IP per day before `/api/spin` returns 429. `0` turns the cap off |
 | `FORCE_REELS` | `keith,keith,keith` | Preview/dev only; ignored in production. Forces the payline for demos and tests |
 | `CLAIM_PHONE` | `+44…` | Number shown on "Call to claim" |

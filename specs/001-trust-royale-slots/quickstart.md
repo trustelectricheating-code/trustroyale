@@ -45,7 +45,7 @@ Manual:
 2. Set `FORCE_REELS=keith,keith,keith` in `.env.local`; spin; confirm blink animation + "25% off" popup, win reference, call and form options. Repeat with `neos,neos,neos`: heat-pulse rings + "10% off".
 3. Set `FORCE_REELS=seven,cherry,sweets`; confirm "spin again", counter drops 3 → 2 → 1 → 0, then the Last Chance screen; take the bonus spin; then the game-over thank-you. Reload: still game over; `POST /api/spin` returns 403.
 4. Win, submit the claim form; confirm a `leads` row in Neon (`crm_status` becomes `synced`) and the lead in SharpSpring with discount and win reference.
-5. Set a wrong `SHARPSPRING_SECRET_KEY`; submit; player still sees success; row stays `pending`. Fix the key, call `/api/cron/crm-sync` with `CRON_SECRET`; row becomes `synced`.
+5. Set a wrong `SHARPSPRING_SECRET_KEY`; submit; player still sees success; row stays `pending`. Fix the key, call `/api/cron/crm-sync` with `CRON_SECRET` (or play a spin, which triggers a traffic-driven retry once the lead is due); row becomes `synced`.
 6. Unset `FORCE_REELS`; run `pnpm test`, which includes a 100k-spin simulation asserting win rate ≈ 8.16% ± 0.3%.
 7. In devtools, block `/api/spin`; spin; expect "Machine hiccup, try again", never a win.
 

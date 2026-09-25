@@ -77,7 +77,7 @@ At the top of the screen the player can read what wins what, shown with face ico
 
 **Why this priority**: Players must know the odds of reward exist before spinning.
 
-**Independent Test**: Visually verify the paytable at top on portrait phone and landscape desktop, all six rules readable.
+**Independent Test**: Visually verify the paytable at top on portrait phone and landscape desktop, all seven rules readable.
 
 **Acceptance Scenarios**:
 
@@ -104,9 +104,10 @@ The owner reviews, in order: (1) a mood board, (2) a full-screen visual mock of 
 - Network failure during a spin — reels stop on a "spin again" state and show a retry message; never show a false win.
 - Player refreshes after a win — the win and claim options are still shown (server session + local copy).
 - Player reloads or opens the link again — spins left stays the same (counted server-side against their session), not reset to 3.
-- Player clears cookies / uses another browser — they get a new 3 spins. Accepted risk for v1; a soft per-IP daily cap limits abuse.
+- Player clears cookies / uses another browser — they get a new 3 spins. Accepted risk for v1; a soft per-IP daily cap limits abuse. The cap is set by `DAILY_SESSIONS_PER_IP` (default 20; `0` turns it off) so it can be raised if players on shared IPs (offices, mobile networks) are blocked. Players who hit it see "Come back tomorrow".
 - Player wins on spin 1 or 2 — see FR-014: play stops at the first win.
 - Player uses all 3 spins without winning — a "Last Chance!" screen offers one bonus spin. If the bonus spin loses too, a final thank-you screen shows (no discount).
+- Small phones (320×568): the page never scrolls, but the win popup and claim form scroll inside the popup so every field, the consent checkbox and the submit button stay reachable.
 - Same person submits the form twice for one win — stored once (one lead per winning spin).
 - SharpSpring API down or slow — lead kept in Neon, retried by a scheduled job; the player is never shown an error because of the CRM.
 - Player tries to tamper with the result in the browser — the prize must be decided server-side.
@@ -153,7 +154,7 @@ The owner reviews, in order: (1) a mood board, (2) a full-screen visual mock of 
 - **Symbol**: a reel icon (id, display name, kind face/filler, art frames).
 - **Paytable rule**: a combination pattern and its discount.
 - **Spin result**: the three landed symbols, matched rule (or none), discount, win reference.
-- **Player session**: one visitor, identified by a signed cookie; spins used (max 3), win if any.
+- **Player session**: one visitor, identified by a signed cookie; spins used (max 4: 3 regular + 1 Last Chance bonus), win if any.
 - **Spin**: one server-decided spin tied to a session; result and discount.
 - **Win reference**: short human-readable code tied to a winning spin, used on phone and form.
 - **Lead**: claim form submission tied to a winning spin; CRM sync status.
@@ -168,7 +169,7 @@ The owner reviews, in order: (1) a mood board, (2) a full-screen visual mock of 
 - **SC-003**: 100% of spin results shown match the paytable (verified by automated test over all 343 symbol combinations).
 - **SC-004**: No blank bars or scrollbars at any viewport from 320×568 to 3440×1440.
 - **SC-005**: Owner approves mood board, visual mock and asset board before game logic work starts.
-- **SC-006**: 100% of submitted claim forms are stored in Neon; ≥ 99% appear in SharpSpring within 15 minutes.
+- **SC-006**: 100% of submitted claim forms are stored in Neon; ≥ 99% appear in SharpSpring within 15 minutes while SharpSpring is reachable. During a SharpSpring outage, pending leads reach SharpSpring within 24 hours of it recovering (within 15 minutes if the optional external pinger is enabled). This fits the Vercel Hobby limit of one cron run per day.
 - **SC-007**: No session can play more than 4 spins (3 + 1 bonus) or win more than once.
 
 ## Assumptions
@@ -177,5 +178,5 @@ The owner reviews, in order: (1) a mood board, (2) a full-screen visual mock of 
 - Odds are pure random (see FR-007); no rigging or weighting.
 - Filler symbols (cherry, seven, sweets) and all casino décor are sourced (CC0/royalty-free or generated), not supplied.
 - English only, UK audience, £ where currency appears.
-- No user accounts. Personal data is stored only when a winner submits the claim form, in Neon (UK/EU region) and SharpSpring, with consent.
+- No user accounts. Personal data is stored only when a winner submits the claim form, in Neon (UK/EU region) and SharpSpring, with consent. Retention periods are set in [data-model.md → Data retention](./data-model.md#data-retention-uk-gdpr); the lead retention period is confirmed by the owner at launch.
 - Trust already has a SharpSpring account with API access (account ID + secret key) and a phone line for claims.

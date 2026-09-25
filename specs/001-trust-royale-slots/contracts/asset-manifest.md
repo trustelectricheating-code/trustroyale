@@ -1,7 +1,7 @@
 # Contract: Asset manifest (`public/assets/manifest.json`)
 
 Single source of truth for every image, animation, font and sound. Used by:
-1. the Phase B **asset board** page (`/assets.html`) that shows every asset in order with status, and
+1. the Phase C **asset board** page (`/assets.html`) that shows every asset in order with status, and
 2. the runtime loader (PixiJS `Assets` bundles).
 
 ## Shape

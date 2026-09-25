@@ -65,11 +65,26 @@ Content-Type: application/json
 - Success = response `result.creates[0].success == true`; store returned `id` as `crm_lead_id`.
 - Exact field names and dedupe behaviour to be confirmed against the live account in Phase D (research R13).
 
+## Retry strategy (Vercel Hobby plan)
+
+Vercel Hobby only allows cron jobs that run **once per day** (±59 min); a more frequent expression fails the deployment. Retries therefore come from four layers, all free:
+
+| Layer | Trigger | Batch | Purpose |
+|---|---|---|---|
+| 1. Instant send | `waitUntil` after `/api/lead` or the staff phone-claim responds | that lead | Normal path: lead reaches SharpSpring within seconds |
+| 2. Traffic piggyback | `waitUntil` after `/api/session` and `/api/spin` respond | up to 5 due leads | Retries during an outage whenever players are active |
+| 3. Daily cron backstop | Vercel Cron `0 6 * * *` → `/api/cron/crm-sync` | up to 50 due leads | Guarantees a retry at least once a day with zero traffic |
+| 4. External pinger (optional) | cron-job.org (free) every 15 min → `/api/cron/crm-sync` | up to 50 due leads | Restores 15-minute retries during outages; needs no code change |
+
+All layers call one shared function, `retryDueLeads(limit)` in `api/_lib/crmRetry.ts`. A lead is **due** when `crm_status = 'pending'` and `crm_next_try_at <= now()`. Leads are claimed with `UPDATE … SET crm_next_try_at = now() + interval '2 minutes' WHERE id IN (SELECT id … FOR UPDATE SKIP LOCKED LIMIT n) RETURNING …`, so two layers running at once never send the same lead twice. After each failure `crm_attempts` increments and `crm_next_try_at` moves back (5 min, 15 min, 1 h, then 6 h). After 10 failed attempts the status becomes `failed`.
+
+Layer 2 must never slow down or break the player's response: it runs only after the response is sent, catches every error, and is skipped when SharpSpring credentials are not set.
+
+Layer 4 stores `CRON_SECRET` at cron-job.org. That secret can only trigger the retry job and exposes no lead data; rotate it if the pinger is removed.
+
 ## `GET /api/cron/crm-sync` — retry job
 
-Vercel Cron, every 15 minutes (fits Hobby and Pro). Protected by `Authorization: Bearer ${CRON_SECRET}`.
-
-Selects up to 50 leads with `crm_status = 'pending'` and `created_at < now() - 1 minute`, sends each, updates status. After 10 failed attempts sets `failed`.
+Scheduled in `vercel.json` as `0 6 * * *` (Hobby-compatible), optionally also called by the external pinger. Protected by `Authorization: Bearer ${CRON_SECRET}`. Calls `retryDueLeads(50)` and returns `{ "sent": n, "failed": n, "remaining": n }`.
 
 ## `GET /api/admin/win/{winRef}` — phone-claim lookup
 
@@ -92,3 +107,4 @@ For staff taking calls. Protected by HTTP Basic auth (`ADMIN_USER` / `ADMIN_PASS
 | `CRON_SECRET` | Protects the retry job |
 | `ADMIN_USER`, `ADMIN_PASSWORD` | Staff lookup |
 | `PRIVACY_URL` | Linked beside the consent checkbox |
+| `LEAD_RETENTION_DAYS` | Days to keep synced leads before cleanup (owner confirms at Phase F; placeholder 730) |

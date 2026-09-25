@@ -41,7 +41,7 @@ Initial rules (from spec FR-004):
 | `keith-2-any` | keith:2, anyOther:1 | 15 | glow |
 | `neos-3` | neos:3 | 10 | pulse |
 
-Validation: exhaustive test over all 343 combinations confirms each maps to exactly one rule or none, and that no combination without a face wins.
+Validation: exhaustive test over all 343 combinations confirms each maps to exactly one rule or none, and that no combination wins unless it contains a face (Scott, Fiona, Keith) or three Neos. Neos × 3 is the only winning combination with no face.
 
 ## SpinResult
 
@@ -59,7 +59,7 @@ Returned by `/api/spin` (see [contracts/spin-api.md](./contracts/spin-api.md)).
 | `spinsLeft` | 0–3 | Regular spins left after this spin; forced to 0 on a win |
 | `bonusAvailable` | boolean | True only when the 3 regular spins all lost and the bonus is unused |
 | `isBonus` | boolean | This spin was the Last Chance spin |
-| `nearMiss` | boolean | True when two payline symbols form part of a winning rule but the spin lost; drives the "so close" tease (display only) |
+| `nearMiss` | boolean | True only on a losing spin where the payline holds two Scott/Fiona faces in any mix (Scott+Scott, Fiona+Fiona or Scott+Fiona) or exactly two Neos. A single Keith is never a near miss, because a second Keith always wins. Drives the "so close" tease (display only) |
 
 State transitions (client game state):
 
@@ -85,8 +85,8 @@ Accessed from Vercel Functions with `@neondatabase/serverless`. Schema in `db/mi
 | `id` | uuid PK | Stored in signed, `HttpOnly`, `Secure`, `SameSite=Lax` cookie `tr_sid`, 90-day expiry |
 | `created_at` | timestamptz | |
 | `spins_used` | smallint | 0–4, `CHECK (spins_used <= 4)`; spin 4 is the bonus |
-| `won_spin_id` | uuid null FK → spins | Set once; non-null means no more spins |
-| `ip_hash` | text | SHA-256 of IP + salt, for soft daily cap only |
+| `won_spin_id` | uuid null FK → spins, `DEFERRABLE INITIALLY DEFERRED` | Set once; non-null means no more spins |
+| `ip_hash` | text | SHA-256 of IP + salt, for soft daily cap only. Raw IPs are never stored |
 | `utm` | jsonb null | Campaign params from the landing URL, passed to CRM |
 
 ### `spins`
@@ -102,7 +102,27 @@ Accessed from Vercel Functions with `@neondatabase/serverless`. Schema in `db/mi
 | `win_ref` | text null UNIQUE | Only on win; 6 chars from an unambiguous alphabet (no 0/O/1/I), prefixed `TR-` |
 | `created_at` | timestamptz | |
 
-Spin counting is atomic: `UPDATE sessions SET spins_used = spins_used + 1 WHERE id = $1 AND spins_used < 4 AND won_spin_id IS NULL RETURNING spins_used`. Spin 4 is only reachable after 3 losses, because any win sets `won_spin_id` — no row returned means no spins left.
+Spin counting is atomic and runs as **one SQL statement**, because the Neon HTTP driver cannot run interactive transactions (a batched `sql.transaction([...])` cannot branch on an earlier query's result). The server rolls the reels, evaluates the paytable and generates `spinId` and `winRef` (null on a loss) *before* touching the database, then runs:
+
+```sql
+WITH s AS (
+  UPDATE sessions
+     SET spins_used  = spins_used + 1,
+         won_spin_id = CASE WHEN $5::text IS NOT NULL THEN $2::uuid END
+   WHERE id = $1 AND spins_used < 4 AND won_spin_id IS NULL
+   RETURNING id, spins_used
+)
+INSERT INTO spins (id, session_id, spin_no, reels, rule_id, discount, win_ref)
+SELECT $2, s.id, s.spins_used, $3, $4, $6, $5 FROM s
+RETURNING spin_no;
+-- $1 session id, $2 spinId, $3 reels, $4 ruleId, $5 winRef (null = loss), $6 discount
+```
+
+- No row returned means no spins left (403); nothing is counted.
+- A single statement is all-or-nothing: any error, including a `win_ref` `UNIQUE` collision, rolls back the counter too. On a collision, generate a new `winRef` and rerun; on any other error return 500 with the spin not counted.
+- Spin 4 (the bonus) is only reachable after 3 losses, because any win sets `won_spin_id` in the same statement.
+- The row lock taken by the `UPDATE` serialises concurrent spins on one session, so parallel requests cannot exceed 4.
+- `sessions.won_spin_id → spins.id` is declared `DEFERRABLE INITIALLY DEFERRED`, because the session row points at a spin inserted by the same statement.
 
 ### `leads`
 
@@ -120,6 +140,7 @@ Spin counting is atomic: `UPDATE sessions SET spins_used = spins_used + 1 WHERE 
 | `created_at` | timestamptz | |
 | `crm_status` | `'pending' \| 'synced' \| 'failed'` | Starts `pending` |
 | `crm_attempts` | smallint | Incremented per try |
+| `crm_next_try_at` | timestamptz | Earliest time of the next send attempt. Set to `now()` on insert; after a failure, `now() + backoff` (5 min, 15 min, 1 h, then 6 h per attempt). Stops traffic-driven retries from hammering SharpSpring |
 | `crm_lead_id` | text null | SharpSpring lead ID once synced |
 | `crm_last_error` | text null | |
 | `claimed_via` | `'form' \| 'phone'` | `phone` set by staff lookup |
@@ -129,8 +150,10 @@ Lead lifecycle:
 ```text
 pending ──send ok──▶ synced
    │
-   └──send fails──▶ pending (attempts+1) ──… 10 attempts ──▶ failed (shown in staff export for manual entry)
+   └──send fails──▶ pending (attempts+1, crm_next_try_at pushed back) ──… 10 attempts ──▶ failed (shown in staff export for manual entry)
 ```
+
+Send attempts come from four places, all free on the Vercel Hobby plan (see [contracts/lead-api.md](./contracts/lead-api.md#retry-strategy-vercel-hobby-plan)): the instant send after `/api/lead`, traffic-driven retries piggybacked on `/api/session` and `/api/spin`, a once-a-day Vercel Cron backstop, and an optional external pinger.
 
 ## Reel RNG
 
@@ -138,14 +161,25 @@ No weights. Each reel picks one of the 7 symbol IDs with `crypto.randomInt(7)`. 
 
 ## AssetEntry
 
-One row per file in `assets/manifest.json` (schema in [contracts/asset-manifest.md](./contracts/asset-manifest.md)). Drives the Phase B asset board and the runtime loader.
+One row per file in `assets/manifest.json` (schema in [contracts/asset-manifest.md](./contracts/asset-manifest.md)). Drives the Phase C asset board and the runtime loader.
 
 | Field | Type | Rules |
 |---|---|---|
 | `key` | string | Unique, e.g. `face.scott.closed` |
-| `group` | `'cabinet' \| 'symbols' \| 'faces' \| 'fx' \| 'ui' \| 'background' \| 'audio' \| 'fonts'` | Asset board sections, in this order |
+| `group` | `'background' \| 'cabinet' \| 'symbols' \| 'faces' \| 'emblem' \| 'fx' \| 'ui' \| 'fonts' \| 'audio'` | Asset board sections, in this order (matches `groups` in [contracts/asset-manifest.md](./contracts/asset-manifest.md)) |
 | `file` | path | Under `public/assets/` |
 | `status` | `'needed' \| 'placeholder' \| 'draft' \| 'approved'` | Board shows status badge |
 | `source` | `'supplied' \| 'generated' \| 'cc0' \| 'licensed' \| 'custom'` | |
 | `licence` | string | Required unless `supplied` |
 | `sourceUrl` | string \| null | Where it came from |
+
+## Data retention (UK GDPR)
+
+| Data | Kept for | Removed by |
+|---|---|---|
+| `sessions` with no win, and their `spins` | 90 days (matches the `tr_sid` cookie life) | Daily `crm-sync` cron job, cleanup step |
+| `sessions.ip_hash` | 2 days (only needed for the daily cap) | Same cleanup step sets it to null |
+| `leads`, winning `spins` and their `sessions` | `LEAD_RETENTION_DAYS` (owner confirms at Phase F; placeholder 730 days) | Same cleanup step, only for leads with `crm_status = 'synced'` |
+
+Leads in `pending` or `failed` are never auto-deleted, so no lead is lost before it reaches SharpSpring or staff. SharpSpring holds its own copy under Trust's CRM retention policy.
+
