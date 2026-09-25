@@ -1045,8 +1045,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1790341317.2427921,
-    "ast_hash": "8af80b9e62ddbaf4da2b6336d1685b6b",
+    "mtime": 1790343494.7588222,
+    "ast_hash": "4746e26d806d030970a037745666a35c",
     "semantic_hash": ""
   },
   "moodboard.html": {
@@ -1135,23 +1135,23 @@
     "semantic_hash": ""
   },
   "src/main.ts": {
-    "mtime": 1790341290.0478249,
-    "ast_hash": "fa15c83bfe240072b71f1566c85e021e",
+    "mtime": 1790343502.737625,
+    "ast_hash": "a92f90ab43e638015016be9f7e4198d1",
     "semantic_hash": ""
   },
   "src/scene/background.ts": {
-    "mtime": 1790340387.9949856,
-    "ast_hash": "3154be9d3a32c3186d3fa25ec1a8de6f",
+    "mtime": 1790344210.1686025,
+    "ast_hash": "10683cb89d21eb8809c84718c678579c",
     "semantic_hash": ""
   },
   "src/scene/cabinet.ts": {
-    "mtime": 1790341492.6330938,
-    "ast_hash": "deaed789d10b5715024244c1bf51ad64",
+    "mtime": 1790343265.8181922,
+    "ast_hash": "c02457239ba00ddb866cc1debeb50fb9",
     "semantic_hash": ""
   },
   "src/scene/layout.ts": {
-    "mtime": 1790341714.8242922,
-    "ast_hash": "6295810667f6ba3d4b86c6e7be3f99c7",
+    "mtime": 1790343533.8615787,
+    "ast_hash": "e050f03fba50e985210265ca82d3996c",
     "semantic_hash": ""
   },
   "tests/e2e/layout.spec.ts": {
@@ -1165,13 +1165,13 @@
     "semantic_hash": ""
   },
   "public/assets/mock/SOURCES.md": {
-    "mtime": 1790340267.9797766,
-    "ast_hash": "cd1e45e9f353fea0e1e6d498fd32745c",
+    "mtime": 1790344349.4966812,
+    "ast_hash": "8f09294f8361e8e1c80c264c7b3b85d7",
     "semantic_hash": ""
   },
   "specs/001-trust-royale-slots/decisions.md": {
-    "mtime": 1790341228.823366,
-    "ast_hash": "96593ed451f0b38634a5452b8702248f",
+    "mtime": 1790342244.4139614,
+    "ast_hash": "e883b998de2ab94e559b45db3ca83d9c",
     "semantic_hash": ""
   },
   "public/assets/mock/fiona-medallion.webp": {
@@ -1189,44 +1189,139 @@
     "ast_hash": "f80a06e9a58b8baeb082cdafb755fe21",
     "semantic_hash": ""
   },
-  "tests/e2e/__screenshots__/desktop-1920x1080.png": {
-    "mtime": 1790341776.4997883,
-    "ast_hash": "c87e69682550036eb0bd71011f40b3f0",
+  "scripts/capture-gate-b.mjs": {
+    "mtime": 1790344071.1987448,
+    "ast_hash": "c874dba41b79a928b25f13698e24f1ff",
     "semantic_hash": ""
   },
-  "tests/e2e/__screenshots__/desktop-ultrawide-3440x1440.png": {
-    "mtime": 1790341791.1658978,
-    "ast_hash": "f23e52ac5a08ea8574bb490af8df6fe6",
+  "src/scene/cabinetArt.ts": {
+    "mtime": 1790343223.485732,
+    "ast_hash": "39d6abfbbea07176e0115bc234eae1bc",
     "semantic_hash": ""
   },
-  "tests/e2e/__screenshots__/desktop-wide-2560x1440.png": {
-    "mtime": 1790341782.8613553,
-    "ast_hash": "dc93390e2fbe9693314df9625e5f4416",
+  "public/assets/mock/cabinet.webp": {
+    "mtime": 1790343611.586708,
+    "ast_hash": "6b83e1d3290781e88ff0d81c5bf5cd84",
     "semantic_hash": ""
   },
-  "tests/e2e/__screenshots__/ipad-portrait-1024x1366.png": {
-    "mtime": 1790341771.8682747,
-    "ast_hash": "20e8339ba83613119992c9833d12afa7",
+  "public/assets/mock/casino-hall-landscape.webp": {
+    "mtime": 1790343109.9883351,
+    "ast_hash": "3bb3fe6c639e76e53206b3331a22fc11",
     "semantic_hash": ""
   },
-  "tests/e2e/__screenshots__/phone-landscape-844x390.png": {
-    "mtime": 1790341768.4386744,
-    "ast_hash": "0a26e68db4d4537ca379461e9d3a1ad0",
+  "public/assets/mock/casino-hall-portrait.webp": {
+    "mtime": 1790343110.1272578,
+    "ast_hash": "e521636b1e72c20462243fc3d1014d08",
     "semantic_hash": ""
   },
-  "tests/e2e/__screenshots__/phone-portrait-390x844.png": {
-    "mtime": 1790341766.453507,
-    "ast_hash": "ceec5cac97d24898d1281d7776d1bf22",
+  "public/assets/mock/cherry.webp": {
+    "mtime": 1790343110.658543,
+    "ast_hash": "de54c14f7f256cf1269f88e509fd6fd6",
     "semantic_hash": ""
   },
-  "tests/e2e/__screenshots__/phone-small-320x568.png": {
-    "mtime": 1790341764.3829126,
-    "ast_hash": "6dd9bf19e4c4d094c218ffcc795ee157",
+  "public/assets/mock/chip-gold-blank.webp": {
+    "mtime": 1790343110.9801767,
+    "ast_hash": "2d2199d1454b06b3caa37fb9e3ce58c1",
     "semantic_hash": ""
   },
-  ".playwright-mcp/page-2026-09-25T13-02-30-118Z.yml": {
-    "mtime": 1790341350.2194378,
-    "ast_hash": "d35b7389b3493060c5d5c95a376c7bf2",
+  "public/assets/mock/chip-gold-far.webp": {
+    "mtime": 1790344183.431498,
+    "ast_hash": "758cd3318a39aadad56ece81d53daccb",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/chip-gold-near.webp": {
+    "mtime": 1790344183.5155504,
+    "ast_hash": "6fb3c723ebaeed3ba4218f9d17ab1002",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/chip-navy-blank.webp": {
+    "mtime": 1790343111.0578163,
+    "ast_hash": "4ff06bbbd97c67c7136e5d07ab0c87de",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/chip-navy-far.webp": {
+    "mtime": 1790344183.5732644,
+    "ast_hash": "92de24dc256e023a5c9b1517056b34e1",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/chip-navy-near.webp": {
+    "mtime": 1790344183.659638,
+    "ast_hash": "85c43e12c229cd2efe81b16c90b33f84",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/chip-red-blank.webp": {
+    "mtime": 1790343110.8948662,
+    "ast_hash": "e2f592da5199a34bd5245e120800f62d",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/chip-red-far.webp": {
+    "mtime": 1790344183.2839823,
+    "ast_hash": "68d298cd96a5e59c6ad9343f79e7d923",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/chip-red-near.webp": {
+    "mtime": 1790344183.3680868,
+    "ast_hash": "567657aa91b46ce14254359b6b883309",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/chip-white-blank.webp": {
+    "mtime": 1790343111.140979,
+    "ast_hash": "01d6f72e851d8b74de57e1597cae6f19",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/chip-white-far.webp": {
+    "mtime": 1790344183.7204123,
+    "ast_hash": "8e931cf0de70187766c035e79a43e0db",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/chip-white-near.webp": {
+    "mtime": 1790344183.8074555,
+    "ast_hash": "b523b680f3aeb20aa435dc1c791cff84",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/coin-far.webp": {
+    "mtime": 1790344183.8446872,
+    "ast_hash": "b1032576bb2b7bfa50d453a3cdd306ca",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/coin-near.webp": {
+    "mtime": 1790344183.8966923,
+    "ast_hash": "31abe5e39038890071f5830fb3f7d5d1",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/coin.webp": {
+    "mtime": 1790343111.2147286,
+    "ast_hash": "4daa2fa6d223f84c7b5c47bcf9d50f47",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/roulette-wheel-soft.webp": {
+    "mtime": 1790344192.3018856,
+    "ast_hash": "94956381711b0465a0670830de89b175",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/roulette-wheel.webp": {
+    "mtime": 1790343110.5867465,
+    "ast_hash": "f79a7a5aa881f6e2cd1aa33ee35f98fb",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/seven.webp": {
+    "mtime": 1790343110.7309916,
+    "ast_hash": "9a9fb01e4401bc1cf883db548d429e09",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/sweets.webp": {
+    "mtime": 1790343110.812095,
+    "ast_hash": "eb5d6c76af5221b16b398dc5abb5ed0a",
+    "semantic_hash": ""
+  },
+  "test-results/gate-b-video/page@39f2fe08caf332b2e1e98d7d24c24542.webm": {
+    "mtime": 1790344307.5759594,
+    "ast_hash": "13c6ecee8375f891122656fb5ae22bfc",
+    "semantic_hash": ""
+  },
+  "test-results/gate-b-video/page@dce05779c7797130fc2b61db73faad33.webm": {
+    "mtime": 1790344297.1884983,
+    "ast_hash": "dc1642a73fc7ba4d842aa228c407ae27",
     "semantic_hash": ""
   }
 }

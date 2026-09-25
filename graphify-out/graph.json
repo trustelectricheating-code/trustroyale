@@ -56,55 +56,94 @@
       "norm_label": "workflowlayoutfeedback"
     },
     {
+      "label": "Depth",
+      "file_type": "code",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L26",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "src_scene_background_depth",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "depth"
+    },
+    {
+      "label": "EnvironmentScene",
+      "file_type": "code",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L40",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "src_scene_background_environmentscene",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "environmentscene"
+    },
+    {
+      "label": "FloatingItem",
+      "file_type": "code",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L28",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "id": "src_scene_background_floatingitem",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "floatingitem"
+    },
+    {
       "label": "CabinetScene",
       "file_type": "code",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L18",
+      "source_location": "L16",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_scene_cabinet_cabinetscene",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "cabinetscene"
     },
     {
       "label": "LayoutRect",
       "file_type": "code",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L8",
+      "source_location": "L4",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_scene_layout_layoutrect",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "layoutrect"
     },
     {
       "label": "SafeAreaInsets",
       "file_type": "code",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L1",
+      "source_location": "L3",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_scene_layout_safeareainsets",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "safeareainsets"
     },
     {
       "label": "SceneLayout",
       "file_type": "code",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L15",
+      "source_location": "L6",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_scene_layout_scenelayout",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "scenelayout"
     },
     {
@@ -943,30 +982,6 @@
       "norm_label": "collinearbacktrack()"
     },
     {
-      "label": "connectionEndpointSide()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/architecture/render-architecture.mjs",
-      "source_location": "L919",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_architecture_render_architecture_connectionendpointside",
-      "community": 12,
-      "community_name": "render-architecture.mjs",
-      "norm_label": "connectionendpointside()"
-    },
-    {
-      "label": "connectionSides()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/architecture/render-architecture.mjs",
-      "source_location": "L910",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_architecture_render_architecture_connectionsides",
-      "community": 12,
-      "community_name": "render-architecture.mjs",
-      "norm_label": "connectionsides()"
-    },
-    {
       "label": "expandBoundaryForReadableTitle()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/architecture/render-architecture.mjs",
@@ -1073,6 +1088,18 @@
       "community": 12,
       "community_name": "render-architecture.mjs",
       "norm_label": "porthascornerclearance()"
+    },
+    {
+      "label": "rectContains()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/architecture/render-architecture.mjs",
+      "source_location": "L133",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_architecture_render_architecture_rectcontains",
+      "community": 12,
+      "community_name": "render-architecture.mjs",
+      "norm_label": "rectcontains()"
     },
     {
       "label": "renderBoundaryFrame()",
@@ -1219,112 +1246,16 @@
       "norm_label": "sideawarebridgecandidates()"
     },
     {
-      "label": "flowSides()",
+      "label": "focusEdgeAttrs()",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/dataflow/render-dataflow.mjs",
-      "source_location": "L324",
+      "source_file": ".agents/skills/archify/renderers/shared/cli.mjs",
+      "source_location": "L211",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_dataflow_render_dataflow_flowsides",
+      "id": "agents_skills_archify_renderers_shared_cli_focusedgeattrs",
       "community": 12,
       "community_name": "render-architecture.mjs",
-      "norm_label": "flowsides()"
-    },
-    {
-      "label": "transitionSides()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/lifecycle/render-lifecycle.mjs",
-      "source_location": "L374",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_lifecycle_render_lifecycle_transitionsides",
-      "community": 12,
-      "community_name": "render-architecture.mjs",
-      "norm_label": "transitionsides()"
-    },
-    {
-      "label": "anchor()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L1121",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_anchor",
-      "community": 12,
-      "community_name": "render-architecture.mjs",
-      "norm_label": "anchor()"
-    },
-    {
-      "label": "automaticPortSpread()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L1214",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_automaticportspread",
-      "community": 12,
-      "community_name": "render-architecture.mjs",
-      "norm_label": "automaticportspread()"
-    },
-    {
-      "label": "chosenSide()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L1288",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_chosenside",
-      "community": 12,
-      "community_name": "render-architecture.mjs",
-      "norm_label": "chosenside()"
-    },
-    {
-      "label": "defaultFromSide()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L1274",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_defaultfromside",
-      "community": 12,
-      "community_name": "render-architecture.mjs",
-      "norm_label": "defaultfromside()"
-    },
-    {
-      "label": "defaultToSide()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L1281",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_defaulttoside",
-      "community": 12,
-      "community_name": "render-architecture.mjs",
-      "norm_label": "defaulttoside()"
-    },
-    {
-      "label": "roundedPath()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L1303",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_roundedpath",
-      "community": 12,
-      "community_name": "render-architecture.mjs",
-      "norm_label": "roundedpath()"
-    },
-    {
-      "label": "routeHonorsEndpointSides()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L253",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_routehonorsendpointsides",
-      "community": 12,
-      "community_name": "render-architecture.mjs",
-      "norm_label": "routehonorsendpointsides()"
+      "norm_label": "focusedgeattrs()"
     },
     {
       "label": "boundaryBox()",
@@ -1759,6 +1690,42 @@
       "norm_label": "svg()"
     },
     {
+      "label": "renderComponent()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/architecture/render-architecture.mjs",
+      "source_location": "L981",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_architecture_render_architecture_rendercomponent",
+      "community": 13,
+      "community_name": "render-sequence.mjs",
+      "norm_label": "rendercomponent()"
+    },
+    {
+      "label": "renderNode()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/dataflow/render-dataflow.mjs",
+      "source_location": "L372",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_dataflow_render_dataflow_rendernode",
+      "community": 13,
+      "community_name": "render-sequence.mjs",
+      "norm_label": "rendernode()"
+    },
+    {
+      "label": "renderState()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/lifecycle/render-lifecycle.mjs",
+      "source_location": "L432",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_lifecycle_render_lifecycle_renderstate",
+      "community": 13,
+      "community_name": "render-sequence.mjs",
+      "norm_label": "renderstate()"
+    },
+    {
       "label": "messageGeometry()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/sequence/render-sequence.mjs",
@@ -1867,6 +1834,18 @@
       "norm_label": "rendermessage()"
     },
     {
+      "label": "renderParticipant()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/sequence/render-sequence.mjs",
+      "source_location": "L312",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_sequence_render_sequence_renderparticipant",
+      "community": 13,
+      "community_name": "render-sequence.mjs",
+      "norm_label": "renderparticipant()"
+    },
+    {
       "label": "renderSegment()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/sequence/render-sequence.mjs",
@@ -1915,16 +1894,100 @@
       "norm_label": "segmentlabelbox()"
     },
     {
-      "label": "validateSequence()",
+      "label": "brandLabelFitWidth()",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/sequence/render-sequence.mjs",
-      "source_location": "L148",
+      "source_file": ".agents/skills/archify/renderers/shared/brand-marks.mjs",
+      "source_location": "L521",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_sequence_render_sequence_validatesequence",
+      "id": "agents_skills_archify_renderers_shared_brand_marks_brandlabelfitwidth",
       "community": 13,
       "community_name": "render-sequence.mjs",
-      "norm_label": "validatesequence()"
+      "norm_label": "brandlabelfitwidth()"
+    },
+    {
+      "label": "brandMarkFor()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/brand-marks.mjs",
+      "source_location": "L507",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_brand_marks_brandmarkfor",
+      "community": 13,
+      "community_name": "render-sequence.mjs",
+      "norm_label": "brandmarkfor()"
+    },
+    {
+      "label": "brandMetadataFor()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/brand-marks.mjs",
+      "source_location": "L511",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_brand_marks_brandmetadatafor",
+      "community": 13,
+      "community_name": "render-sequence.mjs",
+      "norm_label": "brandmetadatafor()"
+    },
+    {
+      "label": "markAttrs()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/brand-marks.mjs",
+      "source_location": "L534",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_brand_marks_markattrs",
+      "community": 13,
+      "community_name": "render-sequence.mjs",
+      "norm_label": "markattrs()"
+    },
+    {
+      "label": "renderBrandMark()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/brand-marks.mjs",
+      "source_location": "L544",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_brand_marks_renderbrandmark",
+      "community": 13,
+      "community_name": "render-sequence.mjs",
+      "norm_label": "renderbrandmark()"
+    },
+    {
+      "label": "animateAttr()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/cli.mjs",
+      "source_location": "L169",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_cli_animateattr",
+      "community": 13,
+      "community_name": "render-sequence.mjs",
+      "norm_label": "animateattr()"
+    },
+    {
+      "label": "focusNodeAttrs()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/cli.mjs",
+      "source_location": "L181",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_cli_focusnodeattrs",
+      "community": 13,
+      "community_name": "render-sequence.mjs",
+      "norm_label": "focusnodeattrs()"
+    },
+    {
+      "label": "focusNodeTitle()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/cli.mjs",
+      "source_location": "L205",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_cli_focusnodetitle",
+      "community": 13,
+      "community_name": "render-sequence.mjs",
+      "norm_label": "focusnodetitle()"
     },
     {
       "label": "svgAccessibleText()",
@@ -1939,40 +2002,40 @@
       "norm_label": "svgaccessibletext()"
     },
     {
-      "label": "routePointsValue()",
+      "label": "escapeHtml()",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L1296",
+      "source_file": ".agents/skills/archify/renderers/shared/i18n.mjs",
+      "source_location": "L6",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_routepointsvalue",
+      "id": "agents_skills_archify_renderers_shared_i18n_escapehtml",
       "community": 13,
       "community_name": "render-sequence.mjs",
-      "norm_label": "routepointsvalue()"
+      "norm_label": "escapehtml()"
     },
     {
-      "label": "minimumNodeTextWidth()",
+      "label": "fittedNodeFontSize()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/shared/text-fit.mjs",
-      "source_location": "L42",
+      "source_location": "L32",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_text_fit_minimumnodetextwidth",
+      "id": "agents_skills_archify_renderers_shared_text_fit_fittednodefontsize",
       "community": 13,
       "community_name": "render-sequence.mjs",
-      "norm_label": "minimumnodetextwidth()"
+      "norm_label": "fittednodefontsize()"
     },
     {
-      "label": "textUnits()",
+      "label": "renderSemanticSigil()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/shared/utils.mjs",
-      "source_location": "L220",
+      "source_location": "L80",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_utils_textunits",
+      "id": "agents_skills_archify_renderers_shared_utils_rendersemanticsigil",
       "community": 13,
       "community_name": "render-sequence.mjs",
-      "norm_label": "textunits()"
+      "norm_label": "rendersemanticsigil()"
     },
     {
       "label": "presetRuntime()",
@@ -2299,18 +2362,6 @@
       "norm_label": "svgblock()"
     },
     {
-      "label": "rectContains()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/architecture/render-architecture.mjs",
-      "source_location": "L133",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_architecture_render_architecture_rectcontains",
-      "community": 14,
-      "community_name": "geometry.mjs",
-      "norm_label": "rectcontains()"
-    },
-    {
       "label": "validateArchitecture()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/architecture/render-architecture.mjs",
@@ -2347,16 +2398,16 @@
       "norm_label": "validatelifecycle()"
     },
     {
-      "label": "brandTopRailProblem()",
+      "label": "validateSequence()",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/brand-marks.mjs",
-      "source_location": "L525",
+      "source_file": ".agents/skills/archify/renderers/sequence/render-sequence.mjs",
+      "source_location": "L148",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_brand_marks_brandtoprailproblem",
+      "id": "agents_skills_archify_renderers_sequence_render_sequence_validatesequence",
       "community": 14,
       "community_name": "geometry.mjs",
-      "norm_label": "brandtoprailproblem()"
+      "norm_label": "validatesequence()"
     },
     {
       "label": "recordDiagnostic()",
@@ -2719,18 +2770,6 @@
       "norm_label": "orientation()"
     },
     {
-      "label": "pointInBox()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L1088",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_pointinbox",
-      "community": 14,
-      "community_name": "geometry.mjs",
-      "norm_label": "pointinbox()"
-    },
-    {
       "label": "pointLiesOnSegment()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
@@ -2839,6 +2878,18 @@
       "norm_label": "routebudgetmetrics()"
     },
     {
+      "label": "routeHonorsEndpointSides()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
+      "source_location": "L253",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_geometry_routehonorsendpointsides",
+      "community": 14,
+      "community_name": "geometry.mjs",
+      "norm_label": "routehonorsendpointsides()"
+    },
+    {
       "label": "sameRelationship()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
@@ -2849,18 +2900,6 @@
       "community": 14,
       "community_name": "geometry.mjs",
       "norm_label": "samerelationship()"
-    },
-    {
-      "label": "segmentIntersectsRect()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L37",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_segmentintersectsrect",
-      "community": 14,
-      "community_name": "geometry.mjs",
-      "norm_label": "segmentintersectsrect()"
     },
     {
       "label": "segmentPosition()",
@@ -2971,18 +3010,6 @@
       "norm_label": "suggestlabelpairfix()"
     },
     {
-      "label": "availableNodeTextWidth()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/text-fit.mjs",
-      "source_location": "L47",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_text_fit_availablenodetextwidth",
-      "community": 14,
-      "community_name": "geometry.mjs",
-      "norm_label": "availablenodetextwidth()"
-    },
-    {
       "label": "rect()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/test/geometry.test.mjs",
@@ -2990,6 +3017,18 @@
       "_callable": true,
       "_origin": "ast",
       "id": "agents_skills_archify_test_geometry_test_rect",
+      "community": 14,
+      "community_name": "geometry.mjs",
+      "norm_label": "rect()"
+    },
+    {
+      "label": "rect()",
+      "file_type": "code",
+      "source_file": "src/scene/layout.ts",
+      "source_location": "L20",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "src_scene_layout_rect",
       "community": 14,
       "community_name": "geometry.mjs",
       "norm_label": "rect()"
@@ -3919,16 +3958,28 @@
       "norm_label": "svg()"
     },
     {
-      "label": "renderComponent()",
+      "label": "connectionEndpointSide()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/architecture/render-architecture.mjs",
-      "source_location": "L981",
+      "source_location": "L919",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_architecture_render_architecture_rendercomponent",
+      "id": "agents_skills_archify_renderers_architecture_render_architecture_connectionendpointside",
       "community": 167,
       "community_name": "render-dataflow.mjs",
-      "norm_label": "rendercomponent()"
+      "norm_label": "connectionendpointside()"
+    },
+    {
+      "label": "connectionSides()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/architecture/render-architecture.mjs",
+      "source_location": "L910",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_architecture_render_architecture_connectionsides",
+      "community": 167,
+      "community_name": "render-dataflow.mjs",
+      "norm_label": "connectionsides()"
     },
     {
       "label": "flowLabelSize()",
@@ -3941,6 +3992,18 @@
       "community": 167,
       "community_name": "render-dataflow.mjs",
       "norm_label": "flowlabelsize()"
+    },
+    {
+      "label": "flowSides()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/dataflow/render-dataflow.mjs",
+      "source_location": "L324",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_dataflow_render_dataflow_flowsides",
+      "community": 167,
+      "community_name": "render-dataflow.mjs",
+      "norm_label": "flowsides()"
     },
     {
       "label": "measureNode()",
@@ -3989,18 +4052,6 @@
       "community": 167,
       "community_name": "render-dataflow.mjs",
       "norm_label": "renderflowpath()"
-    },
-    {
-      "label": "renderNode()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/dataflow/render-dataflow.mjs",
-      "source_location": "L372",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_dataflow_render_dataflow_rendernode",
-      "community": 167,
-      "community_name": "render-dataflow.mjs",
-      "norm_label": "rendernode()"
     },
     {
       "label": "renderStage()",
@@ -4063,160 +4114,88 @@
       "norm_label": "stagex()"
     },
     {
-      "label": "renderState()",
+      "label": "transitionSides()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/lifecycle/render-lifecycle.mjs",
-      "source_location": "L432",
+      "source_location": "L374",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_lifecycle_render_lifecycle_renderstate",
+      "id": "agents_skills_archify_renderers_lifecycle_render_lifecycle_transitionsides",
       "community": 167,
       "community_name": "render-dataflow.mjs",
-      "norm_label": "renderstate()"
+      "norm_label": "transitionsides()"
     },
     {
-      "label": "renderParticipant()",
+      "label": "anchor()",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/sequence/render-sequence.mjs",
-      "source_location": "L312",
+      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
+      "source_location": "L1121",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_sequence_render_sequence_renderparticipant",
+      "id": "agents_skills_archify_renderers_shared_geometry_anchor",
       "community": 167,
       "community_name": "render-dataflow.mjs",
-      "norm_label": "renderparticipant()"
+      "norm_label": "anchor()"
     },
     {
-      "label": "brandLabelFitWidth()",
+      "label": "automaticPortSpread()",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/brand-marks.mjs",
-      "source_location": "L521",
+      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
+      "source_location": "L1214",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_brand_marks_brandlabelfitwidth",
+      "id": "agents_skills_archify_renderers_shared_geometry_automaticportspread",
       "community": 167,
       "community_name": "render-dataflow.mjs",
-      "norm_label": "brandlabelfitwidth()"
+      "norm_label": "automaticportspread()"
     },
     {
-      "label": "brandMarkFor()",
+      "label": "chosenSide()",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/brand-marks.mjs",
-      "source_location": "L507",
+      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
+      "source_location": "L1288",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_brand_marks_brandmarkfor",
+      "id": "agents_skills_archify_renderers_shared_geometry_chosenside",
       "community": 167,
       "community_name": "render-dataflow.mjs",
-      "norm_label": "brandmarkfor()"
+      "norm_label": "chosenside()"
     },
     {
-      "label": "brandMetadataFor()",
+      "label": "defaultFromSide()",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/brand-marks.mjs",
-      "source_location": "L511",
+      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
+      "source_location": "L1274",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_brand_marks_brandmetadatafor",
+      "id": "agents_skills_archify_renderers_shared_geometry_defaultfromside",
       "community": 167,
       "community_name": "render-dataflow.mjs",
-      "norm_label": "brandmetadatafor()"
+      "norm_label": "defaultfromside()"
     },
     {
-      "label": "markAttrs()",
+      "label": "defaultToSide()",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/brand-marks.mjs",
-      "source_location": "L534",
+      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
+      "source_location": "L1281",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_brand_marks_markattrs",
+      "id": "agents_skills_archify_renderers_shared_geometry_defaulttoside",
       "community": 167,
       "community_name": "render-dataflow.mjs",
-      "norm_label": "markattrs()"
+      "norm_label": "defaulttoside()"
     },
     {
-      "label": "renderBrandMark()",
+      "label": "routePointsValue()",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/brand-marks.mjs",
-      "source_location": "L544",
+      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
+      "source_location": "L1296",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_brand_marks_renderbrandmark",
+      "id": "agents_skills_archify_renderers_shared_geometry_routepointsvalue",
       "community": 167,
       "community_name": "render-dataflow.mjs",
-      "norm_label": "renderbrandmark()"
-    },
-    {
-      "label": "animateAttr()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/cli.mjs",
-      "source_location": "L169",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_cli_animateattr",
-      "community": 167,
-      "community_name": "render-dataflow.mjs",
-      "norm_label": "animateattr()"
-    },
-    {
-      "label": "focusNodeAttrs()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/cli.mjs",
-      "source_location": "L181",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_cli_focusnodeattrs",
-      "community": 167,
-      "community_name": "render-dataflow.mjs",
-      "norm_label": "focusnodeattrs()"
-    },
-    {
-      "label": "focusNodeTitle()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/cli.mjs",
-      "source_location": "L205",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_cli_focusnodetitle",
-      "community": 167,
-      "community_name": "render-dataflow.mjs",
-      "norm_label": "focusnodetitle()"
-    },
-    {
-      "label": "escapeHtml()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/i18n.mjs",
-      "source_location": "L6",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_i18n_escapehtml",
-      "community": 167,
-      "community_name": "render-dataflow.mjs",
-      "norm_label": "escapehtml()"
-    },
-    {
-      "label": "fittedNodeFontSize()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/text-fit.mjs",
-      "source_location": "L32",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_text_fit_fittednodefontsize",
-      "community": 167,
-      "community_name": "render-dataflow.mjs",
-      "norm_label": "fittednodefontsize()"
-    },
-    {
-      "label": "renderSemanticSigil()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/utils.mjs",
-      "source_location": "L80",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_utils_rendersemanticsigil",
-      "community": 167,
-      "community_name": "render-dataflow.mjs",
-      "norm_label": "rendersemanticsigil()"
+      "norm_label": "routepointsvalue()"
     },
     {
       "label": "render()",
@@ -6283,6 +6262,18 @@
       "norm_label": "waitforreader()"
     },
     {
+      "label": "catalogKeys()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/i18n.mjs",
+      "source_location": "L593",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_i18n_catalogkeys",
+      "community": 30,
+      "community_name": "cli.mjs",
+      "norm_label": "catalogkeys()"
+    },
+    {
       "label": "formatMessage()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/shared/i18n.mjs",
@@ -6317,6 +6308,18 @@
       "community": 30,
       "community_name": "cli.mjs",
       "norm_label": "resolvelocale()"
+    },
+    {
+      "label": "translateCount()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/i18n.mjs",
+      "source_location": "L579",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_i18n_translatecount",
+      "community": 30,
+      "community_name": "cli.mjs",
+      "norm_label": "translatecount()"
     },
     {
       "label": "translateMessage()",
@@ -6379,16 +6382,64 @@
       "norm_label": "serializescriptjson()"
     },
     {
-      "label": "render()",
+      "label": "authoredExample()",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
-      "source_location": "L23",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
+      "source_location": "L51",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_test_settled_flow_test_render",
+      "id": "agents_skills_archify_test_i18n_test_authoredexample",
       "community": 30,
       "community_name": "cli.mjs",
-      "norm_label": "render()"
+      "norm_label": "authoredexample()"
+    },
+    {
+      "label": "evaluate()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
+      "source_location": "L102",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_test_i18n_test_evaluate",
+      "community": 30,
+      "community_name": "cli.mjs",
+      "norm_label": "evaluate()"
+    },
+    {
+      "label": "example()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
+      "source_location": "L34",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_test_i18n_test_example",
+      "community": 30,
+      "community_name": "cli.mjs",
+      "norm_label": "example()"
+    },
+    {
+      "label": "loadArtifact()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
+      "source_location": "L116",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_test_i18n_test_loadartifact",
+      "community": 30,
+      "community_name": "cli.mjs",
+      "norm_label": "loadartifact()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
+      "source_location": "L86",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_test_i18n_test_run",
+      "community": 30,
+      "community_name": "cli.mjs",
+      "norm_label": "run()"
     },
     {
       "label": "renderLegend()",
@@ -6415,6 +6466,18 @@
       "norm_label": "renderlegend()"
     },
     {
+      "label": "brandTopRailProblem()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/brand-marks.mjs",
+      "source_location": "L525",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_brand_marks_brandtoprailproblem",
+      "community": 31,
+      "community_name": "workflow-compiler.mjs",
+      "norm_label": "brandtoprailproblem()"
+    },
+    {
       "label": "throwDiagnosticError()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/shared/diagnostics.mjs",
@@ -6439,6 +6502,18 @@
       "norm_label": "withdiagnosticrecordingsuppressed()"
     },
     {
+      "label": "pointInBox()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
+      "source_location": "L1088",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_geometry_pointinbox",
+      "community": 31,
+      "community_name": "workflow-compiler.mjs",
+      "norm_label": "pointinbox()"
+    },
+    {
       "label": "polylinePath()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
@@ -6451,16 +6526,16 @@
       "norm_label": "polylinepath()"
     },
     {
-      "label": "variantAccent()",
+      "label": "segmentIntersectsRect()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L1375",
+      "source_location": "L37",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_variantaccent",
+      "id": "agents_skills_archify_renderers_shared_geometry_segmentintersectsrect",
       "community": 31,
       "community_name": "workflow-compiler.mjs",
-      "norm_label": "variantaccent()"
+      "norm_label": "segmentintersectsrect()"
     },
     {
       "label": "legendFootprint()",
@@ -6533,6 +6608,42 @@
       "community": 31,
       "community_name": "workflow-compiler.mjs",
       "norm_label": "resolvelegend()"
+    },
+    {
+      "label": "availableNodeTextWidth()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/text-fit.mjs",
+      "source_location": "L47",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_text_fit_availablenodetextwidth",
+      "community": 31,
+      "community_name": "workflow-compiler.mjs",
+      "norm_label": "availablenodetextwidth()"
+    },
+    {
+      "label": "minimumNodeTextWidth()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/text-fit.mjs",
+      "source_location": "L42",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_text_fit_minimumnodetextwidth",
+      "community": 31,
+      "community_name": "workflow-compiler.mjs",
+      "norm_label": "minimumnodetextwidth()"
+    },
+    {
+      "label": "textUnits()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/utils.mjs",
+      "source_location": "L220",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_utils_textunits",
+      "community": 31,
+      "community_name": "workflow-compiler.mjs",
+      "norm_label": "textunits()"
     },
     {
       "label": "authoredNodeHeight()",
@@ -8323,18 +8434,6 @@
       "norm_label": "routevia()"
     },
     {
-      "label": "focusEdgeAttrs()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/cli.mjs",
-      "source_location": "L211",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_cli_focusedgeattrs",
-      "community": 41,
-      "community_name": "render-lifecycle.mjs",
-      "norm_label": "focusedgeattrs()"
-    },
-    {
       "label": "svgRootAttrs()",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/shared/cli.mjs",
@@ -8345,6 +8444,30 @@
       "community": 41,
       "community_name": "render-lifecycle.mjs",
       "norm_label": "svgrootattrs()"
+    },
+    {
+      "label": "roundedPath()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
+      "source_location": "L1303",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_geometry_roundedpath",
+      "community": 41,
+      "community_name": "render-lifecycle.mjs",
+      "norm_label": "roundedpath()"
+    },
+    {
+      "label": "variantAccent()",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
+      "source_location": "L1375",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_geometry_variantaccent",
+      "community": 41,
+      "community_name": "render-lifecycle.mjs",
+      "norm_label": "variantaccent()"
     },
     {
       "label": "compactMessage()",
@@ -8794,181 +8917,241 @@
       "label": "boot()",
       "file_type": "code",
       "source_file": "src/main.ts",
-      "source_location": "L29",
+      "source_location": "L30",
       "_callable": true,
       "_origin": "ast",
       "id": "src_main_boot",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "boot()"
     },
     {
       "label": "placeElement()",
       "file_type": "code",
       "source_file": "src/main.ts",
-      "source_location": "L22",
+      "source_location": "L23",
       "_callable": true,
       "_origin": "ast",
       "id": "src_main_placeelement",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "placeelement()"
     },
     {
       "label": "readSafeAreaInsets()",
       "file_type": "code",
       "source_file": "src/main.ts",
-      "source_location": "L7",
+      "source_location": "L8",
       "_callable": true,
       "_origin": "ast",
       "id": "src_main_readsafeareainsets",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "readsafeareainsets()"
+    },
+    {
+      "label": "animateBackground()",
+      "file_type": "code",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L184",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "src_scene_background_animatebackground",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "animatebackground()"
+    },
+    {
+      "label": "card()",
+      "file_type": "code",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L70",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "src_scene_background_card",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "card()"
+    },
+    {
+      "label": "chip()",
+      "file_type": "code",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L61",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "src_scene_background_chip",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "chip()"
+    },
+    {
+      "label": "cover()",
+      "file_type": "code",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L147",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "src_scene_background_cover",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "cover()"
     },
     {
       "label": "createBackground()",
       "file_type": "code",
       "source_file": "src/scene/background.ts",
-      "source_location": "L4",
+      "source_location": "L83",
       "_callable": true,
       "_origin": "ast",
       "id": "src_scene_background_createbackground",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "createbackground()"
     },
     {
       "label": "drawBackground()",
       "file_type": "code",
       "source_file": "src/scene/background.ts",
-      "source_location": "L10",
+      "source_location": "L154",
       "_callable": true,
       "_origin": "ast",
       "id": "src_scene_background_drawbackground",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "drawbackground()"
+    },
+    {
+      "label": "sprite()",
+      "file_type": "code",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L53",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "src_scene_background_sprite",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "sprite()"
+    },
+    {
+      "label": "centredSprite()",
+      "file_type": "code",
+      "source_file": "src/scene/cabinet.ts",
+      "source_location": "L18",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "src_scene_cabinet_centredsprite",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "centredsprite()"
     },
     {
       "label": "createCabinet()",
       "file_type": "code",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L50",
+      "source_location": "L103",
       "_callable": true,
       "_origin": "ast",
       "id": "src_scene_cabinet_createcabinet",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "createcabinet()"
     },
     {
-      "label": "label()",
+      "label": "createDrum()",
       "file_type": "code",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L24",
+      "source_location": "L43",
       "_callable": true,
       "_origin": "ast",
-      "id": "src_scene_cabinet_label",
+      "id": "src_scene_cabinet_createdrum",
       "community": 45,
-      "community_name": "main.ts",
-      "norm_label": "label()"
+      "community_name": "cabinet.ts",
+      "norm_label": "createdrum()"
     },
     {
       "label": "layoutCabinet()",
       "file_type": "code",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L190",
+      "source_location": "L137",
       "_callable": true,
       "_origin": "ast",
       "id": "src_scene_cabinet_layoutcabinet",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "layoutcabinet()"
     },
     {
       "label": "maskedMedallion()",
       "file_type": "code",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L40",
+      "source_location": "L27",
       "_callable": true,
       "_origin": "ast",
       "id": "src_scene_cabinet_maskedmedallion",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "maskedmedallion()"
     },
     {
-      "label": "place()",
+      "label": "readout()",
       "file_type": "code",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L185",
+      "source_location": "L84",
       "_callable": true,
       "_origin": "ast",
-      "id": "src_scene_cabinet_place",
+      "id": "src_scene_cabinet_readout",
       "community": 45,
-      "community_name": "main.ts",
-      "norm_label": "place()"
+      "community_name": "cabinet.ts",
+      "norm_label": "readout()"
     },
     {
-      "label": "symbol()",
+      "label": "reelSymbol()",
       "file_type": "code",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L31",
+      "source_location": "L37",
       "_callable": true,
       "_origin": "ast",
-      "id": "src_scene_cabinet_symbol",
+      "id": "src_scene_cabinet_reelsymbol",
       "community": 45,
-      "community_name": "main.ts",
-      "norm_label": "symbol()"
-    },
-    {
-      "label": "centredRect()",
-      "file_type": "code",
-      "source_file": "src/scene/layout.ts",
-      "source_location": "L39",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "src_scene_layout_centredrect",
-      "community": 45,
-      "community_name": "main.ts",
-      "norm_label": "centredrect()"
+      "community_name": "cabinet.ts",
+      "norm_label": "reelsymbol()"
     },
     {
       "label": "computeLayout()",
       "file_type": "code",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L43",
+      "source_location": "L46",
       "_callable": true,
       "_origin": "ast",
       "id": "src_scene_layout_computelayout",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "computelayout()"
     },
     {
-      "label": "rect()",
+      "label": "overlays()",
       "file_type": "code",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L31",
+      "source_location": "L28",
       "_callable": true,
       "_origin": "ast",
-      "id": "src_scene_layout_rect",
+      "id": "src_scene_layout_overlays",
       "community": 45,
-      "community_name": "main.ts",
-      "norm_label": "rect()"
+      "community_name": "cabinet.ts",
+      "norm_label": "overlays()"
     },
     {
-      "label": "withScale()",
+      "label": "scaled()",
       "file_type": "code",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L35",
+      "source_location": "L24",
       "_callable": true,
       "_origin": "ast",
-      "id": "src_scene_layout_withscale",
+      "id": "src_scene_layout_scaled",
       "community": 45,
-      "community_name": "main.ts",
-      "norm_label": "withscale()"
+      "community_name": "cabinet.ts",
+      "norm_label": "scaled()"
     },
     {
       "label": "expectInside()",
@@ -8979,7 +9162,7 @@
       "_origin": "ast",
       "id": "tests_unit_layout_test_expectinside",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "expectinside()"
     },
     {
@@ -10375,88 +10558,16 @@
       "norm_label": "validatejson()"
     },
     {
-      "label": "catalogKeys()",
+      "label": "render()",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/i18n.mjs",
-      "source_location": "L593",
+      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
+      "source_location": "L23",
       "_callable": true,
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_i18n_catalogkeys",
+      "id": "agents_skills_archify_test_settled_flow_test_render",
       "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "catalogkeys()"
-    },
-    {
-      "label": "translateCount()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/i18n.mjs",
-      "source_location": "L579",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_i18n_translatecount",
-      "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "translatecount()"
-    },
-    {
-      "label": "authoredExample()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L51",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test_authoredexample",
-      "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "authoredexample()"
-    },
-    {
-      "label": "evaluate()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L102",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test_evaluate",
-      "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "evaluate()"
-    },
-    {
-      "label": "example()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L34",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test_example",
-      "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "example()"
-    },
-    {
-      "label": "loadArtifact()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L116",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test_loadartifact",
-      "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "loadartifact()"
-    },
-    {
-      "label": "run()",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L86",
-      "_callable": true,
-      "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test_run",
-      "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "run()"
+      "community_name": "settled-flow.test.mjs",
+      "norm_label": "render()"
     },
     {
       "label": "executable()",
@@ -15859,26 +15970,26 @@
       "norm_label": "participanttextfit"
     },
     {
-      "label": "text-fit.mjs",
+      "label": "arrowClassMap",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/text-fit.mjs",
-      "source_location": "L1",
+      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
+      "source_location": "L1366",
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_text_fit",
+      "id": "agents_skills_archify_renderers_shared_geometry_arrowclassmap",
       "community": 13,
       "community_name": "render-sequence.mjs",
-      "norm_label": "text-fit.mjs"
+      "norm_label": "arrowclassmap"
     },
     {
-      "label": "nodeTextFit",
+      "label": "componentFill",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/text-fit.mjs",
-      "source_location": "L24",
+      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
+      "source_location": "L1346",
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_text_fit_nodetextfit",
+      "id": "agents_skills_archify_renderers_shared_geometry_componentfill",
       "community": 13,
       "community_name": "render-sequence.mjs",
-      "norm_label": "nodetextfit"
+      "norm_label": "componentfill"
     },
     {
       "label": "preset-tryon.test.mjs",
@@ -19104,15 +19215,15 @@
       "norm_label": "pathcache"
     },
     {
-      "label": "componentFill",
+      "label": "automaticPorts",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L1346",
+      "source_file": ".agents/skills/archify/renderers/lifecycle/render-lifecycle.mjs",
+      "source_location": "L383",
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_componentfill",
+      "id": "agents_skills_archify_renderers_lifecycle_render_lifecycle_automaticports",
       "community": 167,
       "community_name": "render-dataflow.mjs",
-      "norm_label": "componentfill"
+      "norm_label": "automaticports"
     },
     {
       "label": "componentText",
@@ -23735,6 +23846,17 @@
       "norm_label": "gate a \u2014 visual direction (2026-09-25)"
     },
     {
+      "label": "Gate B round 3 \u2014 realism (2026-09-25)",
+      "file_type": "document",
+      "source_file": "specs/001-trust-royale-slots/decisions.md",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "specs_001_trust_royale_slots_decisions_gate_b_round_3_realism_2026_09_25",
+      "community": 222,
+      "community_name": "Owner decisions \u2014 Trust Royale",
+      "norm_label": "gate b round 3 \u2014 realism (2026-09-25)"
+    },
+    {
       "label": "Image generation (2026-09-25)",
       "file_type": "document",
       "source_file": "specs/001-trust-royale-slots/decisions.md",
@@ -23804,56 +23926,67 @@
       "label": "minimum",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L235",
+      "source_location": "L174",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_cornerradius_minimum",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_height_minimum",
       "community": 224,
-      "community_name": "cornerRadius",
+      "community_name": "height",
       "norm_label": "minimum"
     },
     {
       "label": "type",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L234",
+      "source_location": "L173",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_cornerradius_type",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_height_type",
       "community": 224,
-      "community_name": "cornerRadius",
+      "community_name": "height",
       "norm_label": "type"
     },
     {
-      "label": "cornerRadius",
+      "label": "height",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L233",
+      "source_location": "L172",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_properties_cornerradius",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_properties_height",
       "community": 224,
-      "community_name": "cornerRadius",
-      "norm_label": "cornerradius"
+      "community_name": "height",
+      "norm_label": "height"
     },
     {
-      "label": "$ref",
+      "label": "minLength",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L106",
+      "source_location": "L110",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_id_ref",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_label_minlength",
       "community": 225,
-      "community_name": "id",
-      "norm_label": "$ref"
+      "community_name": "label",
+      "norm_label": "minlength"
     },
     {
-      "label": "id",
+      "label": "type",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L105",
+      "source_location": "L109",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_properties_id",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_label_type",
       "community": 225,
-      "community_name": "id",
-      "norm_label": "id"
+      "community_name": "label",
+      "norm_label": "type"
+    },
+    {
+      "label": "label",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
+      "source_location": "L108",
+      "_origin": "ast",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_properties_label",
+      "community": 225,
+      "community_name": "label",
+      "norm_label": "label"
     },
     {
       "label": "minimum",
@@ -25216,7 +25349,7 @@
       "_origin": "ast",
       "id": "public_assets_mock_sources",
       "community": 249,
-      "community_name": "mock/SOURCES.md",
+      "community_name": "Gate B generated mock sources",
       "norm_label": "mock/sources.md"
     },
     {
@@ -25227,8 +25360,19 @@
       "_origin": "ast",
       "id": "public_assets_mock_sources_gate_b_generated_mock_sources",
       "community": 249,
-      "community_name": "mock/SOURCES.md",
+      "community_name": "Gate B generated mock sources",
       "norm_label": "gate b generated mock sources"
+    },
+    {
+      "label": "Round 3 \u2014 realism",
+      "file_type": "document",
+      "source_file": "public/assets/mock/SOURCES.md",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "public_assets_mock_sources_round_3_realism",
+      "community": 249,
+      "community_name": "Gate B generated mock sources",
+      "norm_label": "round 3 \u2014 realism"
     },
     {
       "label": "package.json",
@@ -25715,6 +25859,39 @@
       "norm_label": "deployment-ownership"
     },
     {
+      "label": "capture-gate-b.mjs",
+      "file_type": "code",
+      "source_file": "scripts/capture-gate-b.mjs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_capture_gate_b",
+      "community": 252,
+      "community_name": "capture-gate-b.mjs",
+      "norm_label": "capture-gate-b.mjs"
+    },
+    {
+      "label": "results",
+      "file_type": "code",
+      "source_file": "scripts/capture-gate-b.mjs",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "scripts_capture_gate_b_results",
+      "community": 252,
+      "community_name": "capture-gate-b.mjs",
+      "norm_label": "results"
+    },
+    {
+      "label": "root",
+      "file_type": "code",
+      "source_file": "scripts/capture-gate-b.mjs",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "scripts_capture_gate_b_root",
+      "community": 252,
+      "community_name": "capture-gate-b.mjs",
+      "norm_label": "root"
+    },
+    {
       "label": "$ref",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
@@ -25748,6 +25925,28 @@
       "norm_label": "type"
     },
     {
+      "label": "minimum",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
+      "source_location": "L235",
+      "_origin": "ast",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_cornerradius_minimum",
+      "community": 26,
+      "community_name": "properties",
+      "norm_label": "minimum"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
+      "source_location": "L234",
+      "_origin": "ast",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_cornerradius_type",
+      "community": 26,
+      "community_name": "properties",
+      "norm_label": "type"
+    },
+    {
       "label": "$ref",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
@@ -25759,26 +25958,15 @@
       "norm_label": "$ref"
     },
     {
-      "label": "minimum",
+      "label": "$ref",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L174",
+      "source_location": "L106",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_height_minimum",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_id_ref",
       "community": 26,
       "community_name": "properties",
-      "norm_label": "minimum"
-    },
-    {
-      "label": "type",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L173",
-      "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_height_type",
-      "community": 26,
-      "community_name": "properties",
-      "norm_label": "type"
+      "norm_label": "$ref"
     },
     {
       "label": "properties",
@@ -25790,28 +25978,6 @@
       "community": 26,
       "community_name": "properties",
       "norm_label": "properties"
-    },
-    {
-      "label": "minLength",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L110",
-      "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_label_minlength",
-      "community": 26,
-      "community_name": "properties",
-      "norm_label": "minlength"
-    },
-    {
-      "label": "type",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L109",
-      "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_label_type",
-      "community": 26,
-      "community_name": "properties",
-      "norm_label": "type"
     },
     {
       "label": "$ref",
@@ -25902,6 +26068,17 @@
       "norm_label": "channely"
     },
     {
+      "label": "cornerRadius",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
+      "source_location": "L233",
+      "_origin": "ast",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_properties_cornerradius",
+      "community": 26,
+      "community_name": "properties",
+      "norm_label": "cornerradius"
+    },
+    {
       "label": "from",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
@@ -25913,26 +26090,15 @@
       "norm_label": "from"
     },
     {
-      "label": "height",
+      "label": "id",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L172",
+      "source_location": "L105",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_properties_height",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_properties_id",
       "community": 26,
       "community_name": "properties",
-      "norm_label": "height"
-    },
-    {
-      "label": "label",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L108",
-      "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_properties_label",
-      "community": 26,
-      "community_name": "properties",
-      "norm_label": "label"
+      "norm_label": "id"
     },
     {
       "label": "labelAt",
@@ -27024,6 +27190,17 @@
       "norm_label": "message_pairs"
     },
     {
+      "label": "SUPPORTED_LOCALES",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/i18n.mjs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_i18n_supported_locales",
+      "community": 30,
+      "community_name": "cli.mjs",
+      "norm_label": "supported_locales"
+    },
+    {
       "label": "utils.mjs",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/shared/utils.mjs",
@@ -27112,67 +27289,89 @@
       "norm_label": "layoutjson"
     },
     {
-      "label": "settled-flow.test.mjs",
+      "label": "i18n.test.mjs",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "agents_skills_archify_test_settled_flow_test",
+      "id": "agents_skills_archify_test_i18n_test",
       "community": 30,
       "community_name": "cli.mjs",
-      "norm_label": "settled-flow.test.mjs"
+      "norm_label": "i18n.test.mjs"
     },
     {
-      "label": "CASES",
+      "label": "AUTHORED_TEXT_KEYS",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
-      "source_location": "L15",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
+      "source_location": "L38",
       "_origin": "ast",
-      "id": "agents_skills_archify_test_settled_flow_test_cases",
+      "id": "agents_skills_archify_test_i18n_test_authored_text_keys",
       "community": 30,
       "community_name": "cli.mjs",
-      "norm_label": "cases"
+      "norm_label": "authored_text_keys"
+    },
+    {
+      "label": "cli",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
+      "source_location": "L20",
+      "_origin": "ast",
+      "id": "agents_skills_archify_test_i18n_test_cli",
+      "community": 30,
+      "community_name": "cli.mjs",
+      "norm_label": "cli"
     },
     {
       "label": "__dirname",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
-      "source_location": "L10",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
+      "source_location": "L18",
       "_origin": "ast",
-      "id": "agents_skills_archify_test_settled_flow_test_dirname",
+      "id": "agents_skills_archify_test_i18n_test_dirname",
       "community": 30,
       "community_name": "cli.mjs",
       "norm_label": "__dirname"
     },
     {
+      "label": "EXAMPLES",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "agents_skills_archify_test_i18n_test_examples",
+      "community": 30,
+      "community_name": "cli.mjs",
+      "norm_label": "examples"
+    },
+    {
       "label": "skillRoot",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
-      "source_location": "L11",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
+      "source_location": "L19",
       "_origin": "ast",
-      "id": "agents_skills_archify_test_settled_flow_test_skillroot",
+      "id": "agents_skills_archify_test_i18n_test_skillroot",
       "community": 30,
       "community_name": "cli.mjs",
       "norm_label": "skillroot"
     },
     {
-      "label": "template",
+      "label": "templatePath",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
-      "source_location": "L12",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
+      "source_location": "L21",
       "_origin": "ast",
-      "id": "agents_skills_archify_test_settled_flow_test_template",
+      "id": "agents_skills_archify_test_i18n_test_templatepath",
       "community": 30,
       "community_name": "cli.mjs",
-      "norm_label": "template"
+      "norm_label": "templatepath"
     },
     {
       "label": "tmp",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
-      "source_location": "L13",
+      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
+      "source_location": "L22",
       "_origin": "ast",
-      "id": "agents_skills_archify_test_settled_flow_test_tmp",
+      "id": "agents_skills_archify_test_i18n_test_tmp",
       "community": 30,
       "community_name": "cli.mjs",
       "norm_label": "tmp"
@@ -27187,6 +27386,28 @@
       "community": 31,
       "community_name": "workflow-compiler.mjs",
       "norm_label": "legend.mjs"
+    },
+    {
+      "label": "text-fit.mjs",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/text-fit.mjs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_text_fit",
+      "community": 31,
+      "community_name": "workflow-compiler.mjs",
+      "norm_label": "text-fit.mjs"
+    },
+    {
+      "label": "nodeTextFit",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/renderers/shared/text-fit.mjs",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "agents_skills_archify_renderers_shared_text_fit_nodetextfit",
+      "community": 31,
+      "community_name": "workflow-compiler.mjs",
+      "norm_label": "nodetextfit"
     },
     {
       "label": "workflow-compiler.mjs",
@@ -28850,17 +29071,6 @@
       "norm_label": "render-lifecycle.mjs"
     },
     {
-      "label": "automaticPorts",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/lifecycle/render-lifecycle.mjs",
-      "source_location": "L383",
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_lifecycle_render_lifecycle_automaticports",
-      "community": 41,
-      "community_name": "render-lifecycle.mjs",
-      "norm_label": "automaticports"
-    },
-    {
       "label": "__dirname",
       "file_type": "code",
       "source_file": ".agents/skills/archify/renderers/lifecycle/render-lifecycle.mjs",
@@ -28969,17 +29179,6 @@
       "community": 41,
       "community_name": "render-lifecycle.mjs",
       "norm_label": "typeclass"
-    },
-    {
-      "label": "arrowClassMap",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/geometry.mjs",
-      "source_location": "L1366",
-      "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_geometry_arrowclassmap",
-      "community": 41,
-      "community_name": "render-lifecycle.mjs",
-      "norm_label": "arrowclassmap"
     },
     {
       "label": "items",
@@ -29341,7 +29540,7 @@
       "_origin": "ast",
       "id": "src_main",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "main.ts"
     },
     {
@@ -29352,8 +29551,19 @@
       "_origin": "ast",
       "id": "src_scene_background",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "background.ts"
+    },
+    {
+      "label": "ASSETS",
+      "file_type": "code",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "src_scene_background_assets",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "assets"
     },
     {
       "label": "cabinet.ts",
@@ -29363,19 +29573,52 @@
       "_origin": "ast",
       "id": "src_scene_cabinet",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "cabinet.ts"
     },
     {
       "label": "ASSETS",
       "file_type": "code",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L4",
+      "source_location": "L5",
       "_origin": "ast",
       "id": "src_scene_cabinet_assets",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "assets"
+    },
+    {
+      "label": "cabinetArt.ts",
+      "file_type": "code",
+      "source_file": "src/scene/cabinetArt.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_scene_cabinetart",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "cabinetart.ts"
+    },
+    {
+      "label": "CABINET_ART",
+      "file_type": "code",
+      "source_file": "src/scene/cabinetArt.ts",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "src_scene_cabinetart_cabinet_art",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "cabinet_art"
+    },
+    {
+      "label": "CABINET_DESIGN",
+      "file_type": "code",
+      "source_file": "src/scene/cabinetArt.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_scene_cabinetart_cabinet_design",
+      "community": 45,
+      "community_name": "cabinet.ts",
+      "norm_label": "cabinet_design"
     },
     {
       "label": "layout.ts",
@@ -29385,30 +29628,8 @@
       "_origin": "ast",
       "id": "src_scene_layout",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "layout.ts"
-    },
-    {
-      "label": "LANDSCAPE_GRID",
-      "file_type": "code",
-      "source_file": "src/scene/layout.ts",
-      "source_location": "L28",
-      "_origin": "ast",
-      "id": "src_scene_layout_landscape_grid",
-      "community": 45,
-      "community_name": "main.ts",
-      "norm_label": "landscape_grid"
-    },
-    {
-      "label": "PORTRAIT_GRID",
-      "file_type": "code",
-      "source_file": "src/scene/layout.ts",
-      "source_location": "L27",
-      "_origin": "ast",
-      "id": "src_scene_layout_portrait_grid",
-      "community": 45,
-      "community_name": "main.ts",
-      "norm_label": "portrait_grid"
     },
     {
       "label": "layout.test.ts",
@@ -29418,7 +29639,7 @@
       "_origin": "ast",
       "id": "tests_unit_layout_test",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "layout.test.ts"
     },
     {
@@ -29429,7 +29650,7 @@
       "_origin": "ast",
       "id": "tests_unit_layout_test_none",
       "community": 45,
-      "community_name": "main.ts",
+      "community_name": "cabinet.ts",
       "norm_label": "none"
     },
     {
@@ -30753,28 +30974,6 @@
       "norm_label": "items"
     },
     {
-      "label": "minItems",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/schemas/sequence.schema.json",
-      "source_location": "L150",
-      "_origin": "ast",
-      "id": "agents_skills_archify_schemas_sequence_schema_messages_minitems",
-      "community": 53,
-      "community_name": "required",
-      "norm_label": "minitems"
-    },
-    {
-      "label": "type",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/schemas/sequence.schema.json",
-      "source_location": "L149",
-      "_origin": "ast",
-      "id": "agents_skills_archify_schemas_sequence_schema_messages_type",
-      "community": 53,
-      "community_name": "required",
-      "norm_label": "type"
-    },
-    {
       "label": "items",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/sequence.schema.json",
@@ -30786,15 +30985,37 @@
       "norm_label": "items"
     },
     {
-      "label": "messages",
+      "label": "minItems",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/sequence.schema.json",
-      "source_location": "L148",
+      "source_location": "L95",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_sequence_schema_properties_messages",
+      "id": "agents_skills_archify_schemas_sequence_schema_participants_minitems",
       "community": 53,
       "community_name": "required",
-      "norm_label": "messages"
+      "norm_label": "minitems"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/schemas/sequence.schema.json",
+      "source_location": "L94",
+      "_origin": "ast",
+      "id": "agents_skills_archify_schemas_sequence_schema_participants_type",
+      "community": 53,
+      "community_name": "required",
+      "norm_label": "type"
+    },
+    {
+      "label": "participants",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/schemas/sequence.schema.json",
+      "source_location": "L93",
+      "_origin": "ast",
+      "id": "agents_skills_archify_schemas_sequence_schema_properties_participants",
+      "community": 53,
+      "community_name": "required",
+      "norm_label": "participants"
     },
     {
       "label": "segments",
@@ -32975,102 +33196,69 @@
       "norm_label": "skillroot"
     },
     {
-      "label": "SUPPORTED_LOCALES",
+      "label": "settled-flow.test.mjs",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/renderers/shared/i18n.mjs",
+      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "agents_skills_archify_renderers_shared_i18n_supported_locales",
+      "id": "agents_skills_archify_test_settled_flow_test",
       "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "supported_locales"
+      "community_name": "settled-flow.test.mjs",
+      "norm_label": "settled-flow.test.mjs"
     },
     {
-      "label": "i18n.test.mjs",
+      "label": "CASES",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L1",
+      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
+      "source_location": "L15",
       "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test",
+      "id": "agents_skills_archify_test_settled_flow_test_cases",
       "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "i18n.test.mjs"
-    },
-    {
-      "label": "AUTHORED_TEXT_KEYS",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L38",
-      "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test_authored_text_keys",
-      "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "authored_text_keys"
-    },
-    {
-      "label": "cli",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L20",
-      "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test_cli",
-      "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "cli"
+      "community_name": "settled-flow.test.mjs",
+      "norm_label": "cases"
     },
     {
       "label": "__dirname",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L18",
+      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
+      "source_location": "L10",
       "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test_dirname",
+      "id": "agents_skills_archify_test_settled_flow_test_dirname",
       "community": 68,
-      "community_name": "i18n.test.mjs",
+      "community_name": "settled-flow.test.mjs",
       "norm_label": "__dirname"
-    },
-    {
-      "label": "EXAMPLES",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L26",
-      "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test_examples",
-      "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "examples"
     },
     {
       "label": "skillRoot",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L19",
+      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
+      "source_location": "L11",
       "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test_skillroot",
+      "id": "agents_skills_archify_test_settled_flow_test_skillroot",
       "community": 68,
-      "community_name": "i18n.test.mjs",
+      "community_name": "settled-flow.test.mjs",
       "norm_label": "skillroot"
     },
     {
-      "label": "templatePath",
+      "label": "template",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L21",
+      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
+      "source_location": "L12",
       "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test_templatepath",
+      "id": "agents_skills_archify_test_settled_flow_test_template",
       "community": 68,
-      "community_name": "i18n.test.mjs",
-      "norm_label": "templatepath"
+      "community_name": "settled-flow.test.mjs",
+      "norm_label": "template"
     },
     {
       "label": "tmp",
       "file_type": "code",
-      "source_file": ".agents/skills/archify/test/i18n.test.mjs",
-      "source_location": "L22",
+      "source_file": ".agents/skills/archify/test/settled-flow.test.mjs",
+      "source_location": "L13",
       "_origin": "ast",
-      "id": "agents_skills_archify_test_i18n_test_tmp",
+      "id": "agents_skills_archify_test_settled_flow_test_tmp",
       "community": 68,
-      "community_name": "i18n.test.mjs",
+      "community_name": "settled-flow.test.mjs",
       "norm_label": "tmp"
     },
     {
@@ -33525,15 +33713,15 @@
       "norm_label": "items"
     },
     {
-      "label": "states",
+      "label": "transitions",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L115",
+      "source_location": "L182",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_properties_states",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_properties_transitions",
       "community": 71,
       "community_name": "required",
-      "norm_label": "states"
+      "norm_label": "transitions"
     },
     {
       "label": "items",
@@ -33547,28 +33735,6 @@
       "norm_label": "items"
     },
     {
-      "label": "minItems",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L117",
-      "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_states_minitems",
-      "community": 71,
-      "community_name": "required",
-      "norm_label": "minitems"
-    },
-    {
-      "label": "type",
-      "file_type": "code",
-      "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L116",
-      "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_states_type",
-      "community": 71,
-      "community_name": "required",
-      "norm_label": "type"
-    },
-    {
       "label": "items",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
@@ -33578,6 +33744,17 @@
       "community": 71,
       "community_name": "required",
       "norm_label": "items"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
+      "source_location": "L183",
+      "_origin": "ast",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_transitions_type",
+      "community": 71,
+      "community_name": "required",
+      "norm_label": "type"
     },
     {
       "label": "col",
@@ -34163,15 +34340,15 @@
       "norm_label": "schema_version"
     },
     {
-      "label": "transitions",
+      "label": "states",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L182",
+      "source_location": "L115",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_properties_transitions",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_properties_states",
       "community": 76,
       "community_name": "properties",
-      "norm_label": "transitions"
+      "norm_label": "states"
     },
     {
       "label": "const",
@@ -34185,12 +34362,23 @@
       "norm_label": "const"
     },
     {
+      "label": "minItems",
+      "file_type": "code",
+      "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
+      "source_location": "L117",
+      "_origin": "ast",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_states_minitems",
+      "community": 76,
+      "community_name": "properties",
+      "norm_label": "minitems"
+    },
+    {
       "label": "type",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/lifecycle.schema.json",
-      "source_location": "L183",
+      "source_location": "L116",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_lifecycle_schema_transitions_type",
+      "id": "agents_skills_archify_schemas_lifecycle_schema_states_type",
       "community": 76,
       "community_name": "properties",
       "norm_label": "type"
@@ -35695,9 +35883,9 @@
       "label": "minItems",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/sequence.schema.json",
-      "source_location": "L95",
+      "source_location": "L150",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_sequence_schema_participants_minitems",
+      "id": "agents_skills_archify_schemas_sequence_schema_messages_minitems",
       "community": 93,
       "community_name": "properties",
       "norm_label": "minitems"
@@ -35706,9 +35894,9 @@
       "label": "type",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/sequence.schema.json",
-      "source_location": "L94",
+      "source_location": "L149",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_sequence_schema_participants_type",
+      "id": "agents_skills_archify_schemas_sequence_schema_messages_type",
       "community": 93,
       "community_name": "properties",
       "norm_label": "type"
@@ -35758,15 +35946,15 @@
       "norm_label": "diagram_type"
     },
     {
-      "label": "participants",
+      "label": "messages",
       "file_type": "code",
       "source_file": ".agents/skills/archify/schemas/sequence.schema.json",
-      "source_location": "L93",
+      "source_location": "L148",
       "_origin": "ast",
-      "id": "agents_skills_archify_schemas_sequence_schema_properties_participants",
+      "id": "agents_skills_archify_schemas_sequence_schema_properties_messages",
       "community": 93,
       "community_name": "properties",
-      "norm_label": "participants"
+      "norm_label": "messages"
     },
     {
       "label": "schema_version",
@@ -53139,7 +53327,19 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L49",
+      "source_location": "L105",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_main_boot",
+      "target": "src_scene_background_animatebackground",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L50",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main_boot",
@@ -53163,7 +53363,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L56",
+      "source_location": "L89",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main_boot",
@@ -53175,7 +53375,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L56",
+      "source_location": "L89",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main_boot",
@@ -53187,7 +53387,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L59",
+      "source_location": "L92",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main_boot",
@@ -53199,7 +53399,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L62",
+      "source_location": "L95",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main_boot",
@@ -53211,7 +53411,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L63",
+      "source_location": "L96",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main_boot",
@@ -53222,12 +53422,60 @@
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
-      "source_file": "src/scene/cabinet.ts",
-      "source_location": "L107",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L63",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "src_scene_cabinet_createcabinet",
-      "target": "src_scene_cabinet_maskedmedallion",
+      "source": "src_scene_background_chip",
+      "target": "src_scene_background_sprite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L130",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background_createbackground",
+      "target": "src_scene_background_card",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L134",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background_createbackground",
+      "target": "src_scene_background_chip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background_createbackground",
+      "target": "src_scene_background_sprite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L159",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background_drawbackground",
+      "target": "src_scene_background_cover",
       "confidence_score": 1.0
     },
     {
@@ -53235,11 +53483,11 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L107",
+      "source_location": "L111",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_cabinet_createcabinet",
-      "target": "src_scene_cabinet_symbol",
+      "target": "src_scene_cabinet_createdrum",
       "confidence_score": 1.0
     },
     {
@@ -53251,7 +53499,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_cabinet_createcabinet",
-      "target": "src_scene_cabinet_label",
+      "target": "src_scene_cabinet_readout",
       "confidence_score": 1.0
     },
     {
@@ -53259,11 +53507,11 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L191",
+      "source_location": "L72",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "src_scene_cabinet_layoutcabinet",
-      "target": "src_scene_cabinet_place",
+      "source": "src_scene_cabinet_createdrum",
+      "target": "src_scene_cabinet_reelsymbol",
       "confidence_score": 1.0
     },
     {
@@ -53271,11 +53519,35 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L43",
+      "source_location": "L30",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_cabinet_maskedmedallion",
-      "target": "src_scene_cabinet_symbol",
+      "target": "src_scene_cabinet_centredsprite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/cabinet.ts",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_cabinet_reelsymbol",
+      "target": "src_scene_cabinet_centredsprite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/cabinet.ts",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_cabinet_reelsymbol",
+      "target": "src_scene_cabinet_maskedmedallion",
       "confidence_score": 1.0
     },
     {
@@ -53283,10 +53555,10 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L40",
+      "source_location": "L47",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "src_scene_layout_centredrect",
+      "source": "src_scene_layout_computelayout",
       "target": "src_scene_layout_rect",
       "confidence_score": 1.0
     },
@@ -53295,10 +53567,34 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L52",
+      "source_location": "L66",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_layout_computelayout",
+      "target": "src_scene_layout_scaled",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/layout.ts",
+      "source_location": "L70",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_layout_computelayout",
+      "target": "src_scene_layout_overlays",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/layout.ts",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_layout_overlays",
       "target": "src_scene_layout_rect",
       "confidence_score": 1.0
     },
@@ -53307,23 +53603,11 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L85",
+      "source_location": "L29",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "src_scene_layout_computelayout",
-      "target": "src_scene_layout_withscale",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/scene/layout.ts",
-      "source_location": "L89",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_scene_layout_computelayout",
-      "target": "src_scene_layout_centredrect",
+      "source": "src_scene_layout_overlays",
+      "target": "src_scene_layout_scaled",
       "confidence_score": 1.0
     },
     {
@@ -61739,7 +62023,19 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L3",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_main",
+      "target": "src_scene_background_animatebackground",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -61751,7 +62047,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L3",
+      "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -61763,7 +62059,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L4",
+      "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -61775,7 +62071,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L4",
+      "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -61787,7 +62083,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L5",
+      "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -61799,7 +62095,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L5",
+      "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -61811,7 +62107,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L5",
+      "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -61839,7 +62135,55 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_cabinet",
+      "target": "src_scene_cabinetart_cabinet_art",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/cabinet.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_cabinet",
+      "target": "src_scene_cabinetart_cabinet_design",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/cabinet.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_cabinet",
       "target": "src_scene_layout_scenelayout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/layout.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_layout",
+      "target": "src_scene_cabinetart_cabinet_art",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/layout.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_layout",
+      "target": "src_scene_cabinetart_cabinet_design",
       "confidence_score": 1.0
     },
     {
@@ -63611,7 +63955,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L3",
+      "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -63623,7 +63967,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L4",
+      "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -63635,7 +63979,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L5",
+      "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -63663,7 +64007,31 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_cabinet",
+      "target": "src_scene_cabinetart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/cabinet.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_cabinet",
       "target": "src_scene_layout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/layout.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_layout",
+      "target": "src_scene_cabinetart",
       "confidence_score": 1.0
     },
     {
@@ -93008,6 +93376,17 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "public/assets/mock/SOURCES.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "public_assets_mock_sources_gate_b_generated_mock_sources",
+      "target": "public_assets_mock_sources_round_3_realism",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "public/assets/moodboard/SOURCES.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -93025,6 +93404,28 @@
       "_origin": "ast",
       "source": "readme",
       "target": "readme_trustroyale",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/capture-gate-b.mjs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "scripts_capture_gate_b",
+      "target": "scripts_capture_gate_b_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/capture-gate-b.mjs",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "scripts_capture_gate_b",
+      "target": "scripts_capture_gate_b_results",
       "confidence_score": 1.0
     },
     {
@@ -93410,6 +93811,17 @@
       "_origin": "ast",
       "source": "specs_001_trust_royale_slots_decisions_owner_decisions_trust_royale",
       "target": "specs_001_trust_royale_slots_decisions_mascot_name_2026_09_25",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "specs/001-trust-royale-slots/decisions.md",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "specs_001_trust_royale_slots_decisions_owner_decisions_trust_royale",
+      "target": "specs_001_trust_royale_slots_decisions_gate_b_round_3_realism_2026_09_25",
       "confidence_score": 1.0
     },
     {
@@ -94362,7 +94774,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -94373,7 +94785,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L29",
+      "source_location": "L30",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -94384,7 +94796,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/main.ts",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_main",
@@ -94395,7 +94807,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/background.ts",
-      "source_location": "L10",
+      "source_location": "L147",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background",
+      "target": "src_scene_background_cover",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L154",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_background",
@@ -94406,7 +94829,95 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/background.ts",
+      "source_location": "L184",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background",
+      "target": "src_scene_background_animatebackground",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background",
+      "target": "src_scene_background_depth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background",
+      "target": "src_scene_background_floatingitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
       "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background",
+      "target": "src_scene_background_assets",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background",
+      "target": "src_scene_background_environmentscene",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background",
+      "target": "src_scene_background_sprite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L61",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background",
+      "target": "src_scene_background_chip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L70",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_background",
+      "target": "src_scene_background_card",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/background.ts",
+      "source_location": "L83",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_background",
@@ -94417,29 +94928,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L18",
+      "source_location": "L103",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_cabinet",
-      "target": "src_scene_cabinet_cabinetscene",
+      "target": "src_scene_cabinet_createcabinet",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L185",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_scene_cabinet",
-      "target": "src_scene_cabinet_place",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/scene/cabinet.ts",
-      "source_location": "L190",
+      "source_location": "L137",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_cabinet",
@@ -94450,40 +94950,29 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L24",
+      "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_cabinet",
-      "target": "src_scene_cabinet_label",
+      "target": "src_scene_cabinet_cabinetscene",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L31",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_cabinet",
-      "target": "src_scene_cabinet_symbol",
+      "target": "src_scene_cabinet_centredsprite",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_scene_cabinet",
-      "target": "src_scene_cabinet_assets",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/scene/cabinet.ts",
-      "source_location": "L40",
+      "source_location": "L27",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_cabinet",
@@ -94494,62 +94983,73 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/cabinet.ts",
-      "source_location": "L50",
+      "source_location": "L37",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_cabinet",
-      "target": "src_scene_cabinet_createcabinet",
+      "target": "src_scene_cabinet_reelsymbol",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/scene/layout.ts",
+      "source_file": "src/scene/cabinet.ts",
+      "source_location": "L43",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_cabinet",
+      "target": "src_scene_cabinet_createdrum",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/cabinet.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_cabinet",
+      "target": "src_scene_cabinet_assets",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/cabinet.ts",
+      "source_location": "L84",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_cabinet",
+      "target": "src_scene_cabinet_readout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/cabinetArt.ts",
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "src_scene_layout",
-      "target": "src_scene_layout_safeareainsets",
+      "source": "src_scene_cabinetart",
+      "target": "src_scene_cabinetart_cabinet_design",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/scene/layout.ts",
-      "source_location": "L15",
+      "source_file": "src/scene/cabinetArt.ts",
+      "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "src_scene_layout",
-      "target": "src_scene_layout_scenelayout",
+      "source": "src_scene_cabinetart",
+      "target": "src_scene_cabinetart_cabinet_art",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L27",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_scene_layout",
-      "target": "src_scene_layout_portrait_grid",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/scene/layout.ts",
-      "source_location": "L28",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_scene_layout",
-      "target": "src_scene_layout_landscape_grid",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/scene/layout.ts",
-      "source_location": "L31",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_layout",
@@ -94560,29 +95060,51 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L35",
+      "source_location": "L24",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_layout",
-      "target": "src_scene_layout_withscale",
+      "target": "src_scene_layout_scaled",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L39",
+      "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_layout",
-      "target": "src_scene_layout_centredrect",
+      "target": "src_scene_layout_overlays",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L43",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_layout",
+      "target": "src_scene_layout_safeareainsets",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/layout.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_scene_layout",
+      "target": "src_scene_layout_layoutrect",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scene/layout.ts",
+      "source_location": "L46",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_layout",
@@ -94593,11 +95115,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/scene/layout.ts",
-      "source_location": "L8",
+      "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_scene_layout",
-      "target": "src_scene_layout_layoutrect",
+      "target": "src_scene_layout_scenelayout",
       "confidence_score": 1.0
     },
     {
@@ -95952,5 +96474,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "5f6afd3bdc4fe230b75510cf1b853288f2fd78be"
+  "built_at_commit": "d8329dc4ff6e1d42293f6d31f5f361a4a63631fe"
 }

@@ -1,16 +1,7 @@
-export interface SafeAreaInsets {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
+import { CABINET_ART, CABINET_DESIGN } from "./cabinetArt";
 
-export interface LayoutRect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+export interface SafeAreaInsets { top: number; right: number; bottom: number; left: number }
+export interface LayoutRect { x: number; y: number; width: number; height: number }
 
 export interface SceneLayout {
   orientation: "portrait" | "landscape";
@@ -24,101 +15,69 @@ export interface SceneLayout {
   chipTray: LayoutRect & { scale: number };
 }
 
-const PORTRAIT_GRID = { width: 1080, height: 1920 } as const;
-const LANDSCAPE_GRID = { width: 1920, height: 1080 } as const;
-const MACHINE_ASPECT = 720 / 1040;
+const MACHINE_ASPECT = CABINET_DESIGN.width / CABINET_DESIGN.height;
 
 function rect(x: number, y: number, width: number, height: number): LayoutRect {
   return { x, y, width: Math.max(0, width), height: Math.max(0, height) };
 }
 
-function withScale(frame: LayoutRect, designWidth: number, designHeight: number) {
+function scaled(frame: LayoutRect, designWidth: number, designHeight: number) {
   return { ...frame, scale: Math.min(frame.width / designWidth, frame.height / designHeight) };
 }
 
-function centredRect(bounds: LayoutRect, width: number, height: number, y: number): LayoutRect {
-  return rect(bounds.x + (bounds.width - width) / 2, y, width, height);
+function overlays(machine: SceneLayout["machine"]): Pick<SceneLayout, "marquee" | "spinButton"> {
+  const marquee = scaled(rect(
+    machine.x + machine.width * 0.13,
+    machine.y + machine.height * 0.055,
+    machine.width * 0.74,
+    machine.height * 0.145,
+  ), 800, 170);
+  const scale = machine.scale;
+  const button = CABINET_ART.spinButton;
+  const spinButton = scaled(rect(
+    machine.x + button.x * scale,
+    machine.y + button.y * scale,
+    button.width * scale,
+    button.height * scale,
+  ), button.width, button.height);
+  return { marquee, spinButton };
 }
 
 export function computeLayout(width: number, height: number, safeAreaInsets: SafeAreaInsets): SceneLayout {
-  const viewportWidth = Math.max(1, width);
-  const viewportHeight = Math.max(1, height);
-  const safe = {
-    top: Math.max(0, safeAreaInsets.top),
-    right: Math.max(0, safeAreaInsets.right),
-    bottom: Math.max(0, safeAreaInsets.bottom),
-    left: Math.max(0, safeAreaInsets.left),
-  };
+  const viewport = rect(0, 0, Math.max(1, width), Math.max(1, height));
   const safeBounds = rect(
-    safe.left,
-    safe.top,
-    viewportWidth - safe.left - safe.right,
-    viewportHeight - safe.top - safe.bottom,
+    Math.max(0, safeAreaInsets.left),
+    Math.max(0, safeAreaInsets.top),
+    viewport.width - Math.max(0, safeAreaInsets.left) - Math.max(0, safeAreaInsets.right),
+    viewport.height - Math.max(0, safeAreaInsets.top) - Math.max(0, safeAreaInsets.bottom),
   );
   const orientation = safeBounds.height >= safeBounds.width ? "portrait" : "landscape";
-  const grid = orientation === "portrait" ? PORTRAIT_GRID : LANDSCAPE_GRID;
-  const backgroundScale = Math.max(viewportWidth / grid.width, viewportHeight / grid.height);
-  const backgroundWidth = grid.width * backgroundScale;
-  const backgroundHeight = grid.height * backgroundScale;
-  const background = {
-    ...rect((viewportWidth - backgroundWidth) / 2, (viewportHeight - backgroundHeight) / 2, backgroundWidth, backgroundHeight),
-    scale: backgroundScale,
-  };
+  const background = { ...viewport, scale: 1 };
+  const padding = Math.max(5, Math.min(28, Math.min(safeBounds.width, safeBounds.height) * 0.025));
+  const content = rect(safeBounds.x + padding, safeBounds.y + padding, safeBounds.width - padding * 2, safeBounds.height - padding * 2);
 
   if (orientation === "portrait") {
-    const gap = Math.max(3, Math.min(14, safeBounds.height * 0.008));
-    const horizontalPadding = Math.max(7, Math.min(34, safeBounds.width * 0.035));
-    const content = rect(
-      safeBounds.x + horizontalPadding,
-      safeBounds.y + gap,
-      safeBounds.width - horizontalPadding * 2,
-      safeBounds.height - gap * 2,
-    );
-    const marqueeHeight = content.height * 0.11;
-    const paytableHeight = content.height * 0.115;
-    const chipHeight = content.height * 0.075;
-    const machineSlotHeight = content.height - marqueeHeight - paytableHeight - chipHeight - gap * 3;
-    const machineHeight = Math.min(machineSlotHeight, content.width / MACHINE_ASPECT);
+    const gap = Math.max(5, Math.min(14, content.height * 0.012));
+    const paytableHeight = Math.max(58, Math.min(116, content.height * 0.12));
+    const availableHeight = content.height - paytableHeight - gap;
+    const machineHeight = Math.min(availableHeight, content.width / MACHINE_ASPECT);
     const machineWidth = machineHeight * MACHINE_ASPECT;
-
-    let y = content.y;
-    const marquee = withScale(rect(content.x, y, content.width, marqueeHeight), 960, 190);
-    y += marqueeHeight + gap;
-    const paytable = withScale(rect(content.x, y, content.width, paytableHeight), 960, 150);
-    y += paytableHeight + gap;
-    const machine = withScale(centredRect(content, machineWidth, machineHeight, y), 720, 1040);
-    const spinHeight = machine.height * 0.1;
-    const spinWidth = machine.width * 0.34;
-    const spinButton = withScale(rect(machine.x + (machine.width - spinWidth) / 2, machine.y + machine.height * 0.8, spinWidth, spinHeight), 430, 150);
-    y += machineHeight + gap;
-    const chipTray = withScale(rect(content.x, y, content.width, Math.max(0, content.y + content.height - y)), 520, 130);
-
-    return { orientation, viewport: rect(0, 0, viewportWidth, viewportHeight), safeBounds, background, marquee, paytable, machine, spinButton, chipTray };
+    const machineY = content.y + paytableHeight + gap + (availableHeight - machineHeight) * 0.48;
+    const machine = scaled(rect(content.x + (content.width - machineWidth) / 2, machineY, machineWidth, machineHeight), CABINET_DESIGN.width, CABINET_DESIGN.height);
+    const paytable = scaled(rect(content.x, content.y, content.width, paytableHeight), 960, 150);
+    const wheelSize = Math.min(content.width * 0.48, machine.height * 0.27);
+    const chipTray = scaled(rect(content.x + content.width - wheelSize, machine.y + machine.height * 0.1, wheelSize, wheelSize), 560, 560);
+    return { orientation, viewport, safeBounds, background, paytable, machine, chipTray, ...overlays(machine) };
   }
 
-  const padding = Math.max(6, Math.min(30, safeBounds.height * 0.025));
-  const gap = Math.max(5, Math.min(24, safeBounds.width * 0.012));
-  const content = rect(
-    safeBounds.x + padding,
-    safeBounds.y + padding,
-    safeBounds.width - padding * 2,
-    safeBounds.height - padding * 2,
-  );
-  const machineHeight = content.height * 0.82;
+  const machineHeight = content.height;
   const machineWidth = machineHeight * MACHINE_ASPECT;
-  const centreX = content.x + content.width / 2;
-  const marqueeHeight = content.height * 0.145;
-  const marqueeWidth = machineWidth * 1.08;
-  const machine = withScale(rect(centreX - machineWidth / 2, content.y + marqueeHeight * 0.5, machineWidth, machineHeight), 720, 1040);
-  const marquee = withScale(rect(centreX - marqueeWidth / 2, content.y, marqueeWidth, marqueeHeight), 960, 190);
-  const spinHeight = machine.height * 0.1;
-  const spinWidth = machineWidth * 0.34;
-  const spinButton = withScale(rect(centreX - spinWidth / 2, machine.y + machine.height * 0.8, spinWidth, spinHeight), 430, 150);
-  const sideWidth = Math.max(0, (content.width - marqueeWidth) / 2 - gap);
-  const paytableWidth = Math.min(sideWidth, Math.max(content.height * 0.48, 150));
-  const paytableHeight = Math.min(content.height * 0.78, paytableWidth * 1.35);
-  const paytable = withScale(rect(content.x, content.y + (content.height - paytableHeight) / 2, paytableWidth, paytableHeight), 390, 620);
-  const chipTray = withScale(rect(content.x + content.width - paytableWidth, content.y + (content.height - paytableHeight) / 2, paytableWidth, paytableHeight), 390, 620);
-
-  return { orientation, viewport: rect(0, 0, viewportWidth, viewportHeight), safeBounds, background, marquee, paytable, machine, spinButton, chipTray };
+  const machine = scaled(rect(content.x + (content.width - machineWidth) / 2, content.y, machineWidth, machineHeight), CABINET_DESIGN.width, CABINET_DESIGN.height);
+  const sideGap = Math.max(8, Math.min(28, content.width * 0.014));
+  const sideWidth = Math.max(0, (content.width - machineWidth) / 2 - sideGap * 2);
+  const panelWidth = Math.min(sideWidth, content.height * 0.58);
+  const panelHeight = Math.min(content.height * 0.72, panelWidth * 1.35);
+  const paytable = scaled(rect(content.x, content.y + (content.height - panelHeight) / 2, panelWidth, panelHeight), 390, 620);
+  const chipTray = scaled(rect(content.x + content.width - panelWidth, content.y + (content.height - panelHeight) / 2, panelWidth, panelHeight), 390, 620);
+  return { orientation, viewport, safeBounds, background, paytable, machine, chipTray, ...overlays(machine) };
 }

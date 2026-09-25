@@ -17,3 +17,11 @@ Owner's words: "i wanted the images of scott fiona and the mascot to be taken as
 ## Mascot name (2026-09-25)
 
 The supplied mascot sheet (`reference/keith the mascot.png`) labels the cat "Tiggles". The owner confirmed the cat is called **Keith** in Trust Royale. Use "Keith" in all copy, paytable rows, file names and prompts.
+
+## Gate B round 3 — realism (2026-09-25)
+
+After seeing the first Gate B mock, the owner asked for a much more realistic look: the slot machine must look like a real, physical replica cabinet, the scene needs floating elements that create a 3D environment, animated SVG effects must be present already in the mock, and a spinning casino (roulette) wheel should appear at the side or in the background.
+
+Owner's words: "slot machine needs look like real replica original this looks really basic and does not contribute to realism I am looking for i also wanted elements floating creating a 3d environment no there as well i wanted animated svg's no there Make it as realistic as possible have the casino spinning wheel on side or the background"
+
+Approach: a 2.5D layered PixiJS scene built from photoreal gpt-image-2 renders (casino hall, roulette wheel, cabinet with a transparent reel window, chips, coins, glossy symbols), with depth-of-field blur, pointer/tilt parallax, floating chips and coins at three depths, a continuously rotating roulette wheel, and animated SVG light effects (chaser bulbs, title shimmer, sparkles, spotlight sweeps, SPIN glow). The right-hand "Neos Club" panel with invented labels is superseded by this redesign.
