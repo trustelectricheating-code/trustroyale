@@ -7,3 +7,13 @@
 Owner's words: "i like monte carlo velvet and the chips should have the Neos logo rather than the TR lettering"
 
 Follow-up applied: casino chips carry the Neos 'T' emblem at their centre instead of "TR" lettering. This applies to all chips in Gates B and C and in the final game.
+
+## Image generation (2026-09-25)
+
+The owner-supplied photos of Scott, Fiona and Keith are **reference images only** and are never shipped as-is. Every raster image in the game (character portraits, medallions, backgrounds and any other artwork) is generated with gpt-image-2 through Codex, using the photos as reference input so each person stays recognisable. Everyone gets a casino look in the Monte Carlo Velvet style (for example evening wear or croupier styling for Scott and Fiona, and a dapper casino look for Keith). The Neos emblem and the chips stay as vector SVGs for brand accuracy.
+
+Owner's words: "i wanted the images of scott fiona and the mascot to be taken as refrence and create images using the gpt iage via codex not use the image as is if you need any images use the gpt image 2 to generate it and everyone should have a casiono vibe so use the images as seed and generate assets"
+
+## Mascot name (2026-09-25)
+
+The supplied mascot sheet (`reference/keith the mascot.png`) labels the cat "Tiggles". The owner confirmed the cat is called **Keith** in Trust Royale. Use "Keith" in all copy, paytable rows, file names and prompts.

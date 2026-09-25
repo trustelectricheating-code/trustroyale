@@ -1,2 +1,35 @@
 <!doctype html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trust Royale</title></head><body><main><h1>Trust Royale</h1><p>Coming soon</p></main></body></html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#220308">
+    <meta name="description" content="Trust Royale — a Monte Carlo-inspired prize game from Trust Electric Heating.">
+    <title>Trust Royale</title>
+  </head>
+  <body>
+    <main id="game" aria-label="Trust Royale slot machine preview">
+      <div id="canvas-host" aria-hidden="true"></div>
+      <div id="ui" class="ui-layer">
+        <header id="marquee" class="marquee" aria-label="Trust Royale">
+          <span class="marquee__bulbs" aria-hidden="true"></span>
+          <span class="marquee__title">Trust Royale</span>
+          <span class="marquee__subtitle">Heating for humans</span>
+        </header>
+        <section id="paytable" class="paytable" aria-label="Prize paytable">
+          <span class="paytable__label">Prize table</span>
+          <span><b>25%</b> Keith × 3</span>
+          <span><b>20%</b> Scott × 3</span>
+          <span><b>20%</b> Fiona × 3</span>
+          <span><b>15%</b> Scott × 2 + Fiona</span>
+          <span><b>15%</b> Fiona × 2 + Scott</span>
+          <span><b>15%</b> Keith × 2 + any</span>
+          <span><b>10%</b> Neos × 3</span>
+        </section>
+        <button id="spin" class="spin" type="button" aria-label="Spin the reels">Spin</button>
+      </div>
+      <div id="loading" class="loading" role="status">Preparing the table…</div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -2,9 +2,9 @@
 
 | File | Source | Licence |
 |---|---|---|
-| `scott-medallion.webp` | Owner-supplied `reference/fiona and scott headhsots.zip` (`2.png`) | Owner-supplied; project use |
-| `neos-medallion-red-on-cream.webp` | Custom render from owner-supplied Brand Guidelines and `../emblem/neos.svg` | Custom, original work |
-| `neos-medallion-gold-on-red.webp` | Custom render from owner-supplied Brand Guidelines and `../emblem/neos.svg` | Custom, original work |
+| `scott-medallion.webp` | OpenAI built-in image generation (`gpt-image-2`) using owner-supplied `reference/_work/headshots/2.png` as an identity reference; full-size source at `reference/_work/generated/scott-medallion.png` | Generated for Trust Electric Heating project use |
+| `neos-medallion-red-on-cream.webp` | Custom render from owner-supplied Brand Guidelines `../emblem/neos.svg` | Custom, original work |
+| `neos-medallion-gold-on-red.webp` | Custom render from owner-supplied Brand Guidelines `../emblem/neos.svg` | Custom, original work |
 | `chip-red.svg`, `chip-gold.svg`, `chip-navy.svg`, `chip-white.svg` | Hand-authored SVG | Custom, original work |
 | `cherry-classic.svg`, `cherry-neon.svg` | Hand-authored SVG | Custom, original work |
 | `seven-classic.svg`, `seven-neon.svg` | Hand-authored SVG | Custom, original work |

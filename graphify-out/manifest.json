@@ -900,8 +900,8 @@
     "semantic_hash": ""
   },
   "playwright.config.ts": {
-    "mtime": 1790337129.1787937,
-    "ast_hash": "bdece5d53a30cabbfbbee1dd1402299a",
+    "mtime": 1790340561.4554067,
+    "ast_hash": "7f59e67417e5583b1e49740ac0b84b84",
     "semantic_hash": ""
   },
   "scripts/check-manifest.mjs": {
@@ -925,8 +925,8 @@
     "semantic_hash": ""
   },
   "vite.config.ts": {
-    "mtime": 1790337503.6346402,
-    "ast_hash": "761cdcbb844f42ad37e7fb235a35aedf",
+    "mtime": 1790339448.8363817,
+    "ast_hash": "e35b910b408cbd0e2d0313c12473e297",
     "semantic_hash": ""
   },
   "vitest.config.ts": {
@@ -1045,8 +1045,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1790337129.2305992,
-    "ast_hash": "073f33bdc126b75d3f6659a91737d89f",
+    "mtime": 1790341317.2427921,
+    "ast_hash": "8af80b9e62ddbaf4da2b6336d1685b6b",
     "semantic_hash": ""
   },
   "moodboard.html": {
@@ -1055,13 +1055,13 @@
     "semantic_hash": ""
   },
   "public/assets/moodboard/SOURCES.md": {
-    "mtime": 1790337200.5602415,
-    "ast_hash": "0e50c88df5d7d5f5b36e55f33ec9dad9",
+    "mtime": 1790340279.6452787,
+    "ast_hash": "88391930d8e430f7f2783409306a6def",
     "semantic_hash": ""
   },
   "specs/001-trust-royale-slots/tasks.md": {
-    "mtime": 1790336400.9692857,
-    "ast_hash": "f5bcb71128764aa2ee5639b654e5274b",
+    "mtime": 1790340039.1401818,
+    "ast_hash": "4e8a584f46272e6c04c81765870d16e6",
     "semantic_hash": ""
   },
   "public/assets/emblem/neos.svg": {
@@ -1080,23 +1080,23 @@
     "semantic_hash": ""
   },
   "public/assets/moodboard/chip-gold.svg": {
-    "mtime": 1790337200.4143515,
-    "ast_hash": "cd52669ef163dc15dcac71455115aeb3",
+    "mtime": 1790339626.3154907,
+    "ast_hash": "8aaff271fef9374d883b35288a6b9b3e",
     "semantic_hash": ""
   },
   "public/assets/moodboard/chip-navy.svg": {
-    "mtime": 1790337200.4309802,
-    "ast_hash": "f06dd405901d82147882cec6c651f235",
+    "mtime": 1790339626.3264978,
+    "ast_hash": "9ba7ea8d9c55a2b373a49e0c6b1d2d4a",
     "semantic_hash": ""
   },
   "public/assets/moodboard/chip-red.svg": {
-    "mtime": 1790337200.3981419,
-    "ast_hash": "f5cd9d79133ce5de5f821b420cdeb26a",
+    "mtime": 1790339626.3362918,
+    "ast_hash": "ec08049f4f7c56738bf4154f7196b169",
     "semantic_hash": ""
   },
   "public/assets/moodboard/chip-white.svg": {
-    "mtime": 1790337200.4470181,
-    "ast_hash": "64d26b76ad417a7b14ea871cd77fb51d",
+    "mtime": 1790339626.3447156,
+    "ast_hash": "edd0e8befe234a685bc9bedd24d8bbaa",
     "semantic_hash": ""
   },
   "public/assets/moodboard/neos-medallion-gold-on-red.webp": {
@@ -1110,8 +1110,8 @@
     "semantic_hash": ""
   },
   "public/assets/moodboard/scott-medallion.webp": {
-    "mtime": 1790337240.1258903,
-    "ast_hash": "b2023021678c203632b39695113cb742",
+    "mtime": 1790340252.6854403,
+    "ast_hash": "f80a06e9a58b8baeb082cdafb755fe21",
     "semantic_hash": ""
   },
   "public/assets/moodboard/seven-classic.svg": {
@@ -1132,6 +1132,101 @@
   "public/assets/moodboard/sweets-neon.svg": {
     "mtime": 1790337200.544441,
     "ast_hash": "75573c9d1555ec0b4c984a822f92bd0b",
+    "semantic_hash": ""
+  },
+  "src/main.ts": {
+    "mtime": 1790341290.0478249,
+    "ast_hash": "fa15c83bfe240072b71f1566c85e021e",
+    "semantic_hash": ""
+  },
+  "src/scene/background.ts": {
+    "mtime": 1790340387.9949856,
+    "ast_hash": "3154be9d3a32c3186d3fa25ec1a8de6f",
+    "semantic_hash": ""
+  },
+  "src/scene/cabinet.ts": {
+    "mtime": 1790341492.6330938,
+    "ast_hash": "deaed789d10b5715024244c1bf51ad64",
+    "semantic_hash": ""
+  },
+  "src/scene/layout.ts": {
+    "mtime": 1790341714.8242922,
+    "ast_hash": "6295810667f6ba3d4b86c6e7be3f99c7",
+    "semantic_hash": ""
+  },
+  "tests/e2e/layout.spec.ts": {
+    "mtime": 1790341739.9763937,
+    "ast_hash": "2172d94b3b42dc5518cdc7054f2d85de",
+    "semantic_hash": ""
+  },
+  "tests/unit/layout.test.ts": {
+    "mtime": 1790341739.9551065,
+    "ast_hash": "67b8a255fe9756e802bf3d74fe11c8a2",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/SOURCES.md": {
+    "mtime": 1790340267.9797766,
+    "ast_hash": "cd1e45e9f353fea0e1e6d498fd32745c",
+    "semantic_hash": ""
+  },
+  "specs/001-trust-royale-slots/decisions.md": {
+    "mtime": 1790341228.823366,
+    "ast_hash": "96593ed451f0b38634a5452b8702248f",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/fiona-medallion.webp": {
+    "mtime": 1790340252.6234436,
+    "ast_hash": "a2f7e89a74db54cb49abce48d97c457d",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/keith-medallion.webp": {
+    "mtime": 1790340252.6819317,
+    "ast_hash": "572c8b43300b767998bf91e8aaa112df",
+    "semantic_hash": ""
+  },
+  "public/assets/mock/scott-medallion.webp": {
+    "mtime": 1790340252.5664108,
+    "ast_hash": "f80a06e9a58b8baeb082cdafb755fe21",
+    "semantic_hash": ""
+  },
+  "tests/e2e/__screenshots__/desktop-1920x1080.png": {
+    "mtime": 1790341776.4997883,
+    "ast_hash": "c87e69682550036eb0bd71011f40b3f0",
+    "semantic_hash": ""
+  },
+  "tests/e2e/__screenshots__/desktop-ultrawide-3440x1440.png": {
+    "mtime": 1790341791.1658978,
+    "ast_hash": "f23e52ac5a08ea8574bb490af8df6fe6",
+    "semantic_hash": ""
+  },
+  "tests/e2e/__screenshots__/desktop-wide-2560x1440.png": {
+    "mtime": 1790341782.8613553,
+    "ast_hash": "dc93390e2fbe9693314df9625e5f4416",
+    "semantic_hash": ""
+  },
+  "tests/e2e/__screenshots__/ipad-portrait-1024x1366.png": {
+    "mtime": 1790341771.8682747,
+    "ast_hash": "20e8339ba83613119992c9833d12afa7",
+    "semantic_hash": ""
+  },
+  "tests/e2e/__screenshots__/phone-landscape-844x390.png": {
+    "mtime": 1790341768.4386744,
+    "ast_hash": "0a26e68db4d4537ca379461e9d3a1ad0",
+    "semantic_hash": ""
+  },
+  "tests/e2e/__screenshots__/phone-portrait-390x844.png": {
+    "mtime": 1790341766.453507,
+    "ast_hash": "ceec5cac97d24898d1281d7776d1bf22",
+    "semantic_hash": ""
+  },
+  "tests/e2e/__screenshots__/phone-small-320x568.png": {
+    "mtime": 1790341764.3829126,
+    "ast_hash": "6dd9bf19e4c4d094c218ffcc795ee157",
+    "semantic_hash": ""
+  },
+  ".playwright-mcp/page-2026-09-25T13-02-30-118Z.yml": {
+    "mtime": 1790341350.2194378,
+    "ast_hash": "d35b7389b3493060c5d5c95a376c7bf2",
     "semantic_hash": ""
   }
 }
