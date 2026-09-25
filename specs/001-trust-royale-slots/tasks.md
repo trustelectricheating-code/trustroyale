@@ -62,7 +62,7 @@ Single Vite project at repo root (plan.md → Structure Decision): pages at root
 - [x] T010 [P] [US4] Render the Neos medallion in `public/assets/moodboard/neos-medallion-{red-on-cream,gold-on-red}.webp` using `public/assets/emblem/neos.svg` (depends on T008) in the same gold rim as T009, both colour variants so the owner can choose
 - [x] T011 [P] [US4] Produce chip and filler-symbol style tests in `public/assets/moodboard/` (casino chips in red/gold/navy/white; cherry, seven, sweets in 2 styles each), all generated or CC0, logging source and licence in `public/assets/moodboard/SOURCES.md`
 - [x] T012 [US4] Build `moodboard.html` (plus `src/styles/moodboard.css`) showing 2–3 directions side by side — e.g. "Monte Carlo Velvet", "Vegas Neon Gold", "Art Deco Royale" — each with palette swatches built on the brand reds + gold, "TRUST ROYALE" title type tests (display serif / Art Deco face + rounded sans UI face from Google Fonts, OFL), material references (velvet, gold, bulbs, glass), the Scott and Neos medallions, and chip + filler tests; readable on a 390×844 phone and a 1920×1080 desktop
-- [ ] T013 [US4] Serve Gate A locally with `pnpm dev` (the mood board is review-only and is not built or deployed to Vercel), show the owner `/moodboard.html`, and record the chosen direction verbatim in `specs/001-trust-royale-slots/decisions.md` — **stop until the owner picks a direction**
+- [x] T013 [US4] Serve Gate A locally with `pnpm dev` (the mood board is review-only and is not built or deployed to Vercel), show the owner `/moodboard.html`, and record the chosen direction verbatim in `specs/001-trust-royale-slots/decisions.md` — **stop until the owner picks a direction**
 
 ### Gate B — Look & feel mock (static `/`, no logic)
 
