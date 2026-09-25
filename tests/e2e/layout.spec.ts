@@ -17,12 +17,34 @@ test("full-screen mock fits all required viewports", async ({ page }, testInfo) 
     await page.goto("/");
     await page.waitForFunction(() => document.documentElement.dataset.ready === "true" || Boolean(document.documentElement.dataset.error));
     expect(await page.evaluate(() => document.documentElement.dataset.error), `${viewport.name} boot error`).toBeUndefined();
+    const reelSymbols = await page.evaluate(() => (
+      window as Window & { __trustRoyaleDebug?: { reelSymbols: Array<{ symbol: string; drumWidth: number; width: number; height: number }> } }
+    ).__trustRoyaleDebug?.reelSymbols);
+    expect(reelSymbols, `${viewport.name} reel debug metrics`).toHaveLength(9);
+    expect(reelSymbols?.some((symbol) => symbol.symbol === "gia"), `${viewport.name} Gia on reels`).toBe(true);
+    for (const symbol of reelSymbols ?? []) {
+      expect(symbol.width, `${viewport.name} ${symbol.symbol} width`).toBeLessThanOrEqual(symbol.drumWidth * 0.64);
+      expect(symbol.height, `${viewport.name} ${symbol.symbol} height`).toBeLessThanOrEqual(symbol.drumWidth * 0.64);
+    }
     await expect(page.locator("#paytable > span:not(.paytable__label)"), `${viewport.name} paytable rules`).toHaveCount(7);
-    await expect(page.locator("#paytable > .paytable__rule img"), `${viewport.name} paytable medallions`).toHaveCount(20);
+    expect(await page.locator("#paytable > .paytable__rule").evaluateAll((rules) => rules.map((rule) => rule.getAttribute("aria-label")))).toEqual([
+      "Scott times three, 20 percent",
+      "Fiona times three, 20 percent",
+      "Gia times three, 20 percent",
+      "Keith times three, 15 percent",
+      "Two of Scott, Fiona, Gia, or Keith plus one different person, 15 percent",
+      "Keith times two plus any, 15 percent",
+      "Neos times three, 10 percent",
+    ]);
+    await expect(page.locator("#paytable > .paytable__rule img"), `${viewport.name} paytable medallions`).toHaveCount(21);
+    await expect(page.locator('#paytable img[src="/assets/mock/gia-medallion.webp"]'), `${viewport.name} Gia paytable medallions`).toHaveCount(4);
+    await expect(page.locator(".marquee__bulb"), `${viewport.name} real title bulbs`).toHaveCount(62);
     const dimensions = await page.evaluate(() => {
       const bounds = document.querySelector("canvas")?.getBoundingClientRect();
       const marquee = document.querySelector("#marquee")?.getBoundingClientRect();
+      const marqueePlate = document.querySelector("#marquee svg > rect")?.getBoundingClientRect();
       const marqueeTitle = document.querySelector(".marquee__title")?.getBoundingClientRect();
+      const marqueeSubtitle = document.querySelector(".marquee__subtitle")?.getBoundingClientRect();
       return {
         scrollWidth: document.documentElement.scrollWidth,
         scrollHeight: document.documentElement.scrollHeight,
@@ -30,7 +52,9 @@ test("full-screen mock fits all required viewports", async ({ page }, testInfo) 
         innerHeight,
         canvas: bounds && { left: bounds.left, top: bounds.top, right: bounds.right, bottom: bounds.bottom },
         marquee: marquee && { left: marquee.left, top: marquee.top, right: marquee.right, bottom: marquee.bottom },
+        marqueePlate: marqueePlate && { left: marqueePlate.left, top: marqueePlate.top, right: marqueePlate.right, bottom: marqueePlate.bottom },
         marqueeTitle: marqueeTitle && { left: marqueeTitle.left, top: marqueeTitle.top, right: marqueeTitle.right, bottom: marqueeTitle.bottom },
+        marqueeSubtitle: marqueeSubtitle && { left: marqueeSubtitle.left, top: marqueeSubtitle.top, right: marqueeSubtitle.right, bottom: marqueeSubtitle.bottom },
       };
     });
     expect(dimensions.scrollWidth, `${viewport.name} horizontal overflow`).toBeLessThanOrEqual(dimensions.innerWidth);
@@ -44,6 +68,15 @@ test("full-screen mock fits all required viewports", async ({ page }, testInfo) 
     expect(dimensions.marqueeTitle!.top, `${viewport.name} title top inset`).toBeGreaterThan(dimensions.marquee!.top);
     expect(dimensions.marqueeTitle!.right, `${viewport.name} title right inset`).toBeLessThan(dimensions.marquee!.right);
     expect(dimensions.marqueeTitle!.bottom, `${viewport.name} title bottom inset`).toBeLessThan(dimensions.marquee!.bottom);
+    expect(dimensions.marqueeTitle!.left, `${viewport.name} title inside plate left`).toBeGreaterThan(dimensions.marqueePlate!.left);
+    expect(dimensions.marqueeTitle!.top, `${viewport.name} title inside plate top`).toBeGreaterThan(dimensions.marqueePlate!.top);
+    expect(dimensions.marqueeTitle!.right, `${viewport.name} title inside plate right`).toBeLessThan(dimensions.marqueePlate!.right);
+    expect(dimensions.marqueeTitle!.bottom, `${viewport.name} title inside plate bottom`).toBeLessThan(dimensions.marqueePlate!.bottom);
+    if (dimensions.marqueeSubtitle!.bottom > dimensions.marqueeSubtitle!.top) {
+      expect(dimensions.marqueeSubtitle!.left, `${viewport.name} subtitle inside plate left`).toBeGreaterThan(dimensions.marqueePlate!.left);
+      expect(dimensions.marqueeSubtitle!.right, `${viewport.name} subtitle inside plate right`).toBeLessThan(dimensions.marqueePlate!.right);
+      expect(dimensions.marqueeSubtitle!.bottom, `${viewport.name} subtitle inside plate bottom`).toBeLessThan(dimensions.marqueePlate!.bottom);
+    }
     await page.screenshot({
       path: path.join(process.cwd(), "tests/e2e/__screenshots__", `${viewport.name}-${viewport.width}x${viewport.height}.png`),
       animations: "disabled",

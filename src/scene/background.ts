@@ -20,7 +20,6 @@ const ASSETS = {
   coin: "/assets/mock/coin.webp",
   coinFar: "/assets/mock/coin-far.webp",
   coinNear: "/assets/mock/coin-near.webp",
-  neos: "/assets/emblem/neos.svg",
 } as const;
 
 type Depth = "far" | "mid" | "near";
@@ -62,12 +61,18 @@ function sprite(texture: Texture, size: number): Sprite {
   return node;
 }
 
-function chip(texture: Texture, emblem: Texture): Container {
+function neosMark(size: number, colour: number): Graphics {
+  const scale = size / 160;
+  return new Graphics()
+    .circle(0, -62 * scale, 12 * scale).fill(colour)
+    .roundRect(-45 * scale, -38 * scale, 90 * scale, 18 * scale, 9 * scale).fill(colour)
+    .roundRect(-9 * scale, -38 * scale, 18 * scale, 112 * scale, 9 * scale).fill(colour);
+}
+
+function chip(texture: Texture): Container {
   const node = new Container();
   node.addChild(sprite(texture, 120));
-  const mark = sprite(emblem, 38);
-  mark.tint = 0xffe8a3;
-  node.addChild(mark);
+  node.addChild(neosMark(38, 0xffe6a0));
   return node;
 }
 
@@ -85,8 +90,14 @@ function edgeBand(kind: "chip" | "coin", index: number): Graphics {
     return edge;
   }
   const colours = [0x9f0d1e, 0xc89528, 0x10295b, 0xe7ddc8];
-  edge.roundRect(-14, -56, 28, 112, 8).fill({ color: colours[index % colours.length] }).stroke({ color: 0xffe7a0, width: 2 });
-  for (let y = -46; y <= 42; y += 22) edge.rect(-13, y, 26, 8).fill({ color: 0xf2dfbd, alpha: 0.88 });
+  edge.circle(0, 0, 58).fill({ color: colours[index % colours.length] }).stroke({ color: 0xffe7a0, width: 3 });
+  edge.circle(0, 0, 48).stroke({ color: 0xf2dfbd, width: 4, alpha: 0.88 });
+  for (let mark = 0; mark < 12; mark += 1) {
+    const angle = (mark / 12) * Math.PI * 2;
+    edge.moveTo(Math.cos(angle) * 49, Math.sin(angle) * 49)
+      .lineTo(Math.cos(angle) * 57, Math.sin(angle) * 57)
+      .stroke({ color: 0xf2dfbd, width: 5, alpha: 0.9 });
+  }
   return edge;
 }
 
@@ -95,10 +106,8 @@ function card(index: number): Container {
   const back = new Graphics()
     .roundRect(-39, -55, 78, 110, 9).fill({ color: 0xf2dfbd }).stroke({ color: 0xffe8a3, width: 3 })
     .roundRect(-33, -49, 66, 98, 7).fill({ color: 0x7c0715 }).stroke({ color: 0xd4a437, width: 2 })
-    .circle(0, 0, 20).stroke({ color: 0xffd878, width: 2, alpha: 0.72 })
-    .moveTo(-24, 0).lineTo(24, 0).stroke({ color: 0xffd878, width: 2, alpha: 0.72 })
-    .moveTo(0, -34).lineTo(0, 34).stroke({ color: 0xffd878, width: 2, alpha: 0.72 });
-  node.addChild(back);
+    .roundRect(-27, -43, 54, 86, 5).stroke({ color: 0xffd878, width: 1, alpha: 0.38 });
+  node.addChild(back, neosMark(58, 0xffd878));
   node.rotation = index % 2 ? -0.18 : 0.22;
   return node;
 }
@@ -160,12 +169,12 @@ export async function createBackground(): Promise<EnvironmentScene> {
       face = kind === "coin"
         ? new Container({ children: [sprite(depth === "mid" ? textures.coin : depth === "near" ? textures.coinNear : textures.coinFar, 110)] })
         : depth === "mid"
-          ? chip(itemTextures[index % itemTextures.length], textures.neos)
+          ? chip(itemTextures[index % itemTextures.length])
           : new Container({ children: [sprite(depthTextures[index % depthTextures.length], 120)] });
       node.addChild(edge, face);
     }
     (depth === "near" ? nearLayer : depth === "far" ? farLayer : midLayer).addChild(node);
-    const baseRotation = kind === "card" ? node.rotation : ((index % 5) - 2) * 0.16;
+    const baseRotation = kind === "card" ? node.rotation : ((index % 5) - 2) * 0.12;
     items.push({ node, depth, kind, face, edge, nx, ny, phase: index * 0.71, baseRotation, baseSize: depth === "near" ? 1.15 : depth === "far" ? 0.52 : 0.82, baseX: 0, baseY: 0 });
   });
 
@@ -213,6 +222,10 @@ export function drawBackground(scene: EnvironmentScene, layout: SceneLayout): vo
   });
 }
 
+export function floatingFaceScaleY(timeSeconds: number, speed: number, phase: number): number {
+  return 0.925 + Math.cos(timeSeconds * speed * 0.38 + phase) * 0.075;
+}
+
 export function animateBackground(scene: EnvironmentScene, timeSeconds: number): void {
   if (scene.reducedMotion) return;
   scene.wheelHead.rotation = timeSeconds * Math.PI * 0.18;
@@ -222,19 +235,14 @@ export function animateBackground(scene: EnvironmentScene, timeSeconds: number):
     if (!item.node.visible) return;
     const speed = item.depth === "near" ? 1.2 : item.depth === "far" ? 0.45 : 0.72;
     const parallax = item.depth === "near" ? 22 : item.depth === "far" ? 5 : 11;
-    item.node.x = item.baseX + scene.pointer.x * parallax;
+    item.node.x = item.baseX + Math.cos(timeSeconds * speed * 0.35 + item.phase) * 3 + scene.pointer.x * parallax;
     item.node.y = item.baseY + Math.sin(timeSeconds * speed + item.phase) * (5 + parallax * 0.2) + scene.pointer.y * parallax;
-    const rotationRange = item.kind === "chip" ? 0.08 : item.kind === "coin" ? 0.14 : 0.24;
+    const rotationRange = item.kind === "card" ? 0.24 : 0.06;
     item.node.rotation = item.baseRotation + Math.sin(timeSeconds * speed * 0.7 + item.phase) * rotationRange;
     if (item.face) {
-      const flip = Math.max(0.3, Math.abs(Math.cos(timeSeconds * speed * 0.55 + item.phase)));
-      if (item.kind === "coin") {
-        const coinScale = 0.72 + flip * 0.28;
-        item.face.scale.set(coinScale);
-      } else {
-        item.face.scale.set(flip, 1);
-      }
-      if (item.edge) item.edge.alpha = Math.max(0, Math.min(1, (0.58 - flip) * 2.8));
+      const perspective = floatingFaceScaleY(timeSeconds, speed, item.phase);
+      item.face.scale.set(1, perspective);
+      if (item.edge) item.edge.alpha = 0.22;
     }
   });
 }

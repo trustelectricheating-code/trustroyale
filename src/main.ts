@@ -2,7 +2,7 @@ import { Application } from "pixi.js";
 import { gsap } from "gsap";
 import "./styles/main.css";
 import { animateBackground, createBackground, drawBackground } from "./scene/background";
-import { createCabinet, layoutCabinet } from "./scene/cabinet";
+import { animateCabinet, createCabinet, layoutCabinet } from "./scene/cabinet";
 import { computeLayout, type LayoutRect, type SafeAreaInsets } from "./scene/layout";
 
 function readSafeAreaInsets(): SafeAreaInsets {
@@ -49,6 +49,9 @@ async function boot(): Promise<void> {
 
   const [environment, cabinet] = await Promise.all([createBackground(), createCabinet()]);
   app.stage.addChild(environment.back, cabinet.machine, environment.front);
+  (window as Window & { __trustRoyaleDebug?: { reelSymbols: typeof cabinet.reelSymbols } }).__trustRoyaleDebug = {
+    reelSymbols: cabinet.reelSymbols,
+  };
 
   const motion = gsap.timeline({ repeat: -1, yoyo: true });
   motion
@@ -102,7 +105,11 @@ async function boot(): Promise<void> {
 
   window.addEventListener("resize", scheduleLayout, { passive: true });
   window.addEventListener("orientationchange", scheduleLayout, { passive: true });
-  app.ticker.add(() => animateBackground(environment, performance.now() / 1000));
+  app.ticker.add(() => {
+    const timeSeconds = performance.now() / 1000;
+    animateBackground(environment, timeSeconds);
+    animateCabinet(cabinet, timeSeconds, environment.reducedMotion);
+  });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       app.stop();

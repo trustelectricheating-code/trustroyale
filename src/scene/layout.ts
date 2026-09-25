@@ -26,14 +26,22 @@ function scaled(frame: LayoutRect, designWidth: number, designHeight: number) {
 }
 
 function overlays(machine: SceneLayout["machine"]): Pick<SceneLayout, "marquee" | "spinButton"> {
-  const marquee = scaled(rect(
-    machine.x + machine.width * 0.18,
-    machine.y + machine.height * 0.066,
-    machine.width * 0.64,
-    machine.height * 0.12,
-  ), 800, 170);
   const scale = machine.scale;
-  const button = CABINET_ART.spinButton;
+  const marqueeArt = CABINET_ART.marqueeFrame;
+  const marquee = scaled(rect(
+    machine.x + marqueeArt.x * scale,
+    machine.y + marqueeArt.y * scale,
+    marqueeArt.width * scale,
+    marqueeArt.height * scale,
+  ), 800, 170);
+  const opening = CABINET_ART.spinButtonOpening;
+  const inset = 4;
+  const button = {
+    x: opening.x + inset,
+    y: opening.y + inset,
+    width: opening.width - inset * 2,
+    height: opening.height - inset * 2,
+  };
   const spinButton = scaled(rect(
     machine.x + button.x * scale,
     machine.y + button.y * scale,

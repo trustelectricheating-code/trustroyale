@@ -6,6 +6,7 @@ const ASSETS = {
   cabinet: "/assets/mock/cabinet.webp",
   scott: "/assets/mock/scott-medallion.webp",
   fiona: "/assets/mock/fiona-medallion.webp",
+  gia: "/assets/mock/gia-medallion.webp",
   keith: "/assets/mock/keith-medallion.webp",
   neos: "/assets/emblem/neos.svg",
   cherry: "/assets/mock/cherry-reel.webp",
@@ -13,7 +14,34 @@ const ASSETS = {
   sweets: "/assets/mock/sweets-reel.webp",
 } as const;
 
-export interface CabinetScene { machine: Container }
+export interface ReelSymbolMetric {
+  symbol: string;
+  drum: number;
+  row: number;
+  drumWidth: number;
+  width: number;
+  height: number;
+}
+
+export interface CabinetScene {
+  machine: Container;
+  reelSymbols: ReelSymbolMetric[];
+  bulbs: Graphics[];
+}
+
+export function cabinetBulbAlpha(index: number, count: number, timeSeconds: number, reducedMotion: boolean): number {
+  if (reducedMotion) return 0.78;
+  const duration = 3;
+  const pattern = Math.floor(timeSeconds / duration) % 4;
+  const progress = (timeSeconds % duration) / duration;
+  if (pattern === 0) {
+    const distance = Math.abs(index - Math.floor(progress * count));
+    return distance <= 1 ? 1 : 0.18;
+  }
+  if (pattern === 1) return index % 2 === Math.floor(progress * 8) % 2 ? 0.95 : 0.2;
+  if (pattern === 2) return index / Math.max(1, count - 1) <= progress ? 0.95 : 0.16;
+  return 0.28 + (Math.sin(progress * Math.PI * 8) * 0.5 + 0.5) * 0.72;
+}
 
 function centredSprite(texture: Texture, x: number, y: number, width: number, height = width): Sprite {
   const sprite = new Sprite(texture);
@@ -51,13 +79,22 @@ function enamelNeos(x: number, y: number, size: number): Container {
   return node;
 }
 
-function reelSymbol(texture: Texture, masked: boolean, neos: boolean, x: number, y: number, size: number, scaleX: number, scaleY: number): Container | Sprite {
-  const node = neos ? enamelNeos(x, y, size) : masked ? maskedMedallion(texture, x, y, size) : centredSprite(texture, x, y, size);
+function reelSymbol(texture: Texture, masked: boolean, neos: boolean, x: number, y: number, size: number, scaleX: number, scaleY: number): Container {
+  let node: Container;
+  if (neos) {
+    node = enamelNeos(x, y, size);
+  } else if (masked) {
+    node = maskedMedallion(texture, x, y, size);
+  } else {
+    node = new Container();
+    node.position.set(x, y);
+    node.addChild(centredSprite(texture, 0, 0, size));
+  }
   node.scale.set(scaleX, scaleY);
   return node;
 }
 
-function createDrum(textures: Record<keyof typeof ASSETS, Texture>, index: number): Container {
+function createDrum(textures: Record<keyof typeof ASSETS, Texture>, index: number, metrics: ReelSymbolMetric[]): Container {
   const { reelWindow } = CABINET_ART;
   const gap = 9;
   const width = (reelWindow.width - gap * 4) / 3;
@@ -75,18 +112,20 @@ function createDrum(textures: Record<keyof typeof ASSETS, Texture>, index: numbe
     .rect(width * 0.88, 0, width * 0.12, height).fill({ color: 0x5b250e, alpha: 0.17 }));
 
   const sets = [
-    [[textures.seven, false, false], [textures.scott, true, false], [textures.cherry, false, false]],
-    [[textures.fiona, true, false], [textures.neos, false, true], [textures.sweets, false, false]],
-    [[textures.keith, true, false], [textures.cherry, false, false], [textures.seven, false, false]],
+    [["seven", textures.seven, false, false], ["scott", textures.scott, true, false], ["cherry", textures.cherry, false, false]],
+    [["fiona", textures.fiona, true, false], ["gia", textures.gia, true, false], ["sweets", textures.sweets, false, false]],
+    [["keith", textures.keith, true, false], ["neos", textures.neos, false, true], ["seven", textures.seven, false, false]],
   ] as const;
   const positions = [
     { y: -5, size: 82, sx: 0.88, sy: 0.55 },
     { y: height * 0.5, size: 82, sx: 1, sy: 1 },
     { y: height + 5, size: 82, sx: 0.88, sy: 0.55 },
   ];
-  sets[index].forEach(([texture, masked, neos], row) => {
+  sets[index].forEach(([symbol, texture, masked, neos], row) => {
     const position = positions[row];
-    drum.addChild(reelSymbol(texture, masked, neos, width * 0.5, position.y, position.size, position.sx, position.sy));
+    const node = reelSymbol(texture, masked, neos, width * 0.5, position.y, position.size, position.sx, position.sy);
+    drum.addChild(node);
+    metrics.push({ symbol, drum: index, row, drumWidth: width, width: node.width, height: node.height });
   });
 
   const curvature = new Graphics()
@@ -146,17 +185,33 @@ export async function createCabinet(): Promise<CabinetScene> {
   const loaded = await Assets.load<Texture>(entries.map(([, url]) => url));
   const textures = Object.fromEntries(entries.map(([key, url]) => [key, loaded[url]])) as Record<keyof typeof ASSETS, Texture>;
   const machine = new Container();
+  const reelSymbols: ReelSymbolMetric[] = [];
+  const bulbs: Graphics[] = [];
   machine.label = "Photoreal Trust Royale cabinet with three cylindrical reels";
 
   machine.addChild(new Graphics().ellipse(360, 1050, 330, 30).fill({ color: 0x000000, alpha: 0.48 }));
-  for (let index = 0; index < 3; index += 1) machine.addChild(createDrum(textures, index));
+  const { reelWindow } = CABINET_ART;
+  machine.addChild(new Graphics()
+    .roundRect(reelWindow.x - 4, reelWindow.y - 4, reelWindow.width + 8, reelWindow.height + 8, 28)
+    .fill({ color: 0x100b09 }));
+  for (let index = 0; index < 3; index += 1) machine.addChild(createDrum(textures, index, reelSymbols));
 
   const cabinet = new Sprite(textures.cabinet);
   cabinet.width = CABINET_DESIGN.width;
   cabinet.height = CABINET_DESIGN.height;
   machine.addChild(cabinet);
 
-  const { reelWindow } = CABINET_ART;
+  const bulbLayer = new Container();
+  CABINET_ART.marqueeBulbs.forEach(([x, y]) => {
+    const bulb = new Graphics()
+      .circle(x, y, 10).fill({ color: 0xffb52e, alpha: 0.16 })
+      .circle(x, y, 5).fill({ color: 0xffd66d, alpha: 0.88 })
+      .circle(x - 1, y - 1, 2).fill({ color: 0xffffe1 });
+    bulbs.push(bulb);
+    bulbLayer.addChild(bulb);
+  });
+  machine.addChild(bulbLayer);
+
   machine.addChild(new Graphics()
     .roundRect(reelWindow.x - 3, reelWindow.y - 3, reelWindow.width + 6, reelWindow.height + 6, 28)
       .stroke({ color: 0xffe3a0, width: 4, alpha: 0.86 })
@@ -176,9 +231,15 @@ export async function createCabinet(): Promise<CabinetScene> {
 
   machine.addChild(
     readout("SPINS LEFT", "3", CABINET_ART.leftReadout.x, CABINET_ART.leftReadout.y),
-    readout("TOP PRIZE", "25%", CABINET_ART.rightReadout.x, CABINET_ART.rightReadout.y),
+    readout("TOP PRIZE", "20%", CABINET_ART.rightReadout.x, CABINET_ART.rightReadout.y),
   );
-  return { machine };
+  return { machine, reelSymbols, bulbs };
+}
+
+export function animateCabinet(scene: CabinetScene, timeSeconds: number, reducedMotion: boolean): void {
+  scene.bulbs.forEach((bulb, index) => {
+    bulb.alpha = cabinetBulbAlpha(index, scene.bulbs.length, timeSeconds, reducedMotion);
+  });
 }
 
 export function layoutCabinet(scene: CabinetScene, layout: SceneLayout): void {

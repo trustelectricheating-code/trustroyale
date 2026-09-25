@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { CABINET_ART } from "../../src/scene/cabinetArt";
 import { computeLayout, type LayoutRect, type SafeAreaInsets } from "../../src/scene/layout";
 
 const NONE: SafeAreaInsets = { top: 0, right: 0, bottom: 0, left: 0 };
@@ -45,5 +46,21 @@ describe("computeLayout", () => {
     expect(layout.paytable.x - layout.safeBounds.x).toBeCloseTo(
       layout.safeBounds.x + layout.safeBounds.width - (layout.chipTray.x + layout.chipTray.width),
     );
+  });
+
+  it("seats SPIN inside the measured cabinet opening", () => {
+    const layout = computeLayout(1920, 1080, NONE);
+    const opening = CABINET_ART.spinButtonOpening;
+    const openingFrame = {
+      x: layout.machine.x + opening.x * layout.machine.scale,
+      y: layout.machine.y + opening.y * layout.machine.scale,
+      width: opening.width * layout.machine.scale,
+      height: opening.height * layout.machine.scale,
+    };
+    expectInside(layout.spinButton, openingFrame);
+    expect(layout.spinButton.x + layout.spinButton.width / 2).toBeCloseTo(openingFrame.x + openingFrame.width / 2);
+    expect(layout.spinButton.y + layout.spinButton.height / 2).toBeCloseTo(openingFrame.y + openingFrame.height / 2);
+    expect(layout.spinButton.width).toBeLessThan(openingFrame.width);
+    expect(layout.spinButton.height).toBeLessThan(openingFrame.height);
   });
 });

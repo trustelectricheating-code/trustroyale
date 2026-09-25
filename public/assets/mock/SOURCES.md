@@ -30,3 +30,15 @@ Every raster below was generated with OpenAI's built-in image tool (`gpt-image-2
 Depth-of-field delivery derivatives are also generated from those recorded sources: `roulette-wheel-soft.webp` from `roulette-wheel.png`; `chip-{red,gold,navy,white}-{far,near}.webp` from the corresponding blank chip plus the vector Neos emblem; and `coin-{far,near}.webp` from `coin.png`. ImageMagick applies only resizing, emblem compositing, WebP compression, alpha cutting, and depth blur; it does not introduce ungenerated raster artwork.
 
 Round 5 adds alpha-trimmed reel derivatives `cherry-reel.webp`, `seven-reel.webp`, and `sweets-reel.webp` from their recorded generated sources. ImageMagick trims transparent padding, scales the visible bounds, centres each result on a transparent 256×256 canvas, and writes WebP; no new artwork is introduced.
+
+## Round 7 — Gia medallion
+
+`gia-medallion.webp` was generated with OpenAI's built-in image tool (`gpt-image-2`) from owner-supplied identity reference `reference/gia.png`, with `scott-medallion.webp` and `fiona-medallion.webp` supplied as style/layout references. The untouched full-size generation is `reference/_work/generated/gia-medallion.png`; the exact prompt is `reference/_work/generated/gia-medallion-prompt.txt`. Delivery processing only resizes to 512×512, strips metadata, and encodes WebP.
+
+## Round 8 — transparent chip emblems
+
+The eight `chip-{red,gold,navy,white}-{far,near}.webp` depth derivatives were rebuilt mechanically from their recorded blank generated chip sources. The exact `public/assets/emblem/neos.svg` geometry was rendered in cream-gold on a transparent 46×46 canvas, composited directly onto each chip face, and then given the existing far/near depth blur. No generative model or new artwork was used. The three `coin*.webp` files were inspected and contain no emblem or white backing box, so they were left unchanged.
+
+## Round 9 correction — photoreal marquee bulbs
+
+`marquee-bulb-lit.webp` and `marquee-bulb-unlit.webp` were generated separately with OpenAI's built-in image tool (`gpt-image-2`) as front-on transparent cutouts. Untouched sources are `reference/_work/generated/marquee-bulb-lit.png` and `reference/_work/generated/marquee-bulb-unlit.png`; exact prompts are in `reference/_work/generated/marquee-bulb-prompts.txt`. Delivery processing only resizes each to 128×128, strips metadata, and encodes WebP.
