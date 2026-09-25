@@ -1,0 +1,57 @@
+{
+  "AGENTS.md": {
+    "mtime": 1790335122.1087878,
+    "ast_hash": "6a47d64fcc136324ca395065a707ef76",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1790335122.0574746,
+    "ast_hash": "82efb97a359f5c7290bf2513d14686be",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1790333924.2812989,
+    "ast_hash": "49bc950337ef3540b92e8a6bf319b6e0",
+    "semantic_hash": ""
+  },
+  "specs/001-trust-royale-slots/contracts/asset-manifest.md": {
+    "mtime": 1790334301.8086064,
+    "ast_hash": "d4f6612fa1232deda2f94b629aa032a6",
+    "semantic_hash": ""
+  },
+  "specs/001-trust-royale-slots/contracts/lead-api.md": {
+    "mtime": 1790334480.7740273,
+    "ast_hash": "0e68357cff98204842dce518dcca7a4a",
+    "semantic_hash": ""
+  },
+  "specs/001-trust-royale-slots/contracts/spin-api.md": {
+    "mtime": 1790334824.7932076,
+    "ast_hash": "f04b90e36520c10ef9db0f316f1dd90b",
+    "semantic_hash": ""
+  },
+  "specs/001-trust-royale-slots/data-model.md": {
+    "mtime": 1790334824.792928,
+    "ast_hash": "8bfd782136815ff6ee03cad7d764f09f",
+    "semantic_hash": ""
+  },
+  "specs/001-trust-royale-slots/plan.md": {
+    "mtime": 1790334824.7942033,
+    "ast_hash": "febd5b6185705c744730d6e7d916dd84",
+    "semantic_hash": ""
+  },
+  "specs/001-trust-royale-slots/quickstart.md": {
+    "mtime": 1790334824.794355,
+    "ast_hash": "224d3a0b580283ee3b44079c03d99219",
+    "semantic_hash": ""
+  },
+  "specs/001-trust-royale-slots/research.md": {
+    "mtime": 1790334824.7938478,
+    "ast_hash": "eb9ee91320e3e018d1d728418b507a38",
+    "semantic_hash": ""
+  },
+  "specs/001-trust-royale-slots/spec.md": {
+    "mtime": 1790334829.8470342,
+    "ast_hash": "ab115f443fca2437e8f95987ce0dec8c",
+    "semantic_hash": ""
+  }
+}
