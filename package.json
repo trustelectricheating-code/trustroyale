@@ -1,0 +1,33 @@
+{
+  "name": "trustroyale",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "db:migrate": "node scripts/migrate.mjs",
+    "assets:check": "node scripts/check-manifest.mjs"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "gsap": "^3.13.0",
+    "howler": "^2.2.4",
+    "pixi.js": "^8.13.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.1",
+    "@types/howler": "^2.2.12",
+    "@vercel/functions": "^2.2.13",
+    "@vercel/node": "^5.3.24",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.7",
+    "vitest": "^3.2.4"
+  },
+  "packageManager": "pnpm@10.17.1"
+}
