@@ -57,7 +57,11 @@ export function createReels(initial: ReelStrip = [
       sprite.width = paylineSize * rowLayout.scale;
       sprite.height = sprite.width;
       sprite.alpha = rowLayout.alpha;
-      reel.addChild(sprite);
+      const medallionMask = new Graphics()
+        .circle(sprite.x, sprite.y, sprite.width * 0.495)
+        .fill(0xffffff);
+      sprite.mask = medallionMask;
+      reel.addChild(sprite, medallionMask);
       reelSprites.push(sprite);
     }
     columns.push(reel);
