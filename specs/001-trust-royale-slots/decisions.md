@@ -45,3 +45,9 @@ Owner's words: "please note there is no 25% off the highest is 20% off" and "3 k
 Everything else loses with "So close — spin again!" Keith is the cat mascot but counts as an eligible face in the two-plus-one rule; Scott × 2 + Keith therefore pays 15%. Filler symbols never win except as the third symbol in the Keith × 2 rule.
 
 Owner correction: "Keith DOES count in the two-plus-one rule (Scott, Scott, Keith pays 15%)."
+
+## Title placement (2026-09-29)
+
+The owner compared the two round 11 options and chose the belly panel. Owner's words: "the belly one looks cleaner".
+
+The "trust" wordmark (brand red, never overdrawn by bulbs) and gold "ROYALE" sit on a black glass panel set into the lower cabinet, framed by real bulb sprites that run chase patterns. `DEFAULT_TITLE_PLACEMENT` in `src/scene/cabinetArt.ts` is `"belly"`; the topper arch keeps only its own animated bulbs.
