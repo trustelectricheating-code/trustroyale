@@ -29,3 +29,20 @@ Use case: stylized-concept. Asset type: transparent slot-game side curtain layer
 ## FX atlas
 
 Use case: stylized-concept. Asset type: slot-game FX atlas. Create a clean two-by-two atlas with four separate premium casino effects: top-left, a small eight-point champagne-gold sparkle; top-right, celebratory red, gold, navy and cream confetti; bottom-left, a soft circular warm-gold halo glow; bottom-right, a narrow diagonal warm spotlight beam with faint dust motes. Use photorealistic optical effects and polished game VFX in the Monte Carlo Velvet direction. Require genuine transparency, restrained bloom, generous padding and no overlap. No text, logos, chips, coins, roulette or watermark.
+
+## QA round 1 — bilateral blink corrections
+
+Each approved idle medallion was used as the sole edit target in a separate `gpt-image-2` call. The following shared prompt was used, with the subject-specific invariants listed below:
+
+> Use case: identity-preserve. Asset type: slot-machine character blink correction sheet. Input image: the approved idle medallion as the sole edit target and identity anchor. Create one clean horizontal two-panel sheet of the exact same portrait in the exact same gold-rimmed red-velvet medallion. In the left panel, make both eyes equally half-closed with perfectly matched eyelid closure. In the right panel, make both eyes fully closed with matching eyelid seams. Both eyes must change together; no wink or asymmetric closure. Change only the eyelids. Preserve identity, facial proportions, expression, costume, pose, lighting, red velvet, gold ring, scale, camera, and composition. No text, logos, watermark, extra objects, or panel borders.
+
+- Scott: preserve his hair, beard, tuxedo, and bow tie.
+- Fiona: preserve her black hair, gown, earrings, and makeup.
+- Gia: preserve her lips, long black hair, gown, earrings, and makeup.
+- Keith: preserve his grey-and-white fur markings, mouth, visor, and bow tie; show no visible iris in either fully closed eye.
+
+The untouched outputs are `qa-round1-{scott,fiona,gia,keith}-blink-sheet.png`. Delivery processing only splits each two-panel sheet into equal 887×887 frames, resizes them to 512×512, and encodes them as WebP.
+
+## QA round 1 — deterministic SPIN and medallion-frame renders
+
+These corrections are not generated-image prompts. `scripts/render-gate-c-spin.mjs` renders the approved live Gate B CSS treatment in Chromium. The three SPIN states share the same red radial dome, upper highlight, deep inset shading, gold bezel, and `SPIN` label. The raised state is bright and elevated; the pressed state is smaller, lower, darker, and has less highlight; the disabled state is desaturated and dimmed. The same script renders an empty polished-gold medallion rim with a transparent centre for `sym.frame`.

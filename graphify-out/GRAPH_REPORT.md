@@ -1,16 +1,16 @@
-# Graph Report - casinogame  (2026-09-25)
+# Graph Report - casinogame  (2026-09-29)
 
 ## Corpus Check
-- 243 files · ~695,001 words
+- 255 files · ~826,444 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3218 nodes · 5245 edges · 252 communities (229 shown, 23 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 55 edges (avg confidence: 0.54)
+- 3290 nodes · 5352 edges · 254 communities (227 shown, 27 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 60 edges (avg confidence: 0.54)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1fff1850`
+- Built from commit: `be3f0b29`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -28,8 +28,8 @@
 - CLAUDE.md
 - README.md
 - render-architecture.mjs
-- render-sequence.mjs
-- geometry.mjs
+- motion-governor-browser.test.mjs
+- compileWorkflowInternal
 - generated-validators.mjs
 - properties
 - brand-marks.mjs
@@ -55,12 +55,12 @@
 - architecture-delta.mjs
 - layout-rules.test.mjs
 - workflow-compiler.test.mjs
-- semantic-lens-browser.test.mjs
+- .send
 - render-lifecycle.mjs
 - $ref
 - preview.mjs
 - buildDeltaSvg
-- background.ts
+- main.ts
 - workflow-migration.test.mjs
 - compilerOptions
 - commandDeliver
@@ -83,7 +83,7 @@
 - required
 - legend-contract.test.mjs
 - engineering-profiles.mjs
-- settled-flow.test.mjs
+- meta
 - properties
 - properties
 - required
@@ -169,10 +169,10 @@
 - chapter-handoff.test.mjs
 - chapter-rail.test.mjs
 - diagram-guide.test.mjs
-- .send
+- export-browser.test.mjs
 - finder.test.mjs
 - intent-trace.test.mjs
-- motion-governor-browser.test.mjs
+- groups
 - motion-governor.test.mjs
 - presentation.test.mjs
 - relationship-pulse.test.mjs
@@ -194,7 +194,7 @@
 - viewBox
 - point
 - enum
-- enum
+- assetBoard.ts
 - authoring-safety-contract.test.mjs
 - automatic-port-spread.test.mjs
 - clean-skill-staging.test.mjs
@@ -206,12 +206,12 @@
 - validateSchema
 - layout
 - enum
-- focus
+- enum
 - render-examples.mjs
 - base-input-compatibility.test.mjs
-- cols
+- settled-flow.test.mjs
 - enum
-- bias
+- cornerRadius
 - common.schema.json
 - enum
 - via
@@ -231,7 +231,7 @@
 - vercel.json
 - Brand marks
 - col
-- enum
+- sublabel
 - labelSegment
 - pad
 - row
@@ -239,8 +239,8 @@
 - label
 - Owner decisions — Trust Royale
 - stage
-- height
-- label
+- enum
+- tag
 - labelSegment
 - to
 - y
@@ -256,11 +256,13 @@
 - ci-scope.test.mjs
 - fail-migration-cleanup.mjs
 - SOURCES.md
-- row
+- check-manifest.mjs
+- capture-prize-slides.mjs
+- id
 - Gate B generated mock sources
-- layout.spec.ts
-- enum
+- capture-gate-c.mjs
 - capture-gate-b.mjs
+- assets.spec.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `compileWorkflowInternal()` - 76 edges
@@ -275,21 +277,21 @@
 10. `findChrome()` - 22 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `compileWorkflowInternal()` --indirect_call--> `rect()`  [INFERRED]
-  .agents/skills/archify/renderers/workflow/workflow-compiler.mjs → src/scene/layout.ts
 - `validateArchitecture()` --indirect_call--> `rect()`  [INFERRED]
   .agents/skills/archify/renderers/architecture/render-architecture.mjs → src/scene/layout.ts
 - `validateDataflow()` --indirect_call--> `rect()`  [INFERRED]
   .agents/skills/archify/renderers/dataflow/render-dataflow.mjs → src/scene/layout.ts
 - `validateLifecycle()` --indirect_call--> `rect()`  [INFERRED]
   .agents/skills/archify/renderers/lifecycle/render-lifecycle.mjs → src/scene/layout.ts
-- `validateLifecycle()` --indirect_call--> `state()`  [INFERRED]
-  .agents/skills/archify/renderers/lifecycle/render-lifecycle.mjs → .agents/skills/archify/test/viewer-chrome-layout.test.mjs
+- `compileWorkflowInternal()` --indirect_call--> `rect()`  [INFERRED]
+  .agents/skills/archify/renderers/workflow/workflow-compiler.mjs → src/scene/layout.ts
+- `compileWorkflowInternal()` --indirect_call--> `renderNode()`  [INFERRED]
+  .agents/skills/archify/renderers/workflow/workflow-compiler.mjs → .agents/skills/archify/renderers/dataflow/render-dataflow.mjs
 
 ## Import Cycles
 - None detected.
 
-## Communities (252 total, 23 thin omitted)
+## Communities (254 total, 27 thin omitted)
 
 ### Community 0 - "Research: Trust Royale Slot Machine"
 Cohesion: 0.12
@@ -331,13 +333,13 @@ Nodes (104): acknowledgeUpdate(), acquireOperation(), assertBoundedRegularFile()
 Cohesion: 0.06
 Nodes (65): DEFAULT_GRID, gridLayout(), resolveComponentPos(), validateGridPlacement(), alignFacingPorts(), architectureLegendEntries, automaticPorts, autoViewBoxFor() (+57 more)
 
-### Community 13 - "render-sequence.mjs"
-Cohesion: 0.12
-Nodes (27): arrowClass, compositionFrames, __dirname, layout, LEGEND_CATALOG, messageGeometry(), messageLabel(), messageLabelBox() (+19 more)
+### Community 13 - "motion-governor-browser.test.mjs"
+Cohesion: 0.48
+Nodes (6): load(), media(), run(), screenshot(), skillRoot, snapshot()
 
-### Community 14 - "geometry.mjs"
-Cohesion: 0.10
-Nodes (65): boundaryRect(), rectContains(), validateArchitecture(), renderLegend(), renderSvg(), validateDataflow(), validateLifecycle(), validateSequence() (+57 more)
+### Community 14 - "compileWorkflowInternal"
+Cohesion: 0.11
+Nodes (64): boundaryRect(), componentContext(), validateArchitecture(), renderLegend(), renderSvg(), validateDataflow(), validateLifecycle(), validateSequence() (+56 more)
 
 ### Community 15 - "generated-validators.mjs"
 Cohesion: 0.06
@@ -356,8 +358,8 @@ Cohesion: 0.05
 Nodes (44): $ref, description, enum, additionalProperties, properties, type, title, additionalProperties (+36 more)
 
 ### Community 19 - "properties"
-Cohesion: 0.05
-Nodes (42): $ref, type, type, $ref, minimum, type, $ref, properties (+34 more)
+Cohesion: 0.04
+Nodes (46): maximum, minimum, type, $ref, type, type, $ref, minimum (+38 more)
 
 ### Community 20 - "Authoring contract"
 Cohesion: 0.05
@@ -385,7 +387,7 @@ Nodes (38): gsap, howler, @neondatabase/serverless, dependencies, gsap, howler, 
 
 ### Community 26 - "properties"
 Cohesion: 0.05
-Nodes (38): $ref, type, type, minimum, type, $ref, $ref, properties (+30 more)
+Nodes (39): $ref, type, type, $ref, minimum, type, properties, minLength (+31 more)
 
 ### Community 27 - "update-notifier.test.mjs"
 Cohesion: 0.07
@@ -401,11 +403,11 @@ Nodes (36): bin, archify, description, devDependencies, ajv, parse5, saxes, simp
 
 ### Community 30 - "cli.mjs"
 Cohesion: 0.08
-Nodes (43): loadDiagram(), loadDiagramWithBrandMarks(), outputPathGuards, RELATIONSHIP_COLLECTIONS, SEMANTIC_COLLECTIONS, START_TYPES, validateGuidedViews(), validateRelationshipIds() (+35 more)
+Nodes (40): loadDiagram(), loadDiagramWithBrandMarks(), outputPathGuards, RELATIONSHIP_COLLECTIONS, SEMANTIC_COLLECTIONS, START_TYPES, validateGuidedViews(), validateRelationshipIds() (+32 more)
 
 ### Community 31 - "workflow-compiler.mjs"
-Cohesion: 0.16
-Nodes (38): componentContext(), renderComponent(), renderNode(), renderState(), renderParticipant(), brandLabelFitWidth(), brandMarkFor(), brandMetadataFor() (+30 more)
+Cohesion: 0.13
+Nodes (27): renderLegend(), throwDiagnosticError(), legendFootprint(), measuredEntryWidth(), measureLegend(), renderLegend(), resolveLegend(), authoredNodeHeight() (+19 more)
 
 ### Community 32 - "properties"
 Cohesion: 0.06
@@ -413,7 +415,7 @@ Nodes (34): $ref, $ref, $ref, $ref, properties, minLength, type, $ref (+26 more)
 
 ### Community 33 - "properties"
 Cohesion: 0.06
-Nodes (34): $ref, type, type, type, $ref, $ref, $ref, properties (+26 more)
+Nodes (33): $ref, type, type, type, $ref, $ref, $ref, properties (+25 more)
 
 ### Community 34 - "Tasks: Trust Royale — Branded Slot Machine Promo Game"
 Cohesion: 0.06
@@ -439,13 +441,13 @@ Nodes (13): assertRelationshipsAvoidAllNodeBorders(), assertWorkflowEdgesAvoidAl
 Cohesion: 0.12
 Nodes (16): asciiGroupLabelTextRect(), assertReadableAdjacentResult(), assertRectInsideViewBox(), attribute(), attributeOrUndefined(), cli, compileSuccessfully(), __dirname (+8 more)
 
-### Community 40 - "semantic-lens-browser.test.mjs"
-Cohesion: 0.26
-Nodes (11): desktopBrowser(), desktopPointerCheck(), click(), hash(), key(), load(), move(), point() (+3 more)
+### Community 40 - ".send"
+Cohesion: 0.17
+Nodes (21): desktopBrowser(), desktopPointerCheck(), afterTimer(), click(), key(), load(), media(), move() (+13 more)
 
 ### Community 41 - "render-lifecycle.mjs"
-Cohesion: 0.11
-Nodes (27): automaticPorts, bandFor(), bandTitles(), __dirname, laneLabels, layout, LEGEND_CATALOG, legendY() (+19 more)
+Cohesion: 0.07
+Nodes (72): renderBoundaryFrame(), renderBoundaryLabel(), renderComponent(), renderConnectionPath(), renderSvg(), renderFlowPath(), renderNode(), automaticPorts (+64 more)
 
 ### Community 42 - "$ref"
 Cohesion: 0.09
@@ -459,9 +461,9 @@ Nodes (18): cliPath, compactMessage(), diagramTypes, here, initialAuthoredOutput
 Cohesion: 0.16
 Nodes (22): addNodeMarker(), addState(), annotateArchitectureSideSvg(), boundaryChangeMap(), boundaryElements(), boundaryMarkupByKey(), boundaryMarkupParts(), boundarySymbolMarkup() (+14 more)
 
-### Community 45 - "background.ts"
-Cohesion: 0.10
-Nodes (35): boot(), placeElement(), readSafeAreaInsets(), animateBackground(), ASSETS, card(), chip(), cover() (+27 more)
+### Community 45 - "main.ts"
+Cohesion: 0.06
+Nodes (51): PAYTABLE, PRIZE_SYMBOLS, PrizeRule, PrizeSymbol, boot(), placeElement(), readSafeAreaInsets(), animateBackground() (+43 more)
 
 ### Community 46 - "workflow-migration.test.mjs"
 Cohesion: 0.13
@@ -480,8 +482,8 @@ Cohesion: 0.13
 Nodes (21): items, type, items, type, additionalProperties, required, type, col (+13 more)
 
 ### Community 50 - "required"
-Cohesion: 0.11
-Nodes (24): items, items, minItems, type, items, type, additionalProperties, required (+16 more)
+Cohesion: 0.12
+Nodes (21): items, items, items, type, additionalProperties, required, type, from (+13 more)
 
 ### Community 51 - "workflow.schema.json"
 Cohesion: 0.10
@@ -516,16 +518,16 @@ Cohesion: 0.23
 Nodes (16): canonicalFuturePath(), canonicalize(), directoryIdentityKey(), directorySemanticsCache, futurePathsAlias(), hasFileIdentity(), nearestExistingDirectory(), OutputPathError (+8 more)
 
 ### Community 59 - "properties"
-Cohesion: 0.11
-Nodes (18): $ref, $ref, properties, type, animation, locale, output, quality_profile (+10 more)
+Cohesion: 0.10
+Nodes (21): $ref, enum, $ref, properties, type, animation, engineering_profile, locale (+13 more)
 
 ### Community 60 - "required"
-Cohesion: 0.15
-Nodes (16): items, guidedViews, items, maxItems, type, additionalProperties, items, required (+8 more)
+Cohesion: 0.13
+Nodes (18): items, type, cards, guidedViews, items, maxItems, type, additionalProperties (+10 more)
 
 ### Community 61 - "properties"
-Cohesion: 0.11
-Nodes (18): enum, $ref, properties, maxLength, type, dot, id, note (+10 more)
+Cohesion: 0.13
+Nodes (15): items, minItems, type, $ref, properties, $ref, maxLength, type (+7 more)
 
 ### Community 62 - "viewer-chrome-layout.test.mjs"
 Cohesion: 0.16
@@ -536,8 +538,8 @@ Cohesion: 0.17
 Nodes (15): DESKTOP_READABILITY_VIEWPORT, DESKTOP_READER_DIAGRAM_WIDTH, DESKTOP_READER_HORIZONTAL_CHROME, DESKTOP_READER_MIN_WIDTH, MIN_PROJECTED_NODE_TEXT_PX, minimumReadableSourceTextPx(), projectedNodeTextPx(), __dirname (+7 more)
 
 ### Community 64 - "$defs"
-Cohesion: 0.13
-Nodes (15): enum, oneOf, type, $defs, animation, brandMark, cards, id (+7 more)
+Cohesion: 0.11
+Nodes (19): oneOf, $defs, brandMark, id, qualityProfile, relationshipWidth, visualPreset, pattern (+11 more)
 
 ### Community 65 - "required"
 Cohesion: 0.15
@@ -551,21 +553,21 @@ Nodes (15): attrValues(), AUTO_KINDS, canonicalSvg(), CATALOGS, cli, clone(), __
 Cohesion: 0.18
 Nodes (11): DEPLOYMENT_BOUNDARY_KINDS, deploymentOwnershipDiagnostics(), membership(), PRIVATE_STATE_TYPES, subject(), validateEngineeringProfile(), cli, __dirname (+3 more)
 
-### Community 68 - "settled-flow.test.mjs"
-Cohesion: 0.29
-Nodes (5): CASES, __dirname, skillRoot, template, tmp
+### Community 68 - "meta"
+Cohesion: 0.40
+Nodes (5): title, additionalProperties, required, type, meta
 
 ### Community 69 - "properties"
-Cohesion: 0.13
-Nodes (15): minimum, type, minimum, type, minimum, type, minimum, type (+7 more)
+Cohesion: 0.11
+Nodes (19): minimum, type, minimum, type, maximum, minimum, type, minimum (+11 more)
 
 ### Community 70 - "properties"
 Cohesion: 0.13
 Nodes (15): enum, link_mode, provider, revision, url, enum, properties, pattern (+7 more)
 
 ### Community 71 - "required"
-Cohesion: 0.17
-Nodes (15): additionalProperties, required, type, col, from, id, label, lane (+7 more)
+Cohesion: 0.16
+Nodes (16): additionalProperties, required, type, col, from, id, label, lane (+8 more)
 
 ### Community 72 - "findChrome"
 Cohesion: 0.19
@@ -576,16 +578,16 @@ Cohesion: 0.30
 Nodes (10): clone(), diagnostic(), expandableViewBox(), legacyLayoutProbe(), legacyRequirementProbe(), migrateWorkflowDocument(), requiredViewBoxFrom(), result() (+2 more)
 
 ### Community 74 - "properties"
-Cohesion: 0.14
-Nodes (14): type, $ref, const, title, additionalProperties, required, type, properties (+6 more)
+Cohesion: 0.17
+Nodes (12): type, $ref, minItems, type, const, properties, boundaries, cards (+4 more)
 
 ### Community 75 - "enum"
 Cohesion: 0.14
 Nodes (14): enum, componentType, variant, dashed, default, emphasis, external, security (+6 more)
 
 ### Community 76 - "properties"
-Cohesion: 0.14
-Nodes (14): $ref, const, maxItems, minItems, type, properties, cards, diagram_type (+6 more)
+Cohesion: 0.15
+Nodes (13): $ref, const, maxItems, minItems, type, properties, cards, diagram_type (+5 more)
 
 ### Community 77 - "generate-brand-marks.mjs"
 Cohesion: 0.18
@@ -895,9 +897,9 @@ Nodes (4): CASES, __dirname, skillRoot, tmp
 Cohesion: 0.29
 Nodes (4): CASES, __dirname, skillRoot, tmp
 
-### Community 154 - ".send"
-Cohesion: 0.21
-Nodes (16): click(), key(), load(), record(), run(), skillRoot, afterTimer(), click() (+8 more)
+### Community 154 - "export-browser.test.mjs"
+Cohesion: 0.43
+Nodes (6): click(), key(), load(), record(), run(), skillRoot
 
 ### Community 155 - "finder.test.mjs"
 Cohesion: 0.29
@@ -907,9 +909,9 @@ Nodes (4): CASES, __dirname, skillRoot, tmp
 Cohesion: 0.29
 Nodes (4): CASES, __dirname, skillRoot, tmp
 
-### Community 157 - "motion-governor-browser.test.mjs"
-Cohesion: 0.48
-Nodes (6): load(), media(), run(), screenshot(), skillRoot, snapshot()
+### Community 157 - "groups"
+Cohesion: 0.15
+Nodes (12): assets, groups, version, audio, background, cabinet, emblem, faces (+4 more)
 
 ### Community 158 - "motion-governor.test.mjs"
 Cohesion: 0.29
@@ -949,7 +951,7 @@ Nodes (4): CASES, __dirname, skillRoot, tmp
 
 ### Community 167 - "render-dataflow.mjs"
 Cohesion: 0.13
-Nodes (21): automaticPorts, compositionFrames, __dirname, flowLabelSize(), layout, LEGEND_CATALOG, measureNode(), nodes (+13 more)
+Nodes (19): automaticPorts, compositionFrames, __dirname, flowLabelSize(), layout, LEGEND_CATALOG, measureNode(), nodes (+11 more)
 
 ### Community 168 - "story-beat-navigator.test.mjs"
 Cohesion: 0.29
@@ -991,9 +993,9 @@ Nodes (6): point, items, maxItems, minItems, prefixItems, type
 Cohesion: 0.33
 Nodes (6): side, bottom, left, right, top, enum
 
-### Community 179 - "enum"
+### Community 179 - "assetBoard.ts"
 Cohesion: 0.33
-Nodes (6): visualPreset, blueprint, classic, editorial, signal-flow, enum
+Nodes (12): AssetEntry, assetUrl(), audioCard(), emblemSection(), faceRows(), fontCard(), Group, imageCard() (+4 more)
 
 ### Community 180 - "authoring-safety-contract.test.mjs"
 Cohesion: 0.33
@@ -1035,9 +1037,9 @@ Nodes (5): additionalProperties, required, type, layout, mode
 Cohesion: 0.40
 Nodes (5): legendMode, auto, enum, all, hidden
 
-### Community 191 - "focus"
-Cohesion: 0.40
-Nodes (5): items, minItems, type, $ref, focus
+### Community 191 - "enum"
+Cohesion: 0.25
+Nodes (8): enum, amber, cyan, emerald, orange, rose, slate, violet
 
 ### Community 192 - "render-examples.mjs"
 Cohesion: 0.40
@@ -1047,17 +1049,17 @@ Nodes (4): __dirname, outputRoot, skillRoot, TARGETS
 Cohesion: 0.40
 Nodes (3): here, skillRoot, tmp
 
-### Community 194 - "cols"
-Cohesion: 0.50
-Nodes (4): maximum, minimum, type, cols
+### Community 194 - "settled-flow.test.mjs"
+Cohesion: 0.29
+Nodes (5): CASES, __dirname, skillRoot, template, tmp
 
 ### Community 195 - "enum"
 Cohesion: 0.50
 Nodes (4): enum, kind, region, security-group
 
-### Community 196 - "bias"
-Cohesion: 0.50
-Nodes (4): maximum, minimum, type, bias
+### Community 196 - "cornerRadius"
+Cohesion: 0.67
+Nodes (3): minimum, type, cornerRadius
 
 ### Community 197 - "common.schema.json"
 Cohesion: 0.50
@@ -1088,8 +1090,8 @@ Cohesion: 0.50
 Nodes (4): width, minimum, $ref, type
 
 ### Community 204 - "i18n.test.mjs"
-Cohesion: 0.14
-Nodes (14): catalogKeys(), SUPPORTED_LOCALES, translateCount(), AUTHORED_TEXT_KEYS, authoredExample(), cli, __dirname, evaluate() (+6 more)
+Cohesion: 0.15
+Nodes (13): catalogKeys(), SUPPORTED_LOCALES, AUTHORED_TEXT_KEYS, authoredExample(), cli, __dirname, evaluate(), example() (+5 more)
 
 ### Community 205 - "col"
 Cohesion: 0.50
@@ -1119,10 +1121,6 @@ Nodes (3): crons, framework, outputDirectory
 Cohesion: 0.67
 Nodes (3): minimum, type, col
 
-### Community 216 - "enum"
-Cohesion: 0.50
-Nodes (4): qualityProfile, showcase, standard, enum
-
 ### Community 217 - "labelSegment"
 Cohesion: 0.67
 Nodes (3): minimum, type, labelSegment
@@ -1144,20 +1142,16 @@ Cohesion: 0.67
 Nodes (3): minLength, type, label
 
 ### Community 222 - "Owner decisions — Trust Royale"
-Cohesion: 0.33
-Nodes (5): Gate A — visual direction (2026-09-25), Gate B round 3 — realism (2026-09-25), Image generation (2026-09-25), Mascot name (2026-09-25), Owner decisions — Trust Royale
+Cohesion: 0.22
+Nodes (8): Gate A — visual direction (2026-09-25), Gate B — approved (2026-09-29), Gate B round 3 — realism (2026-09-25), Image generation (2026-09-25), Mascot name (2026-09-25), Owner decisions — Trust Royale, Paytable v2 (Gia joins, top prize 20%) (2026-09-25), Title placement (2026-09-29)
 
 ### Community 223 - "stage"
 Cohesion: 0.67
 Nodes (3): stage, minimum, type
 
-### Community 224 - "height"
-Cohesion: 0.67
-Nodes (3): minimum, type, height
-
-### Community 225 - "label"
-Cohesion: 0.67
-Nodes (3): minLength, type, label
+### Community 224 - "enum"
+Cohesion: 0.50
+Nodes (4): enum, animation, none, trace
 
 ### Community 226 - "labelSegment"
 Cohesion: 0.67
@@ -1175,32 +1169,32 @@ Nodes (3): y, minimum, type
 Cohesion: 0.67
 Nodes (3): minimum, type, labelSegment
 
-### Community 247 - "row"
-Cohesion: 0.67
-Nodes (3): row, minimum, type
+### Community 243 - "check-manifest.mjs"
+Cohesion: 0.22
+Nodes (8): assetRoot, errors, groups, manifest, root, seen, sources, statuses
 
-### Community 251 - "enum"
-Cohesion: 0.67
-Nodes (3): enum, engineering_profile, deployment-ownership
+### Community 249 - "Gate B generated mock sources"
+Cohesion: 0.22
+Nodes (8): Declutter follow-up — shared Neos medallion, Gate B generated mock sources, Ghost-halo correction, Round 3 — realism, Round 7 — Gia medallion, Round 8 — transparent chip emblems, Round 9 correction — photoreal marquee bulbs, Slot hall background
 
 ## Knowledge Gaps
-- **1435 isolated node(s):** `__dirname`, `skillRoot`, `TYPES`, `COMPOSITION_CHECKS`, `CHECK_FIXES` (+1430 more)
+- **1471 isolated node(s):** `__dirname`, `skillRoot`, `TYPES`, `COMPOSITION_CHECKS`, `CHECK_FIXES` (+1466 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **23 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **27 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
+- **Why does `compileWorkflowInternal()` connect `compileWorkflowInternal` to `render-dataflow.mjs`, `render-lifecycle.mjs`, `render-architecture.mjs`, `workflow-migration.test.mjs`, `validateSchema`, `cli.mjs`, `workflow-compiler.mjs`?**
+  _High betweenness centrality (0.010) - this node is a cross-community bridge._
+- **Why does `rect()` connect `compileWorkflowInternal` to `main.ts`?**
+  _High betweenness centrality (0.009) - this node is a cross-community bridge._
 - **Why does `parseRepositoryRemote()` connect `repository-evidence.mjs` to `architecture-delta.mjs`?**
   _High betweenness centrality (0.008) - this node is a cross-community bridge._
-- **Why does `rect()` connect `geometry.mjs` to `background.ts`, `workflow-compiler.mjs`?**
-  _High betweenness centrality (0.007) - this node is a cross-community bridge._
-- **Why does `compileWorkflowInternal()` connect `workflow-compiler.mjs` to `render-dataflow.mjs`, `render-lifecycle.mjs`, `render-architecture.mjs`, `render-sequence.mjs`, `geometry.mjs`, `workflow-migration.test.mjs`, `validateSchema`, `cli.mjs`?**
-  _High betweenness centrality (0.007) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `compileWorkflowInternal()` (e.g. with `renderNode()` and `stableCompare()`) actually correct?**
   _`compileWorkflowInternal()` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `__dirname`, `skillRoot`, `TYPES` to the rest of the system?**
-  _1435 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1471 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Research: Trust Royale Slot Machine` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `User Scenarios & Testing *(mandatory)*` be split into smaller, more focused modules?**
