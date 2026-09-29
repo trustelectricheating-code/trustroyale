@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import path from "node:path";
-import { PAYTABLE } from "../../src/config/paytable";
+import { PRIZE_CAROUSEL_RULES } from "../../src/config/paytable";
 
 const VIEWPORTS = [
   { name: "phone-small", width: 320, height: 568 },
@@ -83,7 +83,7 @@ async function verifyEveryPrizeSlide(page: Page, viewportName: string): Promise<
     expect(result.intersections, `${viewportName} slide ${index} overlap ${JSON.stringify(result.boxes)}`).toEqual([]);
     expect(result.labelLines, `${viewportName} slide ${index} label lines`).toBeLessThanOrEqual(2.05);
     expect(result.labelClipped, `${viewportName} slide ${index} full label`).toBe(false);
-    expect(result.labelText, `${viewportName} slide ${index} full rule text`).toBe(PAYTABLE[index].fullLabel);
+    expect(result.labelText, `${viewportName} slide ${index} full rule text`).toBe(PRIZE_CAROUSEL_RULES[index].fullLabel);
     expect(result.labelInsideSlide, `${viewportName} slide ${index} label inside slide`).toBe(true);
     expect(result.clippingAncestors, `${viewportName} slide ${index} ancestor clipping`).toEqual([]);
     expect(result.labelControlsOverlap, `${viewportName} slide ${index} controls overlap`).toBe(false);

@@ -1,4 +1,6 @@
-import { PAYTABLE, PRIZE_SYMBOLS, type PrizeRule, type PrizeSymbol } from "../config/paytable";
+import { PRIZE_CAROUSEL_RULES, PRIZE_SYMBOLS, type PrizeRule, type PrizeSymbol } from "../config/paytable";
+
+const PAYTABLE = PRIZE_CAROUSEL_RULES;
 
 const AUTO_ADVANCE_MS = 3000;
 const INTERACTION_PAUSE_MS = 8000;
