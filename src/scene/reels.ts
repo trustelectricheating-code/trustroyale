@@ -1,6 +1,6 @@
 import { Assets, BlurFilter, Container, Graphics, Sprite, Texture } from "pixi.js";
 import { gsap } from "gsap";
-import { SYMBOLS, type SymbolId } from "../config/symbols";
+import { SYMBOLS, SYMBOL_IDS, type SymbolId } from "../config/symbols";
 import { CABINET_ART } from "./cabinetArt";
 
 export type ReelStrip = [[SymbolId, SymbolId, SymbolId], [SymbolId, SymbolId, SymbolId], [SymbolId, SymbolId, SymbolId]];
@@ -9,6 +9,7 @@ export interface ReelsScene {
   columns: Container[];
   sprites: Sprite[][];
   paylineSprites: Sprite[];
+  paylineFlash: Graphics;
   strip: ReelStrip;
 }
 
@@ -80,38 +81,68 @@ export function createReels(initial: ReelStrip = [
   cylinderShade.width = reelWindow.width;
   cylinderShade.height = reelWindow.height;
   container.addChild(cylinderShade);
-  const scene = { container, columns, sprites, paylineSprites: sprites.map((reel) => reel[1]), strip: initial };
+  const paylineFlash = new Graphics()
+    .roundRect(8, reelWindow.height * 0.2, reelWindow.width - 16, reelWindow.height * 0.6, 22)
+    .stroke({ color: 0xffe8a3, width: 6, alpha: 0.95 });
+  paylineFlash.alpha = 0;
+  container.addChild(paylineFlash);
+  const scene = { container, columns, sprites, paylineSprites: sprites.map((reel) => reel[1]), paylineFlash, strip: initial };
   setStrip(scene, initial);
   return scene;
 }
 
-export async function animateSpin(scene: ReelsScene, strip: ReelStrip, reducedMotion = false, onStop?: (reel: 1 | 2 | 3) => void): Promise<void> {
+export async function animateSpin(scene: ReelsScene, strip: ReelStrip, reducedMotion = false, onStop?: (reel: 1 | 2 | 3) => void, nearMiss = false): Promise<void> {
   document.documentElement.dataset.spinning = "true";
   document.querySelectorAll<HTMLElement>("[data-reel]").forEach((node) => { node.dataset.stopped = "false"; });
   if (reducedMotion) {
-    setStrip(scene, strip);
+    await new Promise<void>((resolve) => gsap.to(scene.container, { alpha: 0.72, duration: 0.08, yoyo: true, repeat: 1, onRepeat: () => setStrip(scene, strip), onComplete: resolve }));
     document.querySelectorAll<HTMLElement>("[data-reel]").forEach((node, index) => { node.dataset.stopped = "true"; onStop?.((index + 1) as 1 | 2 | 3); });
     delete document.documentElement.dataset.spinning;
     return;
   }
+  document.documentElement.dataset.nearMiss = String(nearMiss);
   const blur = scene.columns.map(() => new BlurFilter({ strength: 0, quality: 2 }));
   scene.columns.forEach((column, index) => { column.filters = [blur[index]]; });
   await new Promise<void>((resolve) => {
     const timeline = gsap.timeline({ onComplete: resolve });
     scene.columns.forEach((column, index) => {
-      timeline.to(blur[index], { strength: 10, duration: 0.18 }, 0)
-        .to(column, { y: "+=42", duration: 0.13, repeat: 5 + index * 2, ease: "none" }, 0.05)
+      const start = index * 0.045;
+      const stopAt = 1.12 + index * 0.24 + (nearMiss && index === 2 ? 0.62 : 0);
+      const tracker = { progress: 0 };
+      const cycles = 15 + index * 3 + (nearMiss && index === 2 ? 8 : 0);
+      timeline.to(column, { y: -14, duration: 0.14, ease: "power2.out" }, start)
+        .to(tracker, {
+          progress: 1,
+          duration: stopAt,
+          ease: nearMiss && index === 2 ? "power1.inOut" : "power2.inOut",
+          onUpdate: () => {
+            const turn = tracker.progress * cycles;
+            column.y = -14 + (turn % 1) * 58;
+            blur[index].strength = Math.sin(Math.min(1, tracker.progress * 1.22) * Math.PI) * 13;
+            const offset = Math.floor(turn);
+            for (let row = 0; row < 3; row += 1) {
+              const id = SYMBOL_IDS[(offset + row + index * 2) % SYMBOL_IDS.length];
+              scene.sprites[index][row].texture = texture(id);
+            }
+          },
+        }, start + 0.12)
         .call(() => {
           for (let row = 0; row < 3; row += 1) scene.sprites[index][row].texture = texture(strip[row][index]);
+          column.y = 24;
           document.querySelector<HTMLElement>(`[data-reel="${index}"]`)?.setAttribute("data-stopped", "true");
           onStop?.((index + 1) as 1 | 2 | 3);
-        }, [], 0.78 + index * 0.22)
-        .to(column, { y: 0, duration: 0.28, ease: "back.out(2)" }, 0.78 + index * 0.22)
-        .to(blur[index], { strength: 0, duration: 0.18 }, 0.78 + index * 0.22);
+        }, [], start + stopAt + 0.12)
+        .to(column, { y: -5, duration: 0.11, ease: "power2.out" }, start + stopAt + 0.12)
+        .to(column, { y: 0, duration: 0.24, ease: "bounce.out" }, start + stopAt + 0.23)
+        .to(blur[index], { strength: 0, duration: 0.12 }, start + stopAt + 0.12);
     });
+    const flashAt = 1.12 + 2 * 0.24 + (nearMiss ? 0.62 : 0) + 0.55;
+    timeline.to(scene.paylineFlash, { alpha: 1, duration: 0.08 }, flashAt)
+      .to(scene.paylineFlash, { alpha: 0, duration: 0.42, ease: "power2.out" }, flashAt + 0.08);
   });
   setStrip(scene, strip);
   scene.columns.forEach((column) => { column.filters = []; });
+  delete document.documentElement.dataset.nearMiss;
   delete document.documentElement.dataset.spinning;
 }
 

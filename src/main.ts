@@ -107,7 +107,7 @@ async function boot(): Promise<void> {
     machine.send({ type: "SPIN" });
     try {
       const result: SpinResponse = await spin();
-      await animateSpin(reels, result.strip, motionQuery.matches, (reel) => sound.play(`reel.stop.${reel}`));
+      await animateSpin(reels, result.strip, motionQuery.matches, (reel) => sound.play(`reel.stop.${reel}`), result.nearMiss);
       sound.stop("reel.loop");
       machine.send({ type: "RESULT" });
       spinsLeft = result.spinsLeft;
