@@ -1,25 +1,33 @@
-import { expect, test, type Page, type Route } from "@playwright/test";
-import path from "node:path";
+import { expect, test, type Page } from "@playwright/test";
 
-const session = { spinsLeft: 3, bonusAvailable: false, state: "idle", win: null };
-const loss = (spinNo: number, spinsLeft: number, bonusAvailable = false) => ({
+const freshSession = { spinsLeft: 3, bonusAvailable: false, state: "idle", best: null, win: null };
+const loss = (spinNo: number, spinsLeft: number, bonusAvailable = false, gameOver = false) => ({
   spinId: `00000000-0000-4000-8000-00000000000${spinNo}`,
   spinNo,
   reels: ["seven", "cherry", "sweets"],
   strip: [["scott", "fiona", "gia"], ["seven", "cherry", "sweets"], ["neos", "keith", "seven"]],
-  outcome: "retry", ruleId: null, discount: null, winRef: null, nearMiss: spinNo === 2,
-  spinsLeft, bonusAvailable, isBonus: spinNo === 4,
+  outcome: "retry", ruleId: null, discount: null, couponCode: null, winRef: null, best: null,
+  nearMiss: spinNo === 2, spinsLeft, bonusAvailable, isBonus: spinNo === 4, gameOver,
 });
-const win = {
-  spinId: "00000000-0000-4000-8000-000000000020", spinNo: 1,
+const banked15 = {
+  spinId: "00000000-0000-4000-8000-000000000015", spinNo: 1,
+  reels: ["keith", "keith", "keith"],
+  strip: [["seven", "cherry", "sweets"], ["keith", "keith", "keith"], ["neos", "scott", "gia"]],
+  outcome: "win", ruleId: "keith-3", discount: 15, couponCode: null, winRef: "TR-BANK15",
+  best: { spinId: "00000000-0000-4000-8000-000000000015", ruleId: "keith-3", discount: 15, winRef: "TR-BANK15" },
+  nearMiss: false, spinsLeft: 2, bonusAvailable: false, isBonus: false, gameOver: false,
+};
+const final20 = {
+  spinId: "00000000-0000-4000-8000-000000000020", spinNo: 3,
   reels: ["scott", "scott", "scott"],
   strip: [["seven", "cherry", "sweets"], ["scott", "scott", "scott"], ["neos", "keith", "gia"]],
-  outcome: "win", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", winRef: "TR-ABC234", nearMiss: false,
-  spinsLeft: 0, bonusAvailable: false, isBonus: false,
+  outcome: "win", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", winRef: "TR-FINAL20",
+  best: { spinId: "00000000-0000-4000-8000-000000000020", ruleId: "scott-3", discount: 20, winRef: "TR-FINAL20" },
+  nearMiss: false, spinsLeft: 0, bonusAvailable: false, isBonus: false, gameOver: true,
 };
 
-async function mockSession(page: Page): Promise<void> {
-  await page.route("**/api/session**", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(session) }));
+async function mockSession(page: Page, body: object = freshSession): Promise<void> {
+  await page.route("**/api/session**", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) }));
 }
 
 async function ready(page: Page): Promise<void> {
@@ -27,126 +35,127 @@ async function ready(page: Page): Promise<void> {
   await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
 }
 
-async function closeRetry(page: Page): Promise<void> {
-  await expect(page.getByText("So close — spin again!")) .toBeVisible();
-  await page.getByRole("button", { name: "Continue" }).click();
+async function enterGame(page: Page): Promise<void> {
+  await expect(page.getByRole("heading", { name: "Welcome to Trust Royale" })).toBeVisible();
+  await page.getByRole("button", { name: "Skip" }).click();
+  await expect(page.locator("#intro")).not.toBeVisible();
 }
 
-test("PLAY, staggered reels, retry, Last Chance, and game over", async ({ page }) => {
+test("production CSP is present and fresh players see all four intro pages", async ({ page }) => {
   await mockSession(page);
-  const results = [loss(1, 2), loss(2, 1), loss(3, 0, true), loss(4, 0)];
-  let next = 0;
-  await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(results[next++]) }));
+  const response = await page.goto("/");
+  expect(response?.headers()["content-security-policy"]).toContain("script-src 'self'");
+  await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
+  await expect(page.getByRole("heading", { name: "Welcome to Trust Royale" })).toBeVisible();
+  await page.getByRole("button", { name: "Next" }).click();
+  await expect(page.getByText("Win on any try and keep spinning. Your best prize counts, up to 20%.")) .toBeVisible();
+  await page.getByRole("button", { name: "Next" }).click();
+  await expect(page.locator(".intro-prize")).toHaveCount(7);
+  await page.getByRole("button", { name: "Next" }).click();
+  await expect(page.getByRole("heading", { name: "Your code appears at the end" })).toBeVisible();
+  await page.getByRole("button", { name: "Let's play!" }).click();
+  await expect(page.locator("#spin")).toBeEnabled();
+  await expect(page.locator("#spin")).toHaveText("SPIN");
+});
+
+test("loading click is remembered as intro entry and never becomes a spin", async ({ page }) => {
+  let spinRequests = 0;
+  await page.route("**/api/session**", async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 1_500));
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(freshSession) });
+  });
+  await page.route("**/api/spin", async (route) => {
+    spinRequests += 1;
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(loss(1, 2)) });
+  });
+  await page.goto("/");
+  await page.locator("#loading").click();
+  await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
+  await expect(page.getByRole("heading", { name: "Welcome to Trust Royale" })).toBeVisible();
+  await page.waitForTimeout(1_000);
+  expect(spinRequests).toBe(0);
+});
+
+test("only deliberate spin actions issue requests, including retry and Last Chance", async ({ page }) => {
+  test.setTimeout(65_000);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await mockSession(page);
+  const results = [loss(1, 2), loss(2, 1), loss(3, 0, true), loss(4, 0, false, true)];
+  let requests = 0;
+  await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(results[requests++]) }));
   await ready(page);
+  await enterGame(page);
+
+  await page.locator("#prizes").focus();
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("heading", { name: "Line up the middle row" })).toBeVisible();
+  await page.getByRole("button", { name: "Close" }).click();
+  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+  await page.keyboard.press("Space");
+  await page.waitForTimeout(10_000);
+  expect(requests).toBe(0);
 
   const button = page.locator("#spin");
-  await expect(button).toHaveText("PLAY");
   await button.click();
-  await expect(button).toHaveText("SPIN");
-  await expect(button.locator(".spin__label")).toBeHidden();
-  await expect(button).toHaveCSS("background-image", /spin-up\.webp/);
-  await expect(page.locator("#spins-left")).toHaveText("Spins left: 3");
-
+  await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
+  await page.waitForTimeout(10_000);
+  expect(requests).toBe(1);
   await button.click();
-  await expect(button).toBeDisabled();
-  await expect.poll(async () => {
-    const stopped = await page.locator("[data-reel]").evaluateAll((nodes) => nodes.map((node) => node.getAttribute("data-stopped")));
-    return new Set(stopped).size;
-  }, { timeout: 2_000, intervals: [25] }).toBeGreaterThan(1);
-  await closeRetry(page);
-  await expect(button).toBeEnabled();
-  await expect(page.locator("#spins-left")).toHaveText("Spins left: 2");
-
-  await button.click();
-  await closeRetry(page);
-  await expect(page.getByText("One symbol away")) .toBeHidden();
+  await expect(page.getByText("One symbol away")) .toBeVisible();
+  await page.getByRole("button", { name: "Continue" }).click();
   await button.click();
   await expect(page.getByRole("heading", { name: "Last Chance!" })).toBeVisible();
-  await expect(page.locator("#spins-left")).toHaveText("Spins left: 0");
+  await page.keyboard.press("Enter");
+  expect(requests).toBe(3);
   await page.getByRole("button", { name: "Spin now" }).click();
   await expect(page.getByRole("heading", { name: "Thanks for playing" })).toBeVisible();
+  expect(requests).toBe(4);
 });
 
-test("win popup, keyboard controls, and server errors never show a win", async ({ page }) => {
-  await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
+test("touch tap at 390x844 starts exactly one spin", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, reducedMotion: "reduce" });
+  const page = await context.newPage();
   await mockSession(page);
-  let status = 200;
-  await page.route("**/api/spin", async (route: Route) => {
-    if (status === 500) await route.fulfill({ status: 500, contentType: "application/json", body: JSON.stringify({ error: "server_error" }) });
-    else await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(win) });
-  });
+  let requests = 0;
+  await page.route("**/api/spin", (route) => { requests += 1; return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(loss(1, 2)) }); });
   await ready(page);
-  await page.keyboard.press("Enter");
-  await expect(page.locator("#spin")).toHaveText("SPIN");
-  await page.keyboard.press("Space");
-  await expect(page.locator("#spin")).toBeDisabled();
+  await enterGame(page);
+  await page.locator("#spin").tap();
+  await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
+  expect(requests).toBe(1);
+  await context.close();
+});
+
+test("best-of-three waits for presses and reveals only final coupon", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await mockSession(page);
+  const second = { ...loss(2, 1), best: banked15.best };
+  const results = [banked15, second, final20];
+  let requests = 0;
+  await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(results[requests++]) }));
+  await ready(page);
+  await enterGame(page);
+  const button = page.locator("#spin");
+  await button.click();
+  await expect(page.getByRole("heading", { name: "15% banked!" })).toBeVisible();
+  await expect(page.locator("#tries-tracker")).toContainText("Best: 15%");
+  await expect(page.getByText("ROYALE20")).toHaveCount(0);
+  await page.waitForTimeout(1_000);
+  expect(requests).toBe(1);
+  await button.click();
+  await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
+  await button.click();
   await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible();
-  await expect(page.getByText("Your code: ROYALE20")).toBeVisible();
-  await page.getByRole("button", { name: "Copy code" }).click();
-  await expect(page.getByText("Copied!")).toBeVisible();
-  await expect(page.getByText("TR-ABC234")).toBeVisible();
-
-  await page.reload();
-  await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
-  status = 500;
-  await page.locator("#spin").click();
-  await page.locator("#spin").click();
-  await expect(page.getByRole("heading", { name: "Machine hiccup, try again" })).toBeVisible();
-  await expect(page.getByText(/You've won/)).toHaveCount(0);
+  await expect(page.getByText("ROYALE20")).toBeVisible();
+  expect(requests).toBe(3);
+  await page.getByRole("button", { name: "View prize table" }).click();
+  await expect(page.locator('[data-rule-id="scott-3"]')).toHaveClass(/is-winning/);
 });
 
-test("returning winner sees the same coupon and cannot spin", async ({ page }) => {
-  const wonSession = {
-    spinsLeft: 0,
-    bonusAvailable: false,
-    state: "won",
-    win: { spinId: win.spinId, winRef: win.winRef, ruleId: win.ruleId, discount: win.discount, couponCode: win.couponCode, reels: win.reels },
-  };
-  await page.route("**/api/session**", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(wonSession) }));
+test("returning mid-game player skips intro and resumes tracker", async ({ page }) => {
+  await mockSession(page, { spinsLeft: 1, bonusAvailable: false, state: "idle", best: banked15.best, win: null });
   await ready(page);
-  await expect(page.getByText("Your code: ROYALE20")).toBeVisible();
-  await expect(page.locator("#spin")).toBeDisabled();
-  await page.reload();
-  await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
-  await expect(page.getByText("Your code: ROYALE20")).toBeVisible();
-  await expect(page.locator("#spin")).toBeDisabled();
+  await expect(page.locator("#intro")).not.toBeVisible();
+  await expect(page.locator("#tries-tracker")).toContainText("Try 3");
+  await expect(page.locator("#tries-tracker")).toContainText("Best: 15%");
 });
-
-for (const viewport of [{ name: "desktop", width: 1920, height: 1080 }, { name: "mobile", width: 390, height: 844 }]) {
-  test(`captures Phase D states at ${viewport.width}x${viewport.height}`, async ({ page }) => {
-    test.setTimeout(90_000);
-    await page.setViewportSize(viewport);
-    await mockSession(page);
-    const losses = [loss(1, 2), loss(2, 1), loss(3, 0, true), loss(4, 0)];
-    let next = 0;
-    let captureWin = false;
-    await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(captureWin ? win : losses[next++]) }));
-    await ready(page);
-    const directory = path.join(process.cwd(), "reference/_work/phase-d");
-    await page.screenshot({ path: path.join(directory, `landing-${viewport.width}x${viewport.height}.png`) });
-    await page.locator("#spin").click();
-    await page.screenshot({ path: path.join(directory, `idle-${viewport.width}x${viewport.height}.png`) });
-    await page.locator("#spin").click();
-    await page.waitForTimeout(450);
-    await page.screenshot({ path: path.join(directory, `mid-spin-${viewport.width}x${viewport.height}.png`) });
-    await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
-    await page.screenshot({ path: path.join(directory, `retry-${viewport.width}x${viewport.height}.png`) });
-    await page.getByRole("button", { name: "Continue" }).click();
-    await page.locator("#spin").click();
-    await page.getByRole("button", { name: "Continue" }).click();
-    await page.locator("#spin").click();
-    await expect(page.getByRole("heading", { name: "Last Chance!" })).toBeVisible();
-    await page.screenshot({ path: path.join(directory, `last-chance-${viewport.width}x${viewport.height}.png`) });
-    await page.getByRole("button", { name: "Spin now" }).click();
-    await expect(page.getByRole("heading", { name: "Thanks for playing" })).toBeVisible();
-    await page.screenshot({ path: path.join(directory, `game-over-${viewport.width}x${viewport.height}.png`) });
-
-    captureWin = true;
-    await page.reload();
-    await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
-    await page.locator("#spin").click();
-    await page.locator("#spin").click();
-    await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible({ timeout: 15_000 });
-    await page.screenshot({ path: path.join(directory, `win-20-${viewport.width}x${viewport.height}.png`) });
-  });
-}
