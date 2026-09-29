@@ -42,7 +42,12 @@ describe("computeLayout", () => {
     expect(layout.paytable.width).toBeCloseTo(layout.chipTray.width);
     expect(layout.paytable.height).toBeCloseTo(layout.chipTray.height);
     expect(layout.paytable.width / layout.safeBounds.width).toBeLessThan(0.21);
-    expect(layout.paytable.height / layout.safeBounds.height).toBeLessThan(0.5);
+    expect(layout.paytable.height / layout.safeBounds.height).toBeGreaterThanOrEqual(0.45);
+    expect(layout.paytable.height / layout.safeBounds.height).toBeLessThanOrEqual(0.55);
+    expect(layout.paytable.iconSize).toBeGreaterThanOrEqual(90);
+    expect(layout.paytable.iconSize).toBeLessThanOrEqual(110);
+    expect(layout.paytable.prizeSize).toBeGreaterThanOrEqual(70);
+    expect(layout.paytable.prizeSize).toBeLessThanOrEqual(90);
     expect(layout.paytable.x - layout.safeBounds.x).toBeCloseTo(
       layout.safeBounds.x + layout.safeBounds.width - (layout.chipTray.x + layout.chipTray.width),
     );

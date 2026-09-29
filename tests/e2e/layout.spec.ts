@@ -26,8 +26,10 @@ test("full-screen mock fits all required viewports", async ({ page }, testInfo) 
       expect(symbol.width, `${viewport.name} ${symbol.symbol} width`).toBeLessThanOrEqual(symbol.drumWidth * 0.64);
       expect(symbol.height, `${viewport.name} ${symbol.symbol} height`).toBeLessThanOrEqual(symbol.drumWidth * 0.64);
     }
-    await expect(page.locator("#paytable > span:not(.paytable__label)"), `${viewport.name} paytable rules`).toHaveCount(7);
-    expect(await page.locator("#paytable > .paytable__rule").evaluateAll((rules) => rules.map((rule) => rule.getAttribute("aria-label")))).toEqual([
+    await expect(page.locator("#paytable [data-prize-slide]"), `${viewport.name} featured prize`).toHaveCount(1);
+    await expect(page.locator("#paytable .prize-carousel__dots button"), `${viewport.name} prize dots`).toHaveCount(7);
+    await expect(page.locator("#prize-overlay .prize-overlay__rule"), `${viewport.name} all-prizes rows`).toHaveCount(7);
+    expect(await page.locator("#prize-overlay .prize-overlay__rule").evaluateAll((rules) => rules.map((rule) => rule.getAttribute("aria-label")))).toEqual([
       "Scott times three, 20 percent",
       "Fiona times three, 20 percent",
       "Gia times three, 20 percent",
@@ -36,8 +38,6 @@ test("full-screen mock fits all required viewports", async ({ page }, testInfo) 
       "Keith times two plus any, 15 percent",
       "Neos times three, 10 percent",
     ]);
-    await expect(page.locator("#paytable > .paytable__rule img"), `${viewport.name} paytable medallions`).toHaveCount(21);
-    await expect(page.locator('#paytable img[src="/assets/mock/gia-medallion.webp"]'), `${viewport.name} Gia paytable medallions`).toHaveCount(4);
     await expect(page.locator(".marquee__frame-bulb"), `${viewport.name} framing bulbs`).toHaveCount(34);
     const dimensions = await page.evaluate(() => {
       const bounds = document.querySelector("canvas")?.getBoundingClientRect();
@@ -71,6 +71,28 @@ test("full-screen mock fits all required viewports", async ({ page }, testInfo) 
   }
 
   await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.goto("/");
+  await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
+  const firstPrize = await page.locator("#paytable").getAttribute("data-active-index");
+  await page.waitForTimeout(3200);
+  await expect(page.locator("#paytable")).not.toHaveAttribute("data-active-index", firstPrize ?? "0");
+  expect(await page.locator(".prize-carousel__value").evaluate((node) => node.getBoundingClientRect().height), "desktop prize text height").toBeGreaterThanOrEqual(48);
+  await page.getByRole("button", { name: "See all prizes" }).click();
+  await expect(page.locator("#prize-overlay")).toBeVisible();
+  await expect(page.locator("#prize-overlay .prize-overlay__rule")).toHaveCount(7);
+  await page.getByRole("button", { name: "Close all prizes" }).click();
+  await page.getByRole("button", { name: "Next prize" }).click();
+  const manuallySelectedPrize = await page.locator("#paytable").getAttribute("data-active-index");
+  await page.waitForTimeout(3200);
+  await expect(page.locator("#paytable"), "manual navigation pauses autoplay").toHaveAttribute("data-active-index", manuallySelectedPrize ?? "0");
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.reload();
+  await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
+  const reducedMotionPrize = await page.locator("#paytable").getAttribute("data-active-index");
+  await page.waitForTimeout(3200);
+  await expect(page.locator("#paytable"), "reduced motion disables autoplay").toHaveAttribute("data-active-index", reducedMotionPrize ?? "0");
+
   await page.goto("/?title=topper");
   await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
   await expect(page.locator(".marquee__frame-bulbs"), "topper reuses cabinet arch bulbs").toBeHidden();

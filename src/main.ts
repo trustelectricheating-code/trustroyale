@@ -5,6 +5,7 @@ import { animateBackground, createBackground, drawBackground } from "./scene/bac
 import { animateCabinet, createCabinet, layoutCabinet } from "./scene/cabinet";
 import { DEFAULT_TITLE_PLACEMENT, type TitlePlacement } from "./scene/cabinetArt";
 import { computeLayout, type LayoutRect, type SafeAreaInsets } from "./scene/layout";
+import { initPrizeCarousel } from "./ui/prizeCarousel";
 
 function readSafeAreaInsets(): SafeAreaInsets {
   const probe = document.createElement("div");
@@ -32,9 +33,10 @@ async function boot(): Promise<void> {
   const host = document.querySelector<HTMLDivElement>("#canvas-host");
   const marquee = document.querySelector<HTMLElement>("#marquee");
   const paytable = document.querySelector<HTMLElement>("#paytable");
+  const prizeOverlay = document.querySelector<HTMLDialogElement>("#prize-overlay");
   const spin = document.querySelector<HTMLButtonElement>("#spin");
   const loading = document.querySelector<HTMLElement>("#loading");
-  if (!host || !marquee || !paytable || !spin || !loading) throw new Error("Game shell is incomplete");
+  if (!host || !marquee || !paytable || !prizeOverlay || !spin || !loading) throw new Error("Game shell is incomplete");
 
   const app = new Application();
   await app.init({
@@ -76,6 +78,7 @@ async function boot(): Promise<void> {
   };
   motionQuery.addEventListener("change", updateMotion);
   updateMotion();
+  initPrizeCarousel(paytable, prizeOverlay, motionQuery);
 
   const updatePointer = (x: number, y: number) => {
     gsap.to(environment.pointer, { x, y, duration: 0.55, ease: "power2.out", overwrite: true });
@@ -100,6 +103,8 @@ async function boot(): Promise<void> {
     document.documentElement.style.setProperty("--ui-scale", String(Math.max(0.62, Math.min(1.25, layout.machine.scale))));
     placeElement(marquee, layout.marquee);
     placeElement(paytable, layout.paytable);
+    paytable.style.setProperty("--prize-icon-size", `${layout.paytable.iconSize}px`);
+    paytable.style.setProperty("--prize-value-size", `${layout.paytable.prizeSize}px`);
     placeElement(spin, layout.spinButton);
     drawBackground(environment, layout);
     layoutCabinet(cabinet, layout);
