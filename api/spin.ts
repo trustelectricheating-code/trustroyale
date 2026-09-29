@@ -6,6 +6,7 @@ import { spinReels as roll, type ReelSpin } from "./_lib/rng";
 import { getOrCreateSession } from "./_lib/session";
 import { newWinRef as makeWinRef } from "./_lib/winRef";
 import { evaluate } from "../src/game/evaluator";
+import { couponFor } from "./_lib/coupons";
 
 interface SpinDependencies {
   query?: Query;
@@ -84,6 +85,7 @@ export function createSpinHandler(dependencies: SpinDependencies = {}) {
         outcome: evaluation.rule ? "win" : "retry",
         ruleId: evaluation.rule?.id ?? null,
         discount: evaluation.rule?.discount ?? null,
+        couponCode: evaluation.rule ? couponFor(evaluation.rule.discount) : null,
         winRef,
         nearMiss: evaluation.nearMiss,
         spinsLeft: evaluation.rule ? 0 : Math.max(0, 3 - spinNo),

@@ -14,7 +14,7 @@ const win = {
   spinId: "00000000-0000-4000-8000-000000000020", spinNo: 1,
   reels: ["scott", "scott", "scott"],
   strip: [["seven", "cherry", "sweets"], ["scott", "scott", "scott"], ["neos", "keith", "gia"]],
-  outcome: "win", ruleId: "scott-3", discount: 20, winRef: "TR-ABC234", nearMiss: false,
+  outcome: "win", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", winRef: "TR-ABC234", nearMiss: false,
   spinsLeft: 0, bonusAvailable: false, isBonus: false,
 };
 
@@ -68,6 +68,7 @@ test("PLAY, staggered reels, retry, Last Chance, and game over", async ({ page }
 });
 
 test("win popup, keyboard controls, and server errors never show a win", async ({ page }) => {
+  await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
   await mockSession(page);
   let status = 200;
   await page.route("**/api/spin", async (route: Route) => {
@@ -80,6 +81,9 @@ test("win popup, keyboard controls, and server errors never show a win", async (
   await page.keyboard.press("Space");
   await expect(page.locator("#spin")).toBeDisabled();
   await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible();
+  await expect(page.getByText("Your code: ROYALE20")).toBeVisible();
+  await page.getByRole("button", { name: "Copy code" }).click();
+  await expect(page.getByText("Copied!")).toBeVisible();
   await expect(page.getByText("TR-ABC234")).toBeVisible();
 
   await page.reload();
@@ -89,6 +93,23 @@ test("win popup, keyboard controls, and server errors never show a win", async (
   await page.locator("#spin").click();
   await expect(page.getByRole("heading", { name: "Machine hiccup, try again" })).toBeVisible();
   await expect(page.getByText(/You've won/)).toHaveCount(0);
+});
+
+test("returning winner sees the same coupon and cannot spin", async ({ page }) => {
+  const wonSession = {
+    spinsLeft: 0,
+    bonusAvailable: false,
+    state: "won",
+    win: { spinId: win.spinId, winRef: win.winRef, ruleId: win.ruleId, discount: win.discount, couponCode: win.couponCode, reels: win.reels },
+  };
+  await page.route("**/api/session**", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(wonSession) }));
+  await ready(page);
+  await expect(page.getByText("Your code: ROYALE20")).toBeVisible();
+  await expect(page.locator("#spin")).toBeDisabled();
+  await page.reload();
+  await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
+  await expect(page.getByText("Your code: ROYALE20")).toBeVisible();
+  await expect(page.locator("#spin")).toBeDisabled();
 });
 
 for (const viewport of [{ name: "desktop", width: 1920, height: 1080 }, { name: "mobile", width: 390, height: 844 }]) {

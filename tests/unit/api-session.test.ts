@@ -27,7 +27,7 @@ describe("GET /api/session with PGlite", () => {
     await setup.query("UPDATE sessions SET spins_used = 1, won_spin_id = $1 WHERE id = $2", [spinId, session.id]);
     const reply = response();
     await createSessionHandler({ query: setup.query })(request("GET", session.cookie), reply);
-    expect(reply.body).toEqual({ spinsLeft: 0, bonusAvailable: false, state: "won", win: { spinId, winRef: "TR-ABC234", ruleId: "scott-3", discount: 20, reels: ["scott", "scott", "scott"] } });
+    expect(reply.body).toEqual({ spinsLeft: 0, bonusAvailable: false, state: "won", win: { spinId, winRef: "TR-ABC234", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", reels: ["scott", "scott", "scott"] } });
   });
 
   it("restores a claimed winning session", async () => {

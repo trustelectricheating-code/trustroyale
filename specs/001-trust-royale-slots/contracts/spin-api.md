@@ -17,7 +17,7 @@ Called on page load. Creates a session if none exists; stores UTM params from th
 }
 ```
 
-`state`: `"idle" | "last_chance" | "won" | "claimed" | "game_over"`. When `won` or `claimed`, `win` is `{ "spinId", "winRef", "ruleId", "discount", "reels" }` so a returning player sees their prize again.
+`state`: `"idle" | "last_chance" | "won" | "claimed" | "game_over"`. When `won` or `claimed`, `win` is `{ "spinId", "winRef", "ruleId", "discount", "couponCode", "reels" }` so a returning player sees their prize again.
 
 ## `POST /api/spin`
 
@@ -34,6 +34,7 @@ No request body.
   "outcome": "win",
   "ruleId": "keith-2-any",
   "discount": 15,
+  "couponCode": "ROYALE15",
   "winRef": "TR-7K3F",
   "nearMiss": false,
   "spinsLeft": 0,
@@ -42,7 +43,7 @@ No request body.
 }
 ```
 
-On `outcome: "retry"`: `ruleId`, `discount`, `winRef` are `null`; `spinsLeft` is 2, 1 or 0. When the third regular spin loses, `bonusAvailable` is `true` and the client shows the Last Chance screen; the next `POST /api/spin` is the bonus spin (`isBonus: true`).
+On `outcome: "retry"`: `ruleId`, `discount`, `couponCode` and `winRef` are `null`; `spinsLeft` is 2, 1 or 0. On a win, `couponCode` comes from `COUPON_CODE_10`, `COUPON_CODE_15` or `COUPON_CODE_20`, with temporary fallbacks `ROYALE10`, `ROYALE15` and `ROYALE20`. When the third regular spin loses, `bonusAvailable` is `true` and the client shows the Last Chance screen; the next `POST /api/spin` is the bonus spin (`isBonus: true`).
 On a win, `spinsLeft` is always 0 (play stops at first win).
 `strip[1]` is the payline and always equals `reels`.
 

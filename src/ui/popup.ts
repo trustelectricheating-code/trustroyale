@@ -33,9 +33,32 @@ export function createPopups(): Popups {
         <p class="result-popup__eyebrow">Trust Royale winner</p>
         <h2 id="result-title">You've won ${win.discount}% off your order</h2>
         <p>One voucher per order</p>
+        <div class="coupon-ticket">
+          <span>Your code:</span>
+          <code class="coupon-ticket__code" tabindex="0"></code>
+          <button type="button" data-copy-code>Copy code</button>
+          <output class="coupon-ticket__status" aria-live="polite"></output>
+        </div>
+        <p class="result-popup__instruction">Use this code on our offer page to claim your discount.</p>
         <p class="result-popup__reference">Win reference <strong>${win.winRef}</strong></p>
-        <div id="claim-options" data-placeholder="claim-options" aria-label="Claim options coming next"></div>
       </section>`, "win");
+      const code = dialog.querySelector<HTMLElement>(".coupon-ticket__code")!;
+      code.textContent = win.couponCode;
+      const status = dialog.querySelector<HTMLOutputElement>(".coupon-ticket__status")!;
+      dialog.querySelector<HTMLButtonElement>("[data-copy-code]")?.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(win.couponCode);
+          status.textContent = "Copied!";
+        } catch {
+          const range = document.createRange();
+          range.selectNodeContents(code);
+          const selection = getSelection();
+          selection?.removeAllRanges();
+          selection?.addRange(range);
+          code.focus();
+          status.textContent = "Code selected — copy it.";
+        }
+      });
     },
     showRetry(nearMiss) {
       show(`<section aria-labelledby="result-title"><h2 id="result-title">So close — spin again!</h2>${nearMiss ? "<p>One symbol away — your next spin could be the one.</p>" : ""}<button type="button" data-close-popup>Continue</button></section>`, "retry", false);

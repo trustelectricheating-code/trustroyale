@@ -534,6 +534,14 @@ html[data-game-state="landing"] .spin { background-image: none; }
 .result-popup__eyebrow { margin: 0; color: #ffb746; letter-spacing: .15em; text-transform: uppercase; }
 .result-popup__reference strong { display: block; margin-top: .4rem; font-size: 1.45rem; letter-spacing: .12em; }
 .result-popup button { min-width: 150px; padding: .8rem 1.2rem; border: 1px solid #ffe8a3; border-radius: 999px; color: #fff; background: #b20d29; font: 700 1rem "Trust Royale UI", sans-serif; }
-#claim-options { min-height: 24px; }
+.coupon-ticket { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .35rem .8rem; margin: 1.1rem auto; padding: 1rem 1.15rem; border: 2px dashed #ffe8a3; border-radius: 14px; color: #3b070e; background: linear-gradient(135deg, #fff1ad, #d5a136); text-align: left; }
+.coupon-ticket::before, .coupon-ticket::after { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; background: #3d0610; content: ""; transform: translateY(-50%); }
+.coupon-ticket::before { left: -11px; }
+.coupon-ticket::after { right: -11px; }
+.coupon-ticket span { font: 700 .8rem "Trust Royale UI", sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.coupon-ticket__code { grid-column: 1; user-select: all; color: #510713; background: transparent; font: 700 clamp(1.35rem, 5vw, 2rem) "Trust Royale Display", serif; letter-spacing: .08em; }
+.coupon-ticket button { grid-column: 2; grid-row: 1 / span 2; min-width: 112px; color: #fff; background: #720918; }
+.coupon-ticket__status { grid-column: 1 / -1; min-height: 1.1em; color: #510713; font: 700 .8rem "Trust Royale UI", sans-serif; text-align: center; }
+.result-popup__instruction { margin: .7rem 0; }
 
 html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }

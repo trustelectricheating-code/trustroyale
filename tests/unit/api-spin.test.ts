@@ -31,7 +31,7 @@ describe("POST /api/spin with PGlite", () => {
       const reply = response();
       await handler(request("POST", session.cookie), reply);
       expect(reply.statusCode).toBe(200);
-      expect(reply.body).toMatchObject({ spinsLeft: expected, bonusAvailable: expected === 0, isBonus: false });
+      expect(reply.body).toMatchObject({ spinsLeft: expected, bonusAvailable: expected === 0, isBonus: false, couponCode: null });
       expect((reply.body as { strip: string[][]; reels: string[] }).strip[1]).toEqual((reply.body as { reels: string[] }).reels);
     }
     const bonus = response();
@@ -48,7 +48,7 @@ describe("POST /api/spin with PGlite", () => {
     const handler = createSpinHandler({ query: setup.query, spinReels: () => win, newWinRef: () => "TR-ABC234" });
     const reply = response();
     await handler(request("POST", session.cookie), reply);
-    expect(reply.body).toMatchObject({ outcome: "win", ruleId: "scott-3", discount: 20, spinsLeft: 0 });
+    expect(reply.body).toMatchObject({ outcome: "win", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", spinsLeft: 0 });
     const denied = response();
     await handler(request("POST", session.cookie), denied);
     expect(denied.body).toEqual({ error: "no_spins_left", state: "won" });

@@ -92,11 +92,11 @@ async function boot(): Promise<void> {
       machine.send({ type: "RESULT" });
       spinsLeft = result.spinsLeft;
       controls.setSpinsLeft(spinsLeft);
-      if (result.outcome === "win" && result.ruleId && result.discount && result.winRef) {
+      if (result.outcome === "win" && result.ruleId && result.discount && result.winRef && result.couponCode) {
         const rule = PAYTABLE.find(({ id }) => id === result.ruleId);
         if (!rule) throw new Error(`Unknown paytable rule: ${result.ruleId}`);
         await celebrate(reels, rule);
-        const win: WinSummary = { spinId: result.spinId, winRef: result.winRef, ruleId: result.ruleId, discount: result.discount, reels: result.reels };
+        const win: WinSummary = { spinId: result.spinId, winRef: result.winRef, ruleId: result.ruleId, discount: result.discount, couponCode: result.couponCode, reels: result.reels };
         machine.send({ type: "RESOLVE", outcome: "win", spinsLeft: 0, bonusAvailable: false, isBonus: result.isBonus });
         displayWin(win);
         return;
