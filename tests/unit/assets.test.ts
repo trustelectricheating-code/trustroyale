@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
 import { getAssetEntry, INITIAL_ASSET_GROUPS, loadAudioAssets, loadInitialAssets, parseAssetManifest } from "../../src/assets";
+import { SYMBOLS } from "../../src/config/symbols";
 
 async function realManifest() {
   return parseAssetManifest(JSON.parse(await readFile("public/assets/manifest.json", "utf8")));
@@ -28,5 +29,14 @@ describe("asset loader", () => {
     expect(assets.loadBundle.mock.calls.map(([group]) => group)).toEqual(INITIAL_ASSET_GROUPS);
     await loadAudioAssets(assets as never);
     expect(assets.loadBundle).toHaveBeenLastCalledWith("audio");
+  });
+
+  it("maps every reel frame to a real approved asset file", async () => {
+    const manifest = await realManifest();
+    for (const symbol of Object.values(SYMBOLS)) for (const key of Object.values(symbol.frames)) {
+      const entry = getAssetEntry(manifest, key);
+      expect(entry.status, key).toBe("approved");
+      expect((await readFile(`public/assets/${entry.file}`)).byteLength, key).toBeGreaterThan(100);
+    }
   });
 });

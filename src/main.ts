@@ -1,4 +1,4 @@
-import { Application } from "pixi.js";
+import { Application, Assets, Texture } from "pixi.js";
 import "pixi.js/unsafe-eval";
 import { gsap } from "gsap";
 import "./styles/main.css";
@@ -6,6 +6,7 @@ import { loadInitialAssets } from "./assets";
 import { GameApiError, getSession, spin, type BestSummary, type SpinResponse, type WinSummary } from "./game/api";
 import { GameStateMachine, type GameState } from "./game/state";
 import { PAYTABLE } from "./config/paytable";
+import { SYMBOLS } from "./config/symbols";
 import { createBackground, drawBackground } from "./scene/background";
 import { animateCabinet, createCabinet, layoutCabinet } from "./scene/cabinet";
 import { DEFAULT_TITLE_PLACEMENT, type TitlePlacement } from "./scene/cabinetArt";
@@ -77,9 +78,12 @@ async function boot(): Promise<void> {
   const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
   const marqueeScene = createMarquee(marquee, motionQuery.matches);
   const chipsScene = createChips(environment, motionQuery.matches);
-  (window as Window & { __trustRoyaleDebug?: { reelSymbols: typeof cabinet.reelSymbols; chipPositions: () => number[][] } }).__trustRoyaleDebug = {
+  const missingReelTextures = Object.values(SYMBOLS).flatMap(({ frames }) => Object.values(frames))
+    .filter((key) => { const loaded = Assets.get<Texture>(key); return !loaded || loaded === Texture.EMPTY || loaded === Texture.WHITE; });
+  (window as Window & { __trustRoyaleDebug?: { reelSymbols: typeof cabinet.reelSymbols; chipPositions: () => number[][]; missingReelTextures: string[] } }).__trustRoyaleDebug = {
     reelSymbols: cabinet.reelSymbols,
     chipPositions: chipsScene.positions,
+    missingReelTextures,
   };
   const updateMotion = () => {
     environment.reducedMotion = motionQuery.matches;

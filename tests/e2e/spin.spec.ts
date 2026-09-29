@@ -1,4 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { computeLayout } from "../../src/scene/layout";
+import { CABINET_ART } from "../../src/scene/cabinetArt";
 
 const freshSession = { spinsLeft: 3, bonusAvailable: false, state: "idle", best: null, win: null };
 const loss = (spinNo: number, spinsLeft: number, bonusAvailable = false, gameOver = false) => ({
@@ -33,6 +39,8 @@ async function mockSession(page: Page, body: object = freshSession): Promise<voi
 async function ready(page: Page): Promise<void> {
   await page.goto("/");
   await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
+  const missing = await page.evaluate(() => (window as Window & { __trustRoyaleDebug?: { missingReelTextures: string[] } }).__trustRoyaleDebug?.missingReelTextures);
+  expect(missing).toEqual([]);
 }
 
 async function enterGame(page: Page): Promise<void> {
@@ -158,4 +166,26 @@ test("returning mid-game player skips intro and resumes tracker", async ({ page 
   await expect(page.locator("#intro")).not.toBeVisible();
   await expect(page.locator("#tries-tracker")).toContainText("Try 3");
   await expect(page.locator("#tries-tracker")).toContainText("Best: 15%");
+});
+
+test("non-face payline symbols contain artwork, never blank white discs", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await mockSession(page);
+  await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(loss(1, 2)) }));
+  await ready(page); await enterGame(page);
+  await page.locator("#spin").click();
+  await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
+  const screenshot = path.join(mkdtempSync(path.join(tmpdir(), "trust-royale-pixels-")), "payline.png");
+  await page.screenshot({ path: screenshot });
+  const viewport = page.viewportSize()!;
+  const layout = computeLayout(viewport.width, viewport.height, { top: 0, right: 0, bottom: 0, left: 0 });
+  const scale = layout.machine.scale;
+  const cell = CABINET_ART.reelWindow.width * scale / 3;
+  const size = Math.floor(Math.min(cell * 0.72, CABINET_ART.reelWindow.height * scale * 0.52));
+  const y = Math.floor(layout.machine.y + (CABINET_ART.reelWindow.y + CABINET_ART.reelWindow.height / 2) * scale - size / 2);
+  for (let column = 0; column < 3; column += 1) {
+    const x = Math.floor(layout.machine.x + (CABINET_ART.reelWindow.x + CABINET_ART.reelWindow.width * (column + 0.5) / 3) * scale - size / 2);
+    const whiteRatio = Number(execFileSync("magick", [screenshot, "-crop", `${size}x${size}+${x}+${y}`, "-colorspace", "gray", "-threshold", "92%", "-format", "%[fx:mean]", "info:"]).toString());
+    expect(whiteRatio, `payline column ${column + 1}`).toBeLessThan(0.5);
+  }
 });

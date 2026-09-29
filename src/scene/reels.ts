@@ -30,8 +30,11 @@ export function usesCircularMask(symbol: SymbolId): boolean { return SYMBOLS[sym
 
 function setSymbol(scene: ReelsScene, column: number, row: number, symbol: SymbolId, frame: "idle" | "half" | "closed" | "win" = "idle"): void {
   const sprite = scene.sprites[column][row];
+  const medallionMask = scene.medallionMasks[column][row];
   sprite.texture = texture(symbol, frame);
-  sprite.mask = usesCircularMask(symbol) ? scene.medallionMasks[column][row] : null;
+  sprite.mask = usesCircularMask(symbol) ? medallionMask : null;
+  // Pixi restores a detached mask's renderability; keep mask geometry out of the reel artwork.
+  medallionMask.renderable = false;
 }
 
 function setStrip(scene: ReelsScene, strip: ReelStrip): void {
