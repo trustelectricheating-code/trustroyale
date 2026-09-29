@@ -43,9 +43,13 @@ export function createPopups(): Popups {
   };
   return {
     showWin(win) {
+      const neosSymbols = win.ruleId === "neos-3"
+        ? '<div class="result-popup__symbols" aria-label="Three Neos chips"><img src="/assets/symbols/neos-chip-red.webp" alt=""><img src="/assets/symbols/neos-chip-red.webp" alt=""><img src="/assets/symbols/neos-chip-red.webp" alt=""></div>'
+        : "";
       show(`<section aria-labelledby="result-title">
         <p class="result-popup__eyebrow">Trust Royale winner</p>
         <h2 id="result-title">You've won ${win.discount}% off your order</h2>
+        ${neosSymbols}
         <p>One voucher per order</p>
         <div class="coupon-ticket">
           <span>Your code:</span>

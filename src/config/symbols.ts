@@ -26,7 +26,7 @@ export const SYMBOLS = {
   fiona: { id: "fiona", name: "Fiona", kind: "face", frames: { idle: "face.fiona.idle", half: "face.fiona.half", closed: "face.fiona.closed", win: "face.fiona.win" } },
   gia: { id: "gia", name: "Gia", kind: "face", frames: { idle: "face.gia.idle", half: "face.gia.half", closed: "face.gia.closed", win: "face.gia.win" } },
   keith: { id: "keith", name: "Keith", kind: "face", frames: { idle: "face.keith.idle", half: "face.keith.half", closed: "face.keith.closed", win: "face.keith.win" } },
-  neos: { id: "neos", name: "Neos", kind: "emblem", frames: { idle: "emblem.neos.idle", pulse: "emblem.neos.pulse" } },
+  neos: { id: "neos", name: "Neos", kind: "emblem", frames: { idle: "sym.neos.chip", pulse: "emblem.neos.pulse" } },
   cherry: { id: "cherry", name: "Cherry", kind: "filler", frames: { idle: "sym.cherry", shine: "sym.cherry.shine" } },
   seven: { id: "seven", name: "Seven", kind: "filler", frames: { idle: "sym.seven", shine: "sym.seven.shine" } },
   sweets: { id: "sweets", name: "Sweets", kind: "filler", frames: { idle: "sym.sweets", shine: "sym.sweets.shine" } },

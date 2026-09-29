@@ -128,7 +128,7 @@ test("full-screen mock fits all required viewports", async ({ page }) => {
       await expect(overlayNeos, `${viewport.name} Neos medallions`).toHaveCount(3);
       expect(await overlayNeos.evaluateAll((images) => images.every((image) => {
         const node = image as HTMLImageElement;
-        return new URL(node.src).pathname === "/assets/mock/neos-medallion.webp"
+        return new URL(node.src).pathname === "/assets/symbols/neos-chip-red.webp"
           && node.getBoundingClientRect().width >= 32
           && node.getBoundingClientRect().width === node.getBoundingClientRect().height;
       })), `${viewport.name} Neos uses reel medallion asset at readable size`).toBe(true);

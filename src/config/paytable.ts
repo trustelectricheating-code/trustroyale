@@ -29,7 +29,7 @@ export const PRIZE_SYMBOLS: Record<PrizeSymbol, { label: string; src: string }> 
   fiona: { label: "Fiona", src: "/assets/mock/fiona-medallion.webp" },
   gia: { label: "Gia", src: "/assets/mock/gia-medallion.webp" },
   keith: { label: "Keith", src: "/assets/mock/keith-medallion.webp" },
-  neos: { label: "Neos", src: "/assets/mock/neos-medallion.webp" },
+  neos: { label: "Neos", src: "/assets/symbols/neos-chip-red.webp" },
   cherry: { label: "Cherry", src: "/assets/mock/cherry-reel.webp" },
   seven: { label: "Seven", src: "/assets/mock/seven-reel.webp" },
   sweets: { label: "Sweets", src: "/assets/symbols/sweets.webp" },

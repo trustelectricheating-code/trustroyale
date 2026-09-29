@@ -540,6 +540,8 @@ html[data-orientation="portrait"] .prize-carousel__all { font-size: clamp(.55rem
 .result-popup p { font: 700 1rem/1.45 "Trust Royale UI", sans-serif; }
 .result-popup__eyebrow { margin: 0; color: #ffb746; letter-spacing: .15em; text-transform: uppercase; }
 .result-popup__reference strong { display: block; margin-top: .4rem; font-size: 1.45rem; letter-spacing: .12em; }
+.result-popup__symbols { display: flex; justify-content: center; gap: .4rem; }
+.result-popup__symbols img { width: 58px; height: 58px; }
 .result-popup button { min-width: 150px; padding: .8rem 1.2rem; border: 1px solid #ffe8a3; border-radius: 999px; color: #fff; background: #b20d29; font: 700 1rem "Trust Royale UI", sans-serif; }
 .coupon-ticket { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .35rem .8rem; margin: 1.1rem auto; padding: 1rem 1.15rem; border: 2px dashed #ffe8a3; border-radius: 14px; color: #3b070e; background: linear-gradient(135deg, #fff1ad, #d5a136); text-align: left; }
 .coupon-ticket::before, .coupon-ticket::after { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; background: #3d0610; content: ""; transform: translateY(-50%); }

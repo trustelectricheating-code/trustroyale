@@ -8,7 +8,7 @@ const ASSETS = {
   fiona: "/assets/mock/fiona-medallion.webp",
   gia: "/assets/mock/gia-medallion.webp",
   keith: "/assets/mock/keith-medallion.webp",
-  neos: "/assets/mock/neos-medallion.webp",
+  neos: "/assets/symbols/neos-chip-red.webp",
   cherry: "/assets/mock/cherry-reel.webp",
   seven: "/assets/mock/seven-reel.webp",
   sweets: "/assets/mock/sweets-reel.webp",

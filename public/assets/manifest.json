@@ -26,6 +26,7 @@
     {"key":"sym.sweets","group":"symbols","file":"symbols/sweets.webp","status":"approved","source":"generated","licence":"Trust Electric Heating — internal","sourceUrl":null},
     {"key":"sym.sweets.shine","group":"symbols","file":"symbols/sweets-shine.webp","status":"approved","source":"generated","licence":"Trust Electric Heating — internal","sourceUrl":null},
     {"key":"sym.frame","group":"symbols","file":"symbols/frame.webp","status":"approved","source":"custom","licence":"Trust Electric Heating — internal","sourceUrl":null,"notes":"Empty polished-gold medallion rim with transparent centre, rendered from the Gate C medallion-frame treatment."},
+    {"key":"sym.neos.chip","group":"symbols","file":"symbols/neos-chip-red.webp","status":"approved","source":"custom","licence":"Trust Electric Heating — internal","sourceUrl":null,"notes":"Approved red-and-white casino chip with the white Neos T used for every Neos reel and prize symbol."},
 
     {"key":"face.scott.idle","group":"faces","file":"faces/scott-idle.webp","status":"approved","source":"generated","licence":"Trust Electric Heating — internal","sourceUrl":null},
     {"key":"face.scott.half","group":"faces","file":"faces/scott-half.webp","status":"approved","source":"generated","licence":"Trust Electric Heating — internal","sourceUrl":null,"notes":"QA round 1 bilateral half-blink edit from idle."},
