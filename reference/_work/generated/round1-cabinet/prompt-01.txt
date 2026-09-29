@@ -1,0 +1,14 @@
+Use case: product-mockup
+Asset type: layered hero slot-machine cabinet for a PixiJS casino game
+Primary request: Generate a brand-new, front-facing upright slot machine that is unmistakably the detailed hero version of the machines in reference images 1 and 2. Use reference image 3 only for the required straight-on silhouette and layer-friendly composition, not its current styling.
+Input images: Image 1 and Image 2 are authoritative style/material references for the background hall machines; Image 3 is a composition and alpha-cutout reference.
+Scene/backdrop: isolated object on true transparent background.
+Subject: tall deep-red lacquer slot machine with polished ornate gold trim, rounded arched topper with an ornate gold crest and red/gold lamp sockets, a large clean empty transparent rectangular reel-window opening for live reels, a purpose-built button deck with one large wide raised red illuminated SPIN button in the centre, rows of small decorative glowing amber buttons and indicator lamps around it, and one red jewel side lamp. Lower belly has a clean black-glass inset panel framed in gold, intentionally blank for a separate live Trust Royale title overlay.
+Style/medium: premium photoreal product render, same late-19th-century Monte Carlo luxury family as the hall machines, physically plausible materials and reflections, more detailed and brighter than background machines.
+Composition/framing: exact front elevation, symmetric, full machine visible, centred, no perspective skew, no stool, no floor shadow beyond a subtle contact shadow, generous transparent margin, approximately 2:3 cabinet ratio.
+Lighting/mood: warm casino bulbs and rich red-gold reflections, readable controls.
+Color palette: deep red lacquer, black glass and warm polished gold.
+Materials/textures: lacquered wood, enamel, glass, brass and incandescent lamps.
+Text (verbatim): "SPIN" only on the central button.
+Constraints: reel window interior must be genuinely transparent alpha, not black or filled; surrounding cabinet remains opaque; belly panel blank; topper bulbs individually readable for animation alignment; no SPINS LEFT panel; no TOP PRIZE panel; no counters; no extra display screens; no symbols in reel window; no logos; no watermark.
+

@@ -1,0 +1,5 @@
+Use case: background-extraction
+Asset type: layered hero slot-machine cabinet for PixiJS
+Primary request: Preserve the slot machine design, geometry, materials, lighting, ornament, button deck, SPIN label and every cabinet detail exactly. Remove only the brown backdrop and the brown fill inside the large reel window. Make both regions true transparent alpha. The entire cabinet, gold reel-window frame, black glass frame, lights, button deck, lower black belly panel, tray and feet must remain fully intact and opaque.
+Input images: Image 1 is the edit target and authoritative design.
+Constraints: change only background transparency and reel-window interior transparency; exact straight-on geometry; no new objects; no symbols; no text changes; no watermark.

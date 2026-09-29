@@ -6,16 +6,14 @@ export const DEFAULT_TITLE_PLACEMENT: TitlePlacement = "belly";
 export const CABINET_ART = {
   source: { width: 1024, height: 1536 },
   titlePlacements: {
-    topper: { x: 160, y: 122, width: 400, height: 110 },
-    belly: { x: 90, y: 780, width: 540, height: 120 },
+    topper: { x: 150, y: 120, width: 420, height: 112 },
+    belly: { x: 90, y: 745, width: 540, height: 145 },
   },
   marqueeBulbs: [
-    [124, 200], [141, 161], [174, 129], [209, 102], [250, 84], [294, 71],
-    [426, 71], [470, 84], [513, 102], [547, 129], [579, 161], [597, 200],
-    [157, 213], [174, 181], [200, 151], [233, 129], [271, 115], [310, 105],
-    [409, 105], [449, 115], [487, 129], [520, 151], [546, 181], [563, 213],
+    [143, 135], [175, 181], [203, 91], [246, 132], [294, 70], [361, 101],
+    [428, 71], [473, 106], [518, 91], [545, 146], [577, 134], [604, 181],
   ] as const,
-  reelWindow: { x: 143, y: 312, width: 434, height: 242 },
+  reelWindow: { x: 153, y: 308, width: 414, height: 205 },
   // Owner round 1: one wide control replaces the two stale readouts and small centre button.
-  spinButtonOpening: { x: 205, y: 616, width: 310, height: 72 },
+  spinButtonOpening: { x: 271, y: 563, width: 178, height: 121 },
 } as const;

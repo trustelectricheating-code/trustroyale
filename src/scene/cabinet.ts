@@ -3,7 +3,7 @@ import { CABINET_ART, CABINET_DESIGN } from "./cabinetArt";
 import type { SceneLayout } from "./layout";
 
 const ASSETS = {
-  cabinet: "/assets/mock/cabinet.webp",
+  cabinet: "/assets/cabinet/body.webp",
   scott: "/assets/mock/scott-medallion.webp",
   fiona: "/assets/mock/fiona-medallion.webp",
   gia: "/assets/mock/gia-medallion.webp",

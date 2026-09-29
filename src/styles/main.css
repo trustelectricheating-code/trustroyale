@@ -517,7 +517,11 @@ html[data-orientation="portrait"] .prize-carousel__all { font-size: clamp(.55rem
 }
 
 .spin[data-visual-state="down"] { transform: translateY(5px) scale(.985); box-shadow: inset 0 7px 12px #280007, 0 1px 0 #4a2708, 0 3px 7px #0009; }
+.spin[data-visual-state="up"] { background-image: url("/assets/cabinet/spin-up.webp"); background-size: cover; }
+.spin[data-visual-state="down"] { background-image: url("/assets/cabinet/spin-down.webp"); background-size: cover; }
+.spin[data-visual-state="disabled"] { background-image: url("/assets/cabinet/spin-disabled.webp"); background-size: cover; }
 .spin__label { pointer-events: none; }
+html[data-ready="true"] .spin__label { visibility: hidden; }
 
 .spin:active:not(:disabled) {
   transform: translateY(5px) scale(.985);
