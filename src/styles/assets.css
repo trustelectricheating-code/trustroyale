@@ -1,0 +1,38 @@
+@font-face{font-family:"Trust Royale Display";src:url("/assets/fonts/cinzel-bold.woff2") format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Trust Royale UI";src:url("/assets/fonts/nunito-sans-bold.woff2") format("woff2");font-weight:700;font-display:swap}
+:root{color:#fff5d8;background:#100105;font-family:"Trust Royale UI",sans-serif;font-synthesis:none;--gold:#d9aa43;--cream:#fff1bc;--red:#7b1020}
+*{box-sizing:border-box}
+html{min-width:320px;background:#100105}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 0,#4a0915 0,transparent 28rem),linear-gradient(135deg,#160208,#080103 70%);color:#fff5d8}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.14;background-image:repeating-linear-gradient(90deg,transparent 0 3px,rgba(255,255,255,.03) 4px),radial-gradient(circle at 20% 20%,#a81d34 0,transparent 34%)}
+#asset-board{position:relative;width:min(1680px,100%);margin:auto;padding:clamp(24px,4vw,70px)}
+.board-hero{text-align:center;padding:clamp(40px,7vw,96px) 16px 56px}
+.board-hero__eyebrow{text-transform:uppercase;letter-spacing:.32em;color:#dfbf70;font-size:12px}
+.board-hero h1{margin:.25em 0 .1em;font:700 clamp(42px,8vw,108px)/.95 "Trust Royale Display",serif;letter-spacing:.05em;color:#f1ca65;text-shadow:0 2px #5a2b08,0 0 28px rgba(255,190,66,.28)}
+.board-hero h1 span{font-family:"Trust Royale UI",sans-serif;letter-spacing:-.08em;color:#e50746;text-shadow:0 2px #4a0014,0 0 24px rgba(229,7,70,.35)}
+.board-hero p{margin:20px auto 0;max-width:650px;color:#d8c9b0}
+.board-hero__rule{width:min(520px,80%);height:1px;margin:38px auto 0;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.asset-section{margin:0 0 72px;scroll-margin-top:24px}
+.asset-section__head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;margin:0 0 20px;padding:0 2px 14px;border-bottom:1px solid rgba(217,170,67,.36)}
+.asset-section__head span{color:#926b2e;font:700 13px/1 "Trust Royale Display",serif}
+.asset-section__head h2{margin:0;text-transform:uppercase;letter-spacing:.14em;font:700 clamp(22px,3vw,34px)/1 "Trust Royale Display",serif;color:var(--cream)}
+.asset-section__head b{min-width:32px;padding:6px 8px;border:1px solid #744d20;border-radius:999px;text-align:center;color:#e9c66e;font-size:12px}
+.asset-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:16px}
+.asset-card{min-width:0;padding:14px;border:1px solid rgba(217,170,67,.24);border-radius:16px;background:linear-gradient(145deg,rgba(69,10,22,.84),rgba(13,2,6,.94));box-shadow:0 18px 44px rgba(0,0,0,.2)}
+.asset-card__head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.asset-card code{overflow:hidden;color:#ffe9ae;font:700 12px/1.3 ui-monospace,monospace;text-overflow:ellipsis}
+.status{padding:5px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.08em;font-size:9px}.status--draft{border:1px solid #b98235;background:#3a2108;color:#f8ce72}
+.asset-card__preview{display:grid;place-items:center;height:190px;overflow:hidden;border-radius:10px;background:linear-gradient(135deg,#23050b,#080103);box-shadow:inset 0 0 0 1px rgba(255,255,255,.035)}
+.asset-card__preview img{display:block;max-width:100%;max-height:100%;object-fit:contain}
+.asset-card__meta{display:flex;justify-content:space-between;gap:12px;margin-top:12px;color:#b9a98e;font-size:11px}.asset-card__meta a{color:#e5bd62}.asset-card p{margin:9px 0 0;color:#9d8c77;font-size:11px;line-height:1.45}
+.face-row{margin:0 0 22px;padding:18px;border:1px solid rgba(217,170,67,.28);border-radius:20px;background:rgba(24,3,8,.75)}
+.face-row>header{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 16px}.face-row h3{margin:0;text-transform:capitalize;font:700 24px/1 "Trust Royale Display",serif;color:#f4d47e}
+.face-row__frames{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.face-row__frames .asset-card__preview{height:auto;aspect-ratio:1}.face-row__frames .asset-card__meta,.face-row__frames .asset-card p{display:none}
+.blink-preview{display:flex;align-items:center;gap:10px;color:#cdbb9e;font-size:11px;text-transform:uppercase;letter-spacing:.12em}.blink-preview img{width:64px;height:64px;border:2px solid #dcb04f;border-radius:50%;object-fit:cover;box-shadow:0 0 18px rgba(229,180,65,.2)}
+.pulse-preview{display:flex;align-items:center;justify-content:center;gap:18px;margin:24px auto 0;color:#cdbb9e;text-transform:uppercase;letter-spacing:.12em;font-size:11px}.pulse-preview>div{position:relative;width:180px;height:180px}.pulse-preview img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.pulse-preview__rings{animation:pulse 2s ease-out infinite}
+@keyframes pulse{0%{opacity:.85;transform:scale(.72)}70%,100%{opacity:0;transform:scale(1.24)}}
+.font-preview{display:grid;place-items:center;height:190px;padding:18px;border-radius:10px;background:#160307;color:#f3cf76;text-align:center;font-size:clamp(24px,3vw,42px);line-height:1.2}.font-preview small{color:#fff2ca;font-size:14px}
+.audio-button{width:100%;min-height:78px;border:1px solid #b88732;border-radius:12px;background:linear-gradient(#791326,#420814);color:#fff0bb;font:700 14px "Trust Royale UI",sans-serif;cursor:pointer}.audio-button:hover,.audio-button:focus-visible{outline:2px solid #ffe58e;outline-offset:2px;background:linear-gradient(#97182e,#570a19)}.audio-button span{margin-right:8px;color:#f4c75d}
+footer{padding:30px 0 10px;border-top:1px solid rgba(217,170,67,.22);text-align:center;color:#806f5e;font-size:12px}.board-error{padding:40px;color:#fff}
+@media(max-width:700px){#asset-board{padding:20px 14px}.board-hero{padding:42px 4px}.asset-section{margin-bottom:54px}.asset-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.asset-card{padding:10px;border-radius:12px}.asset-card__preview{height:132px}.asset-card__head{align-items:flex-start;flex-direction:column;gap:7px}.asset-card code{font-size:10px}.asset-card__meta{flex-direction:column;gap:3px}.face-row{padding:12px}.face-row>header{align-items:flex-start}.face-row__frames{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.blink-preview{flex-direction:column-reverse;text-align:center}.blink-preview img{width:56px;height:56px}.pulse-preview{flex-direction:column}.font-preview{height:132px;font-size:22px}.audio-button{min-height:64px}}
+@media(prefers-reduced-motion:reduce){.pulse-preview__rings{animation:none;opacity:.5}}
