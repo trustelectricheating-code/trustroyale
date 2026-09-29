@@ -3,7 +3,7 @@ import "pixi.js/unsafe-eval";
 import { gsap } from "gsap";
 import "./styles/main.css";
 import { loadInitialAssets } from "./assets";
-import { GameApiError, getSession, spin, type SpinResponse, type WinSummary } from "./game/api";
+import { GameApiError, getSession, spin, type BestSummary, type SpinResponse, type WinSummary } from "./game/api";
 import { GameStateMachine, type GameState } from "./game/state";
 import { PAYTABLE } from "./config/paytable";
 import { createBackground, drawBackground } from "./scene/background";
@@ -17,7 +17,19 @@ import { animateSpin, createReels } from "./scene/reels";
 import { createSound } from "./audio/sound";
 import { createControls } from "./ui/controls";
 import { createPopups } from "./ui/popup";
-import { createPaytable } from "./ui/paytable";
+import { createIntro } from "./ui/intro";
+
+const sound = createSound();
+let loadingGesture = false;
+const loadingTarget = document.querySelector<HTMLButtonElement>("#loading");
+const spinTarget = document.querySelector<HTMLButtonElement>("#spin");
+const rememberLoadingGesture = (): void => {
+  loadingGesture = true;
+  void sound.unlock().then(() => sound.ambient.start());
+  if (loadingTarget) loadingTarget.textContent = "Ready when Keith is…";
+};
+loadingTarget?.addEventListener("click", rememberLoadingGesture);
+spinTarget?.addEventListener("click", rememberLoadingGesture);
 
 function readSafeAreaInsets(): SafeAreaInsets {
   const probe = document.createElement("div");
@@ -39,11 +51,12 @@ function placeElement(element: HTMLElement, frame: LayoutRect): void {
 async function boot(): Promise<void> {
   const host = document.querySelector<HTMLDivElement>("#canvas-host");
   const marquee = document.querySelector<HTMLElement>("#marquee");
-  const paytable = document.querySelector<HTMLElement>("#paytable");
-  const prizeOverlay = document.querySelector<HTMLDialogElement>("#prize-overlay");
+  const tracker = document.querySelector<HTMLElement>("#tries-tracker");
+  const introDialog = document.querySelector<HTMLDialogElement>("#intro");
+  const prizesButton = document.querySelector<HTMLButtonElement>("#prizes");
   const spinButton = document.querySelector<HTMLButtonElement>("#spin");
   const loading = document.querySelector<HTMLElement>("#loading");
-  if (!host || !marquee || !paytable || !prizeOverlay || !spinButton || !loading) throw new Error("Game shell is incomplete");
+  if (!host || !marquee || !tracker || !introDialog || !prizesButton || !spinButton || !loading) throw new Error("Game shell is incomplete");
 
   await loadInitialAssets();
   const app = new Application();
@@ -64,7 +77,6 @@ async function boot(): Promise<void> {
   const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
   const marqueeScene = createMarquee(marquee, motionQuery.matches);
   const chipsScene = createChips(environment, motionQuery.matches);
-  const sound = createSound();
   (window as Window & { __trustRoyaleDebug?: { reelSymbols: typeof cabinet.reelSymbols; chipPositions: () => number[][] } }).__trustRoyaleDebug = {
     reelSymbols: cabinet.reelSymbols,
     chipPositions: chipsScene.positions,
@@ -78,23 +90,25 @@ async function boot(): Promise<void> {
   };
   motionQuery.addEventListener("change", updateMotion);
   updateMotion();
-  const paytableUi = createPaytable(paytable, prizeOverlay, motionQuery);
-
   const controls = createControls(spinButton, sound.isMuted());
   controls.onMute((muted) => sound.setMuted(muted));
-  const popups = createPopups();
-  const machine = new GameStateMachine();
+  const intro = createIntro(introDialog, () => { void sound.unlock().then(() => sound.ambient.start()); });
+  const popups = createPopups((ruleId) => intro.showPrizes(ruleId));
+  prizesButton.addEventListener("click", () => intro.showPrizes());
+  const machine = new GameStateMachine("IDLE");
   let spinsLeft = 3;
+  let best: BestSummary | undefined;
   controls.setState(machine.state);
-  controls.setSpinsLeft(spinsLeft);
+  controls.setProgress(spinsLeft, false);
   machine.subscribe(({ current }) => {
     controls.setState(current);
-    if (current !== "WON") paytableUi.setState(current);
+    controls.setProgress(spinsLeft, current === "LAST_CHANCE", best?.discount);
   });
 
   const displayWin = (win: WinSummary) => {
     localStorage.setItem("trustRoyaleWin", JSON.stringify(win));
-    paytableUi.setState("WON", win.ruleId);
+    best = win;
+    controls.setProgress(spinsLeft, false, win.discount);
     popups.showWin(win);
   };
 
@@ -111,7 +125,8 @@ async function boot(): Promise<void> {
       sound.stop("reel.loop");
       machine.send({ type: "RESULT" });
       spinsLeft = result.spinsLeft;
-      controls.setSpinsLeft(spinsLeft);
+      if (result.best) best = result.best;
+      controls.setProgress(spinsLeft, result.isBonus, best?.discount);
       if (result.outcome === "win" && result.ruleId && result.discount && result.winRef) {
         const rule = PAYTABLE.find(({ id }) => id === result.ruleId);
         if (!rule) throw new Error(`Unknown paytable rule: ${result.ruleId}`);
@@ -152,24 +167,14 @@ async function boot(): Promise<void> {
   };
 
   controls.onAction(() => {
-    if (machine.state === "LANDING") {
-      void sound.unlock();
-      sound.ambient.start();
-      sound.play("button");
-      sound.play("chips");
-      sound.play("whoosh");
-      chipsScene.settle();
-      machine.send({ type: "PLAY" });
-      spinButton.setAttribute("aria-label", "Spin the reels");
-      return;
-    }
     void playSpin();
   });
 
   try {
     const session = await getSession();
     spinsLeft = session.spinsLeft;
-    controls.setSpinsLeft(spinsLeft);
+    if (session.best) best = session.best;
+    controls.setProgress(spinsLeft, session.state === "last_chance", best?.discount);
     if (session.state !== "idle") {
       chipsScene.settle();
       machine.send({ type: "SERVER_STATE", state: session.state });
@@ -177,8 +182,12 @@ async function boot(): Promise<void> {
       else if (session.state === "last_chance") popups.showLastChance(playSpin);
       else if (session.state === "game_over") popups.showGameOver();
     }
+    if (session.state === "idle" && session.spinsLeft === 3 && !session.best) {
+      intro.show(() => chipsScene.settle());
+    } else chipsScene.settle();
   } catch {
     document.documentElement.dataset.sessionUnavailable = "true";
+    intro.show(() => chipsScene.settle());
   }
 
   const updatePointer = (x: number, y: number) => gsap.to(environment.pointer, { x, y, duration: 0.55, ease: "power2.out", overwrite: true });
@@ -190,9 +199,7 @@ async function boot(): Promise<void> {
     document.documentElement.dataset.orientation = layout.orientation;
     document.documentElement.style.setProperty("--ui-scale", String(Math.max(0.62, Math.min(1.25, layout.machine.scale))));
     placeElement(marquee, layout.marquee);
-    placeElement(paytable, layout.paytable);
-    paytable.style.setProperty("--prize-icon-size", `${layout.paytable.iconSize}px`);
-    paytable.style.setProperty("--prize-value-size", `${layout.paytable.prizeSize}px`);
+    placeElement(tracker, layout.paytable);
     placeElement(spinButton, layout.spinButton);
     drawBackground(environment, layout);
     layoutCabinet(cabinet, layout);
@@ -206,8 +213,14 @@ async function boot(): Promise<void> {
     else { app.start(); marqueeScene.resume(); if (!motionQuery.matches) motion.resume(); }
   });
   renderLayout();
+  spinButton.disabled = false;
+  spinButton.setAttribute("aria-busy", "false");
+  spinButton.removeAttribute("aria-disabled");
+  loadingTarget?.removeEventListener("click", rememberLoadingGesture);
+  spinTarget?.removeEventListener("click", rememberLoadingGesture);
   loading.remove();
   document.documentElement.dataset.ready = "true";
+  if (loadingGesture && !introDialog.open) intro.show(() => chipsScene.settle());
 }
 
 boot().catch((caught: unknown) => {

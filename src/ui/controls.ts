@@ -2,9 +2,9 @@ import type { GameState } from "../game/state";
 
 export interface Controls {
   button: HTMLButtonElement;
-  counter: HTMLElement;
+  tracker: HTMLElement;
   setState(state: GameState): void;
-  setSpinsLeft(spins: number): void;
+  setProgress(spinsLeft: number, lastChance: boolean, bestDiscount?: number): void;
   onAction(listener: () => void): void;
   onMute(listener: (muted: boolean) => void): void;
   setMuted(muted: boolean): void;
@@ -14,11 +14,8 @@ export function createControls(button: HTMLButtonElement, initialMuted = false):
   const label = document.createElement("span");
   label.className = "spin__label";
   button.replaceChildren(label);
-  const counter = document.createElement("output");
-  counter.id = "spins-left";
-  counter.className = "spins-left";
-  counter.setAttribute("aria-live", "polite");
-  button.insertAdjacentElement("beforebegin", counter);
+  const tracker = document.querySelector<HTMLElement>("#tries-tracker");
+  if (!tracker) throw new Error("Tries tracker is missing");
   for (let index = 0; index < 3; index += 1) {
     const marker = document.createElement("span");
     marker.hidden = true;
@@ -46,14 +43,20 @@ export function createControls(button: HTMLButtonElement, initialMuted = false):
   button.addEventListener("pointercancel", () => { if (!button.disabled) button.dataset.visualState = "up"; });
   return {
     button,
-    counter,
+    tracker,
     setState(state) {
       document.documentElement.dataset.gameState = state.toLowerCase();
       button.disabled = ["SPINNING", "RESOLVING", "WON", "CLAIMED", "GAME_OVER"].includes(state);
-      label.textContent = state === "LANDING" ? "PLAY" : state === "LAST_CHANCE" ? "LAST CHANCE" : "SPIN";
+      label.textContent = state === "LAST_CHANCE" ? "LAST CHANCE" : "SPIN";
       button.dataset.visualState = button.disabled ? "disabled" : "up";
     },
-    setSpinsLeft(spins) { counter.textContent = `Spins left: ${spins}`; },
+    setProgress(spinsLeft, lastChance, bestDiscount) {
+      const used = Math.max(0, 3 - spinsLeft);
+      const current = lastChance ? 3 : Math.min(2, used);
+      tracker.innerHTML = `<p class="tries-tracker__title">Your tries</p>
+        <ol>${["Try 1", "Try 2", "Try 3", "Last Chance"].map((name, index) => `<li class="${index < used || (index === 3 && lastChance) ? "is-used" : ""} ${index === current ? "is-current" : ""}"><span aria-hidden="true"></span>${name}</li>`).join("")}</ol>
+        <output aria-live="polite">Best: ${bestDiscount ? `${bestDiscount}%` : "—"}</output>`;
+    },
     onAction(listener) { action = listener; },
     onMute(listener) { muteAction = listener; },
     setMuted(value) { muted = value; renderMute(); },

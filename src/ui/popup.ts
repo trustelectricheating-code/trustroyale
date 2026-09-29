@@ -29,7 +29,7 @@ function dialogShell(): HTMLDialogElement {
   return dialog;
 }
 
-export function createPopups(): Popups {
+export function createPopups(onViewPrizes: (ruleId?: string) => void): Popups {
   const dialog = dialogShell();
   const show = (content: string, kind: string, modal = true) => {
     if (dialog.open) dialog.close();
@@ -81,7 +81,7 @@ export function createPopups(): Popups {
       });
       dialog.querySelector<HTMLButtonElement>("[data-view-prizes]")?.addEventListener("click", () => {
         dialog.close();
-        document.querySelector<HTMLButtonElement>(".prize-carousel__all")?.click();
+        onViewPrizes(win.ruleId);
       });
     },
     showRetry(nearMiss) {

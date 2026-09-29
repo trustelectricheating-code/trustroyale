@@ -85,11 +85,12 @@
             </g>
           </svg>
         </header>
-        <section id="paytable" class="paytable" aria-label="Featured prize carousel"></section>
-        <button id="spin" class="spin" type="button" aria-label="Play Trust Royale">Play</button>
+        <section id="tries-tracker" class="tries-tracker" aria-label="Try progress"></section>
+        <button id="prizes" class="prizes-button" type="button" aria-haspopup="dialog">Prizes</button>
+        <button id="spin" class="spin" type="button" aria-label="Spin the reels" aria-busy="true" disabled>Loading…</button>
       </div>
-      <dialog id="prize-overlay" class="prize-overlay" aria-label="All prizes"></dialog>
-      <div id="loading" class="loading" role="status">Preparing the table…</div>
+      <dialog id="intro" class="intro" aria-label="Trust Royale introduction"></dialog>
+      <button id="loading" class="loading" type="button" aria-busy="true">Preparing the table…<small>Tap once and Keith will welcome you when ready</small></button>
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
