@@ -1,4 +1,4 @@
-import { Assets, Container, Graphics, Sprite, Texture } from "pixi.js";
+import { Assets, BlurFilter, Container, Graphics, Sprite, Texture } from "pixi.js";
 import type { SceneLayout } from "./layout";
 
 const ASSETS = {
@@ -46,10 +46,26 @@ export const FLOATING_ITEM_SPECS: readonly FloatingItemSpec[] = [
   { kind: "chip", depth: "mid", nx: 0.13, ny: 0.38, texture: 1, baseRotation: 0.05, baseSize: 0.64 },
   { kind: "chip", depth: "far", nx: 0.89, ny: 0.39, texture: 3, baseRotation: -0.05, baseSize: 0.43 },
   { kind: "chip", depth: "far", nx: 0.11, ny: 0.8, texture: 2, baseRotation: 0.04, baseSize: 0.43 },
+  { kind: "chip", depth: "mid", nx: 0.05, ny: 0.2, texture: 0, baseRotation: -0.08, baseSize: 0.54 },
+  { kind: "chip", depth: "far", nx: 0.95, ny: 0.22, texture: 1, baseRotation: 0.07, baseSize: 0.38 },
+  { kind: "chip", depth: "mid", nx: 0.05, ny: 0.32, texture: 2, baseRotation: 0.05, baseSize: 0.57 },
+  { kind: "chip", depth: "far", nx: 0.95, ny: 0.36, texture: 3, baseRotation: -0.07, baseSize: 0.4 },
+  { kind: "chip", depth: "mid", nx: 0.05, ny: 0.66, texture: 1, baseRotation: -0.05, baseSize: 0.58 },
+  { kind: "chip", depth: "far", nx: 0.95, ny: 0.7, texture: 0, baseRotation: 0.04, baseSize: 0.37 },
+  { kind: "chip", depth: "mid", nx: 0.05, ny: 0.9, texture: 3, baseRotation: 0.06, baseSize: 0.55 },
+  { kind: "chip", depth: "far", nx: 0.95, ny: 0.9, texture: 2, baseRotation: -0.05, baseSize: 0.39 },
+  { kind: "coin", depth: "far", nx: 0.18, ny: 0.1, texture: 0, baseRotation: 0.03, baseSize: 0.37 },
+  { kind: "chip", depth: "far", nx: 0.81, ny: 0.1, texture: 3, baseRotation: -0.04, baseSize: 0.36 },
+  { kind: "chip", depth: "mid", nx: 0.2, ny: 0.9, texture: 0, baseRotation: 0.04, baseSize: 0.49 },
+  { kind: "coin", depth: "far", nx: 0.8, ny: 0.9, texture: 0, baseRotation: -0.04, baseSize: 0.36 },
+  { kind: "chip", depth: "far", nx: 0.26, ny: 0.14, texture: 1, baseRotation: 0.06, baseSize: 0.34 },
+  { kind: "chip", depth: "far", nx: 0.74, ny: 0.16, texture: 2, baseRotation: -0.06, baseSize: 0.35 },
+  { kind: "chip", depth: "mid", nx: 0.24, ny: 0.85, texture: 3, baseRotation: -0.05, baseSize: 0.48 },
+  { kind: "chip", depth: "mid", nx: 0.76, ny: 0.86, texture: 0, baseRotation: 0.05, baseSize: 0.5 },
 ] as const;
 
 export function floatingItemCount(width: number, height: number): number {
-  return Math.min(width, height) < 600 ? 9 : FLOATING_ITEM_SPECS.length;
+  return Math.min(width, height) < 600 ? 14 : FLOATING_ITEM_SPECS.length;
 }
 
 export interface FloatingItem {
@@ -134,6 +150,7 @@ export async function createBackground(): Promise<EnvironmentScene> {
           ? chip(itemTextures[spec.texture % itemTextures.length])
           : new Container({ children: [sprite(farTextures[spec.texture % farTextures.length], 120)] });
     node.rotation = spec.baseRotation;
+    if (spec.depth === "far") node.filters = [new BlurFilter({ strength: 0.65, quality: 1 })];
     (spec.depth === "far" ? farLayer : midLayer).addChild(node);
     items.push({ ...spec, node, phase: index * 0.83, baseX: 0, baseY: 0 });
   });
@@ -165,8 +182,9 @@ export function drawBackground(scene: EnvironmentScene, layout: SceneLayout): vo
   const phoneTopY = (layout.paytable.y + layout.paytable.height + layout.machine.y) / 2;
   const phoneBottomY = (layout.machine.y + layout.machine.height + height) / 2;
   const phonePositions = [
-    [0.09, phoneTopY], [0.29, phoneTopY], [0.5, phoneTopY], [0.71, phoneTopY], [0.91, phoneTopY],
-    [0.12, phoneBottomY], [0.37, phoneBottomY], [0.63, phoneBottomY], [0.88, phoneBottomY],
+    [0.07, phoneTopY], [0.22, phoneTopY], [0.38, phoneTopY], [0.62, phoneTopY], [0.78, phoneTopY], [0.93, phoneTopY],
+    [0.07, phoneBottomY], [0.2, phoneBottomY], [0.36, phoneBottomY], [0.5, phoneBottomY], [0.64, phoneBottomY], [0.8, phoneBottomY], [0.93, phoneBottomY],
+    [0.94, height * 0.52],
   ] as const;
   scene.items.forEach((item, index) => {
     item.node.visible = index < count;

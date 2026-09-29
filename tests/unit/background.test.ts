@@ -2,12 +2,12 @@ import { describe, expect, it } from "vitest";
 import { FLOATING_ITEM_SPECS, floatingItemCount } from "../../src/scene/background";
 
 describe("decluttered floating items", () => {
-  it("uses sixteen desktop items, nine phone items, and no near layer", () => {
-    expect(FLOATING_ITEM_SPECS).toHaveLength(16);
-    expect(floatingItemCount(1920, 1080)).toBe(16);
-    expect(floatingItemCount(390, 844)).toBe(9);
-    expect(floatingItemCount(844, 390)).toBe(9);
-    expect(FLOATING_ITEM_SPECS.filter(({ kind }) => kind === "coin")).toHaveLength(6);
+  it("uses thirty-two desktop items, fourteen phone items, and no near layer", () => {
+    expect(FLOATING_ITEM_SPECS).toHaveLength(32);
+    expect(floatingItemCount(1920, 1080)).toBe(32);
+    expect(floatingItemCount(390, 844)).toBe(14);
+    expect(floatingItemCount(844, 390)).toBe(14);
+    expect(FLOATING_ITEM_SPECS.filter(({ kind }) => kind === "coin")).toHaveLength(8);
     expect(FLOATING_ITEM_SPECS.filter(({ kind }) => kind === "card")).toHaveLength(3);
     expect(FLOATING_ITEM_SPECS.slice(0, 9).filter(({ kind }) => kind === "coin")).toHaveLength(4);
     expect(FLOATING_ITEM_SPECS.every(({ depth }) => depth === "far" || depth === "mid")).toBe(true);
