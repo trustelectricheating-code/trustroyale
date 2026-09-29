@@ -16,6 +16,14 @@ const win: ReelSpin = {
   reels: ["scott", "scott", "scott"],
   strip: [["seven", "cherry", "sweets"], ["scott", "scott", "scott"], ["neos", "keith", "gia"]],
 };
+const win15: ReelSpin = {
+  reels: ["keith", "keith", "keith"],
+  strip: [["seven", "cherry", "sweets"], ["keith", "keith", "keith"], ["neos", "fiona", "gia"]],
+};
+const win10: ReelSpin = {
+  reels: ["neos", "neos", "neos"],
+  strip: [["seven", "cherry", "sweets"], ["neos", "neos", "neos"], ["scott", "fiona", "gia"]],
+};
 
 describe("POST /api/spin with PGlite", () => {
   let setup: Awaited<ReturnType<typeof testDatabase>>;
@@ -31,27 +39,46 @@ describe("POST /api/spin with PGlite", () => {
       const reply = response();
       await handler(request("POST", session.cookie), reply);
       expect(reply.statusCode).toBe(200);
-      expect(reply.body).toMatchObject({ spinsLeft: expected, bonusAvailable: expected === 0, isBonus: false, couponCode: null });
+      expect(reply.body).toMatchObject({ spinsLeft: expected, bonusAvailable: expected === 0, isBonus: false, couponCode: null, gameOver: false, best: null });
       expect((reply.body as { strip: string[][]; reels: string[] }).strip[1]).toEqual((reply.body as { reels: string[] }).reels);
     }
     const bonus = response();
     await handler(request("POST", session.cookie), bonus);
-    expect(bonus.body).toMatchObject({ spinNo: 4, spinsLeft: 0, bonusAvailable: false, isBonus: true });
+    expect(bonus.body).toMatchObject({ spinNo: 4, spinsLeft: 0, bonusAvailable: false, isBonus: true, gameOver: true });
     const denied = response();
     await handler(request("POST", session.cookie), denied);
     expect(denied.statusCode).toBe(403);
     expect(denied.body).toEqual({ error: "no_spins_left", state: "game_over" });
   });
 
-  it("ends play immediately after a win", async () => {
+  it("never returns 20 percent on try one but allows it on try two", async () => {
     const session = await testSession(setup.query);
-    const handler = createSpinHandler({ query: setup.query, spinReels: () => win, newWinRef: () => "TR-ABC234" });
-    const reply = response();
-    await handler(request("POST", session.cookie), reply);
-    expect(reply.body).toMatchObject({ outcome: "win", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", spinsLeft: 0 });
+    let calls = 0;
+    const handler = createSpinHandler({ query: setup.query, spinReels: () => calls++ === 0 ? win : calls < 33 ? win : loss, newWinRef: () => "TR-ABC234" });
+    const first = response();
+    await handler(request("POST", session.cookie), first);
+    expect(first.body).toMatchObject({ spinNo: 1, outcome: "retry", discount: null, gameOver: false });
+    const second = response();
+    await createSpinHandler({ query: setup.query, spinReels: () => win, newWinRef: () => "TR-ABC234" })(request("POST", session.cookie), second);
+    expect(second.body).toMatchObject({ spinNo: 2, outcome: "win", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", spinsLeft: 0, gameOver: true });
     const denied = response();
     await handler(request("POST", session.cookie), denied);
     expect(denied.body).toEqual({ error: "no_spins_left", state: "won" });
+  });
+
+  it("keeps the highest prize through three tries and hides coupon until the end", async () => {
+    const session = await testSession(setup.query);
+    const rolls = [win10, win15, win10];
+    let index = 0;
+    const refs = ["TR-TEN234", "TR-FIF234", "TR-LOW234"];
+    let ref = 0;
+    const handler = createSpinHandler({ query: setup.query, spinReels: () => rolls[index++], newWinRef: () => refs[ref++] });
+    const first = response(); await handler(request("POST", session.cookie), first);
+    expect(first.body).toMatchObject({ couponCode: null, gameOver: false, best: { discount: 10, winRef: "TR-TEN234" }, spinsLeft: 2 });
+    const second = response(); await handler(request("POST", session.cookie), second);
+    expect(second.body).toMatchObject({ couponCode: null, gameOver: false, best: { discount: 15, winRef: "TR-FIF234" }, spinsLeft: 1 });
+    const third = response(); await handler(request("POST", session.cookie), third);
+    expect(third.body).toMatchObject({ couponCode: "ROYALE15", gameOver: true, best: { discount: 15, winRef: "TR-FIF234" }, bonusAvailable: false });
   });
 
   it("never records more than four concurrent spins", async () => {

@@ -17,7 +17,7 @@ Called on page load. Creates a session if none exists; stores UTM params from th
 }
 ```
 
-`state`: `"idle" | "last_chance" | "won" | "claimed" | "game_over"`. When `won` or `claimed`, `win` is `{ "spinId", "winRef", "ruleId", "discount", "couponCode", "reels" }` so a returning player sees their prize again.
+`state`: `"idle" | "last_chance" | "won" | "claimed" | "game_over"`. `best` contains the highest banked result during play. `win` stays `null` until the game ends, then contains `{ "spinId", "winRef", "ruleId", "discount", "couponCode", "reels" }`.
 
 ## `POST /api/spin`
 
@@ -34,17 +34,19 @@ No request body.
   "outcome": "win",
   "ruleId": "keith-2-any",
   "discount": 15,
-  "couponCode": "ROYALE15",
+  "couponCode": null,
   "winRef": "TR-7K3F",
   "nearMiss": false,
-  "spinsLeft": 0,
+  "best": { "ruleId": "keith-2-any", "discount": 15, "winRef": "TR-7K3F" },
+  "spinsLeft": 1,
   "bonusAvailable": false,
-  "isBonus": false
+  "isBonus": false,
+  "gameOver": false
 }
 ```
 
-On `outcome: "retry"`: `ruleId`, `discount`, `couponCode` and `winRef` are `null`; `spinsLeft` is 2, 1 or 0. On a win, `couponCode` comes from `COUPON_CODE_10`, `COUPON_CODE_15` or `COUPON_CODE_20`, with temporary fallbacks `ROYALE10`, `ROYALE15` and `ROYALE20`. When the third regular spin loses, `bonusAvailable` is `true` and the client shows the Last Chance screen; the next `POST /api/spin` is the bonus spin (`isBonus: true`).
-On a win, `spinsLeft` is always 0 (play stops at first win).
+`outcome` describes this spin only. `best` is the highest result banked across the session. A 10% or 15% win leaves the remaining regular tries available. A 20% win sets `gameOver: true` immediately. After try 3, any banked prize ends the game; only three losses unlock Last Chance. `couponCode` is null until `gameOver` is true, then comes from the matching server-side `COUPON_CODE_*` setting.
+Try 1 redraws any 20% combination; later tries use the uniform RNG unchanged.
 `strip[1]` is the payline and always equals `reels`.
 
 ### Errors
@@ -57,7 +59,7 @@ On a win, `spinsLeft` is always 0 (play stops at first win).
 
 ### Guarantees
 
-1. A session can never exceed 4 spins (3 + 1 bonus) or win twice (atomic update, DB `CHECK` and `UNIQUE` constraints).
+1. A session can never exceed 4 spins (3 + 1 bonus); `sessions.won_spin_id` always points to the highest winning spin so far.
 2. Session increment, win marking and spin insert happen in **one SQL statement** (see [data-model.md → spin counting](../data-model.md#spins)), so they succeed or fail together without an interactive transaction.
 3. `reels` evaluated with the shared paytable evaluator always yields exactly `ruleId` (or none). Server asserts before responding.
 4. p95 < 300 ms (Neon serverless driver over HTTP, same region as the function).

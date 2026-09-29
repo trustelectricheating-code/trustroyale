@@ -18,7 +18,7 @@ suite("API integration with TEST_DATABASE_URL", () => {
     const firstRequest = request("GET");
     firstRequest.headers["x-forwarded-for"] = ip;
     await createSessionHandler({ query })(firstRequest, sessionReply);
-    expect(sessionReply.body).toEqual({ spinsLeft: 3, bonusAvailable: false, state: "idle", win: null });
+    expect(sessionReply.body).toEqual({ spinsLeft: 3, bonusAvailable: false, state: "idle", best: null, win: null });
     const setCookie = sessionReply.headers["Set-Cookie"] as string;
     const cookie = setCookie.split(";")[0];
     const handler = createSpinHandler({

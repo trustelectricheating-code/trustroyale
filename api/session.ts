@@ -31,16 +31,19 @@ export function createSessionHandler({ query = databaseQuery }: { query?: Query 
       const row = rows[0];
       if (!row) throw new Error("Session was not found after creation");
 
-      const won = row.won_spin_id !== null;
-      const state = won ? (row.claimed ? "claimed" : "won")
+      const hasBest = row.won_spin_id !== null;
+      const finishedWin = hasBest && (row.spins_used >= 3 || row.discount === 20);
+      const state = finishedWin ? (row.claimed ? "claimed" : "won")
         : row.spins_used >= 4 ? "game_over"
           : row.spins_used === 3 ? "last_chance"
             : "idle";
+      const best = hasBest ? { spinId: row.spin_id, winRef: row.win_ref, ruleId: row.rule_id, discount: row.discount } : null;
       json(response, 200, {
-        spinsLeft: won ? 0 : Math.max(0, 3 - row.spins_used),
-        bonusAvailable: !won && row.spins_used === 3,
+        spinsLeft: finishedWin ? 0 : Math.max(0, 3 - row.spins_used),
+        bonusAvailable: !hasBest && row.spins_used === 3,
         state,
-        win: won ? {
+        best,
+        win: finishedWin ? {
           spinId: row.spin_id,
           winRef: row.win_ref,
           ruleId: row.rule_id,

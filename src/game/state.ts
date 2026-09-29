@@ -5,7 +5,7 @@ export type GameEvent =
   | { type: "PLAY" }
   | { type: "SPIN" }
   | { type: "RESULT" }
-  | { type: "RESOLVE"; outcome: "win" | "retry"; spinsLeft: number; bonusAvailable: boolean; isBonus: boolean }
+  | { type: "RESOLVE"; outcome: "win" | "retry"; spinsLeft: number; bonusAvailable: boolean; isBonus: boolean; gameOver: boolean }
   | { type: "NETWORK_ERROR" }
   | { type: "SUBMIT" }
   | { type: "SERVER_STATE"; state: ServerState };
@@ -42,7 +42,8 @@ export function transition(state: GameState, event: GameEvent): GameState {
       break;
     case "RESOLVING":
       if (event.type === "RESOLVE") {
-        if (event.outcome === "win") return "WON";
+        if (event.gameOver && event.outcome === "win") return "WON";
+        if (event.gameOver) return "GAME_OVER";
         if (event.isBonus) return "GAME_OVER";
         if (event.spinsLeft > 0) return "IDLE";
         if (event.bonusAvailable) return "LAST_CHANCE";

@@ -3,7 +3,8 @@ import type { SymbolId } from "../config/symbols";
 
 export type ServerState = "idle" | "last_chance" | "won" | "claimed" | "game_over";
 export interface WinSummary { spinId: string; winRef: string; ruleId: string; discount: Discount; couponCode: string; reels: [SymbolId, SymbolId, SymbolId] }
-export interface SessionResponse { spinsLeft: number; bonusAvailable: boolean; state: ServerState; win: WinSummary | null }
+export interface BestSummary { spinId: string; winRef: string; ruleId: string; discount: Discount }
+export interface SessionResponse { spinsLeft: number; bonusAvailable: boolean; state: ServerState; best: BestSummary | null; win: WinSummary | null }
 export interface SpinResponse {
   spinId: string;
   spinNo: number;
@@ -14,10 +15,12 @@ export interface SpinResponse {
   discount: Discount | null;
   couponCode: string | null;
   winRef: string | null;
+  best: BestSummary | null;
   nearMiss: boolean;
   spinsLeft: number;
   bonusAvailable: boolean;
   isBonus: boolean;
+  gameOver: boolean;
 }
 export type GameApiErrorCode = "no_spins_left" | "rate_limited" | "server_error" | "network_error";
 

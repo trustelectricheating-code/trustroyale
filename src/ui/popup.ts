@@ -3,6 +3,7 @@ import type { WinSummary } from "../game/api";
 export interface Popups {
   showWin(win: WinSummary): void;
   showRetry(nearMiss: boolean): void;
+  showBanked(discount: number, spinsLeft: number): void;
   showLastChance(onSpin: () => void): void;
   showGameOver(): void;
   showError(kind: "server" | "rate"): void;
@@ -85,6 +86,10 @@ export function createPopups(): Popups {
     },
     showRetry(nearMiss) {
       show(`<section aria-labelledby="result-title"><h2 id="result-title">So close — spin again!</h2>${nearMiss ? "<p>One symbol away — your next spin could be the one.</p>" : ""}<button type="button" data-close-popup>Continue</button></section>`, "retry", false);
+      dialog.querySelector("[data-close-popup]")?.addEventListener("click", () => dialog.close(), { once: true });
+    },
+    showBanked(discount, spinsLeft) {
+      show(`<section aria-labelledby="result-title"><h2 id="result-title">${discount}% banked!</h2><p>${spinsLeft} ${spinsLeft === 1 ? "try" : "tries"} left to reach 20%.</p><button type="button" data-close-popup>Continue</button></section>`, "retry", false);
       dialog.querySelector("[data-close-popup]")?.addEventListener("click", () => dialog.close(), { once: true });
     },
     showLastChance(onSpin) {

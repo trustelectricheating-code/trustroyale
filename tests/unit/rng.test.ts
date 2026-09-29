@@ -32,4 +32,10 @@ describe("reel RNG", () => {
     process.env.VERCEL_ENV = "production";
     expect(Array.from({ length: 30 }, () => spinReels().reels).some((reels) => reels.some((id) => id !== "gia"))).toBe(true);
   });
+
+  it("excludes 20 percent triples from try one", () => {
+    process.env.FORCE_REELS = "gia,gia,gia";
+    expect(evaluate(spinReels({ excludeTwenty: true }).reels).rule?.discount).not.toBe(20);
+    expect(evaluate(spinReels().reels).rule?.discount).toBe(20);
+  });
 });

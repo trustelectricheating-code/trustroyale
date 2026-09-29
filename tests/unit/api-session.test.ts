@@ -16,7 +16,7 @@ describe("GET /api/session with PGlite", () => {
     const reply = response();
     await createSessionHandler({ query: setup.query })(request("GET"), reply);
     expect(reply.statusCode).toBe(200);
-    expect(reply.body).toEqual({ spinsLeft: 3, bonusAvailable: false, state: "idle", win: null });
+    expect(reply.body).toEqual({ spinsLeft: 3, bonusAvailable: false, state: "idle", best: null, win: null });
     expect(reply.headers["Set-Cookie"]).toBeTruthy();
   });
 
@@ -27,14 +27,14 @@ describe("GET /api/session with PGlite", () => {
     await setup.query("UPDATE sessions SET spins_used = 1, won_spin_id = $1 WHERE id = $2", [spinId, session.id]);
     const reply = response();
     await createSessionHandler({ query: setup.query })(request("GET", session.cookie), reply);
-    expect(reply.body).toEqual({ spinsLeft: 0, bonusAvailable: false, state: "won", win: { spinId, winRef: "TR-ABC234", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", reels: ["scott", "scott", "scott"] } });
+    expect(reply.body).toEqual({ spinsLeft: 0, bonusAvailable: false, state: "won", best: { spinId, winRef: "TR-ABC234", ruleId: "scott-3", discount: 20 }, win: { spinId, winRef: "TR-ABC234", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", reels: ["scott", "scott", "scott"] } });
   });
 
   it("restores a claimed winning session", async () => {
     const session = await testSession(setup.query);
     const spinId = randomUUID();
     await setup.query("INSERT INTO spins (id, session_id, spin_no, reels, rule_id, discount, win_ref) VALUES ($1, $2, 1, $3, 'neos-3', 10, 'TR-XYZ789')", [spinId, session.id, ["neos", "neos", "neos"]]);
-    await setup.query("UPDATE sessions SET spins_used = 1, won_spin_id = $1 WHERE id = $2", [spinId, session.id]);
+    await setup.query("UPDATE sessions SET spins_used = 3, won_spin_id = $1 WHERE id = $2", [spinId, session.id]);
     await setup.query("INSERT INTO leads (id, spin_id, win_ref, discount, first_name, last_name, phone, email, postcode, consent_text, claimed_via) VALUES ($1, $2, 'TR-XYZ789', 10, 'Test', 'Player', '07123456789', 'test@example.com', 'SW1A 1AA', 'test consent', 'form')", [randomUUID(), spinId]);
     const reply = response();
     await createSessionHandler({ query: setup.query })(request("GET", session.cookie), reply);
@@ -46,6 +46,16 @@ describe("GET /api/session with PGlite", () => {
     await setup.query("UPDATE sessions SET spins_used = 4 WHERE id = $1", [session.id]);
     const reply = response();
     await createSessionHandler({ query: setup.query })(request("GET", session.cookie), reply);
-    expect(reply.body).toEqual({ spinsLeft: 0, bonusAvailable: false, state: "game_over", win: null });
+    expect(reply.body).toEqual({ spinsLeft: 0, bonusAvailable: false, state: "game_over", best: null, win: null });
+  });
+
+  it("restores a mid-game best prize without revealing its coupon", async () => {
+    const session = await testSession(setup.query);
+    const spinId = randomUUID();
+    await setup.query("INSERT INTO spins (id, session_id, spin_no, reels, rule_id, discount, win_ref) VALUES ($1, $2, 1, $3, 'keith-3', 15, 'TR-BEST15')", [spinId, session.id, ["keith", "keith", "keith"]]);
+    await setup.query("UPDATE sessions SET spins_used = 1, won_spin_id = $1 WHERE id = $2", [spinId, session.id]);
+    const reply = response();
+    await createSessionHandler({ query: setup.query })(request("GET", session.cookie), reply);
+    expect(reply.body).toEqual({ spinsLeft: 2, bonusAvailable: false, state: "idle", best: { spinId, winRef: "TR-BEST15", ruleId: "keith-3", discount: 15 }, win: null });
   });
 });

@@ -112,7 +112,7 @@ async function boot(): Promise<void> {
       machine.send({ type: "RESULT" });
       spinsLeft = result.spinsLeft;
       controls.setSpinsLeft(spinsLeft);
-      if (result.outcome === "win" && result.ruleId && result.discount && result.winRef && result.couponCode) {
+      if (result.outcome === "win" && result.ruleId && result.discount && result.winRef) {
         const rule = PAYTABLE.find(({ id }) => id === result.ruleId);
         if (!rule) throw new Error(`Unknown paytable rule: ${result.ruleId}`);
         await celebrate(reels, rule, motionQuery.matches);
@@ -121,12 +121,19 @@ async function boot(): Promise<void> {
         sound.play("payout");
         marqueeScene.setPattern("win");
         burstWin(environment.front, motionQuery.matches);
-        const win: WinSummary = { spinId: result.spinId, winRef: result.winRef, ruleId: result.ruleId, discount: result.discount, couponCode: result.couponCode, reels: result.reels };
-        machine.send({ type: "RESOLVE", outcome: "win", spinsLeft: 0, bonusAvailable: false, isBonus: result.isBonus });
-        displayWin(win);
+        machine.send({ type: "RESOLVE", outcome: "win", spinsLeft: result.spinsLeft, bonusAvailable: result.bonusAvailable, isBonus: result.isBonus, gameOver: result.gameOver });
+        if (result.gameOver && result.best && result.couponCode) {
+          const win: WinSummary = { spinId: result.best.spinId, winRef: result.best.winRef, ruleId: result.best.ruleId, discount: result.best.discount, couponCode: result.couponCode, reels: result.reels };
+          displayWin(win);
+        } else popups.showBanked(result.best?.discount ?? result.discount, result.spinsLeft);
         return;
       }
-      machine.send({ type: "RESOLVE", outcome: "retry", spinsLeft: result.spinsLeft, bonusAvailable: result.bonusAvailable, isBonus: result.isBonus });
+      const finalBest = result.gameOver && result.best && result.couponCode;
+      machine.send({ type: "RESOLVE", outcome: finalBest ? "win" : "retry", spinsLeft: result.spinsLeft, bonusAvailable: result.bonusAvailable, isBonus: result.isBonus, gameOver: result.gameOver });
+      if (finalBest) {
+        displayWin({ spinId: result.best!.spinId, winRef: result.best!.winRef, ruleId: result.best!.ruleId, discount: result.best!.discount, couponCode: result.couponCode!, reels: result.reels });
+        return;
+      }
       marqueeScene.setPattern("idle");
       if (result.nearMiss) sound.play("nearmiss");
       const resolvedState = machine.state as GameState;

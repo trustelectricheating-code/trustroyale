@@ -56,8 +56,10 @@ Returned by `/api/spin` (see [contracts/spin-api.md](./contracts/spin-api.md)).
 | `ruleId` | string \| null | Matched rule, null on retry |
 | `discount` | number \| null | |
 | `winRef` | string \| null | Only on win, e.g. `TR-7K3F` |
-| `spinsLeft` | 0–3 | Regular spins left after this spin; forced to 0 on a win |
-| `bonusAvailable` | boolean | True only when the 3 regular spins all lost and the bonus is unused |
+| `best` | object \| null | Highest banked `{ ruleId, discount, winRef }` so far |
+| `spinsLeft` | 0–3 | Regular tries left; 10%/15% wins do not force this to zero |
+| `bonusAvailable` | boolean | True only when all 3 regular tries lost and the bonus is unused |
+| `gameOver` | boolean | True on 20%, after try 3 with a banked prize, or after Last Chance |
 | `isBonus` | boolean | This spin was the Last Chance spin |
 | `nearMiss` | boolean | True only on a losing spin where the payline holds exactly two eligible faces among Scott/Fiona/Gia/Keith but does not satisfy the two-plus-one rule, or exactly two Neos. A second Keith always wins through `keith-2-any`. Drives the "so close" tease (display only) |
 
@@ -69,7 +71,8 @@ LANDING ──PLAY──▶ IDLE ──SPIN──▶ SPINNING ──result──
                     └──── retry (spinsLeft > 0) ◀────────┤
                                                          ├── retry (spinsLeft = 0, bonus unused) ──▶ LAST_CHANCE ──SPIN──▶ SPINNING (bonus)
                                                          ├── retry (bonus used) ──▶ GAME_OVER (thank-you)
-                                                         └── win ──▶ WON (call or form) ──submit──▶ CLAIMED
+                                                         ├── 10%/15% banked with tries left ──▶ IDLE
+                                                         └── final best prize or 20% ──▶ WON
 SPINNING ──network error──▶ IDLE (with "try again" toast; spin not counted; never shows a win)
 Page load with existing session: server returns state → jump straight to IDLE / LAST_CHANCE / WON / CLAIMED / GAME_OVER
 ```
@@ -85,7 +88,7 @@ Accessed from Vercel Functions with `@neondatabase/serverless`. Schema in `db/mi
 | `id` | uuid PK | Stored in signed, `HttpOnly`, `Secure`, `SameSite=Lax` cookie `tr_sid`, 90-day expiry |
 | `created_at` | timestamptz | |
 | `spins_used` | smallint | 0–4, `CHECK (spins_used <= 4)`; spin 4 is the bonus |
-| `won_spin_id` | uuid null FK → spins, `DEFERRABLE INITIALLY DEFERRED` | Set once; non-null means no more spins |
+| `won_spin_id` | uuid null FK → spins, `DEFERRABLE INITIALLY DEFERRED` | Highest winning spin so far; overwritten only by a higher discount |
 | `ip_hash` | text | SHA-256 of IP + salt, for soft daily cap only. Raw IPs are never stored |
 | `utm` | jsonb null | Campaign params from the landing URL, passed to CRM |
 
@@ -157,7 +160,7 @@ Send attempts come from four places, all free on the Vercel Hobby plan (see [con
 
 ## Reel RNG
 
-No weights. Each reel picks one of the 8 symbol IDs with `crypto.randomInt(8)`. The rows above and below the payline are also random and purely cosmetic. Preview-only override: env `FORCE_REELS` (ignored when `VERCEL_ENV === 'production'`).
+No weights. Each reel picks one of the 8 symbol IDs with `crypto.randomInt(8)`. Try 1 redraws the three 20% triples with a bounded loop; tries 2–4 remain uniform. Rows above and below the payline are cosmetic. Preview-only `FORCE_REELS` is ignored in production.
 
 ## AssetEntry
 

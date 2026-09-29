@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import { GameStateMachine, transition, type GameState, type ServerState } from "../../src/game/state";
 
-const retry = (spinsLeft: number, bonusAvailable = false, isBonus = false) => ({
-  type: "RESOLVE" as const, outcome: "retry" as const, spinsLeft, bonusAvailable, isBonus,
+const retry = (spinsLeft: number, bonusAvailable = false, isBonus = false, gameOver = isBonus) => ({
+  type: "RESOLVE" as const, outcome: "retry" as const, spinsLeft, bonusAvailable, isBonus, gameOver,
 });
 
 describe("game state machine", () => {
@@ -14,7 +14,8 @@ describe("game state machine", () => {
     expect(transition("RESOLVING", retry(0, true))).toBe("LAST_CHANCE");
     expect(transition("LAST_CHANCE", { type: "SPIN" })).toBe("SPINNING");
     expect(transition("RESOLVING", retry(0, false, true))).toBe("GAME_OVER");
-    expect(transition("RESOLVING", { ...retry(0), outcome: "win" })).toBe("WON");
+    expect(transition("RESOLVING", { ...retry(0), outcome: "win", gameOver: true })).toBe("WON");
+    expect(transition("RESOLVING", { ...retry(2), outcome: "win" })).toBe("IDLE");
     expect(transition("WON", { type: "SUBMIT" })).toBe("CLAIMED");
   });
 

@@ -82,3 +82,9 @@ The owner removed the in-game claim form. Owner's words: "leave the form it will
 - The coupon codes are server-side configuration (`COUPON_CODE_10`, `COUPON_CODE_15`, `COUPON_CODE_20`) and are returned only in a winning spin or session response, so they never ship in the client bundle. Until the owner supplies the real codes, the placeholders `ROYALE10`, `ROYALE15` and `ROYALE20` are used and flagged in reports.
 - Out of scope from User Story 5: the claim form, lead validation, `POST /api/lead`, SharpSpring sync and its retry cron, the staff phone-claim and CSV export, and `admin.html`. The `leads` table already created by `001_init.sql` stays unused rather than being dropped.
 - A returning winner still sees their win, win reference and coupon after a reload, and SPIN stays locked.
+
+## Best-of-three tries (2026-09-29)
+
+Every player gets all three regular tries and keeps the highest discount landed. A 10% or 15% result is banked while play continues; a lower later result never replaces it. A 20% result ends play immediately because it is the maximum prize. The Last Chance bonus is available only after three regular losses with no prize banked. Coupon code and win reference are revealed only on the final prize screen.
+
+Try 1 never lands a 20% combination. The server redraws Scott × 3, Fiona × 3, or Gia × 3 on that try with a bounded loop and deterministic non-winning fallback. Tries 2, 3, and Last Chance retain the unmodified uniform reel distribution. This restriction is intentionally not disclosed in player-facing intro copy.
