@@ -1,4 +1,5 @@
 import { Application } from "pixi.js";
+import "pixi.js/unsafe-eval";
 import { gsap } from "gsap";
 import "./styles/main.css";
 import { loadInitialAssets } from "./assets";
