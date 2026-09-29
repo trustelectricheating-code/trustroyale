@@ -108,6 +108,7 @@ async function boot(): Promise<void> {
     try {
       const result: SpinResponse = await spin();
       await animateSpin(reels, result.strip, motionQuery.matches, (reel) => sound.play(`reel.stop.${reel}`));
+      sound.stop("reel.loop");
       machine.send({ type: "RESULT" });
       spinsLeft = result.spinsLeft;
       controls.setSpinsLeft(spinsLeft);
@@ -116,6 +117,7 @@ async function boot(): Promise<void> {
         if (!rule) throw new Error(`Unknown paytable rule: ${result.ruleId}`);
         await celebrate(reels, rule, motionQuery.matches);
         sound.play(result.discount === 20 ? "win.big" : "win.small");
+        sound.play("payout");
         marqueeScene.setPattern("win");
         burstWin(environment.front, motionQuery.matches);
         const win: WinSummary = { spinId: result.spinId, winRef: result.winRef, ruleId: result.ruleId, discount: result.discount, couponCode: result.couponCode, reels: result.reels };
@@ -131,6 +133,7 @@ async function boot(): Promise<void> {
       else if (resolvedState === "GAME_OVER") popups.showGameOver();
       else popups.showRetry(result.nearMiss);
     } catch (caught) {
+      sound.stop("reel.loop");
       marqueeScene.setPattern("idle");
       if ((machine.state as GameState) === "SPINNING") machine.send({ type: "NETWORK_ERROR" });
       if (caught instanceof GameApiError && caught.code === "no_spins_left" && caught.state) {

@@ -73,16 +73,17 @@
     {"key":"font.display","group":"fonts","file":"fonts/cinzel-bold.woff2","status":"approved","source":"licensed","licence":"OFL-1.1","sourceUrl":"https://fonts.google.com/specimen/Cinzel"},
     {"key":"font.ui","group":"fonts","file":"fonts/nunito-sans-bold.woff2","status":"approved","source":"licensed","licence":"OFL-1.1","sourceUrl":"https://fonts.google.com/specimen/Nunito+Sans"},
 
-    {"key":"sfx.ambient.loop","group":"audio","file":"audio/ambient-loop.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Separate ambient loop; MP3 fallback at audio/ambient-loop.mp3."},
-    {"key":"sfx.button","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Sprite 0–300 ms; MP3 fallback at audio/sfx-sprite.mp3."},
-    {"key":"sfx.reel.loop","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Sprite 400–1900 ms."},
-    {"key":"sfx.reel.stop.1","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Sprite 2000–2600 ms."},
-    {"key":"sfx.reel.stop.2","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Sprite 2700–3300 ms."},
-    {"key":"sfx.reel.stop.3","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Sprite 3400–4000 ms."},
-    {"key":"sfx.nearmiss","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Sprite 4100–4900 ms."},
-    {"key":"sfx.win.small","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/music-jingles","notes":"Sprite 5000–6100 ms."},
-    {"key":"sfx.win.big","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/music-jingles","notes":"Sprite 6200–8000 ms."},
-    {"key":"sfx.chips","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Sprite 8100–8500 ms."},
-    {"key":"sfx.whoosh","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Sprite 8600–9400 ms."}
+    {"key":"sfx.ambient.loop","group":"audio","file":"audio/ambient-loop.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://opengameart.org/content/jazz-n-brass-loop","notes":"82.32 s loop; MP3 fallback at audio/ambient-loop.mp3."},
+    {"key":"sfx.button","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/ui-audio","notes":"Sprite 0–300 ms; MP3 fallback at audio/sfx-sprite.mp3."},
+    {"key":"sfx.reel.loop","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/interface-sounds","notes":"Sprite 400–2800 ms."},
+    {"key":"sfx.reel.stop.1","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/impact-sounds","notes":"Sprite 2900–3450 ms."},
+    {"key":"sfx.reel.stop.2","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/impact-sounds","notes":"Sprite 3550–4100 ms."},
+    {"key":"sfx.reel.stop.3","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/impact-sounds","notes":"Sprite 4200–4750 ms."},
+    {"key":"sfx.nearmiss","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/interface-sounds","notes":"Sprite 4850–5550 ms."},
+    {"key":"sfx.win.small","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/music-jingles","notes":"Sprite 5650–7550 ms."},
+    {"key":"sfx.win.big","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/music-jingles","notes":"Sprite 7650–10150 ms."},
+    {"key":"sfx.payout","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Sprite 10250–11850 ms."},
+    {"key":"sfx.chips","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Sprite 11950–12600 ms."},
+    {"key":"sfx.whoosh","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/interface-sounds","notes":"Sprite 12700–13250 ms."}
   ]
 }

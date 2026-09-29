@@ -1,24 +1,26 @@
 import { Howl, Howler } from "howler";
 
-export type SoundName = "button" | "reel.loop" | "reel.stop.1" | "reel.stop.2" | "reel.stop.3" | "nearmiss" | "win.small" | "win.big" | "chips" | "whoosh";
+export type SoundName = "button" | "reel.loop" | "reel.stop.1" | "reel.stop.2" | "reel.stop.3" | "nearmiss" | "win.small" | "win.big" | "payout" | "chips" | "whoosh";
 
-const SPRITES: Record<SoundName, [number, number]> = {
+const SPRITES: Record<SoundName, [number, number] | [number, number, boolean]> = {
   button: [0, 300],
-  "reel.loop": [400, 1500],
-  "reel.stop.1": [2000, 600],
-  "reel.stop.2": [2700, 600],
-  "reel.stop.3": [3400, 600],
-  nearmiss: [4100, 800],
-  "win.small": [5000, 1100],
-  "win.big": [6200, 1800],
-  chips: [8100, 400],
-  whoosh: [8600, 800],
+  "reel.loop": [400, 2400, true],
+  "reel.stop.1": [2900, 550],
+  "reel.stop.2": [3550, 550],
+  "reel.stop.3": [4200, 550],
+  nearmiss: [4850, 700],
+  "win.small": [5650, 1900],
+  "win.big": [7650, 2500],
+  payout: [10250, 1600],
+  chips: [11950, 650],
+  whoosh: [12700, 550],
 };
 
 export interface SoundSystem {
   ambient: { start(): void };
   unlock(): Promise<void>;
   play(name: SoundName): void;
+  stop(name: SoundName): void;
   setMuted(muted: boolean): void;
   isMuted(): boolean;
 }
@@ -26,13 +28,14 @@ export interface SoundSystem {
 export function createSound(): SoundSystem {
   let effects: Howl | undefined;
   let ambient: Howl | undefined;
+  let reelLoopId: number | undefined;
   let muted = localStorage.getItem("trustRoyaleMuted") === "true";
   document.documentElement.dataset.audioStatus = "locked";
   Howler.mute(muted);
 
   const load = (): void => {
     effects ??= new Howl({ src: ["/assets/audio/sfx-sprite.webm", "/assets/audio/sfx-sprite.mp3"], sprite: SPRITES, preload: true });
-    ambient ??= new Howl({ src: ["/assets/audio/ambient-loop.webm", "/assets/audio/ambient-loop.mp3"], loop: true, volume: 0.38, preload: true });
+    ambient ??= new Howl({ src: ["/assets/audio/ambient-loop.webm", "/assets/audio/ambient-loop.mp3"], loop: true, volume: 0.24, preload: true });
   };
 
   const unlock = async (): Promise<void> => {
@@ -48,7 +51,17 @@ export function createSound(): SoundSystem {
   return {
     ambient: { start() { try { ambient?.play(); } catch { document.documentElement.dataset.audioStatus = "blocked"; } } },
     unlock,
-    play(name) { try { effects?.play(name); } catch { /* Game remains playable when audio is blocked. */ } },
+    play(name) {
+      try {
+        const id = effects?.play(name);
+        if (name === "reel.loop") reelLoopId = id;
+        if (name === "win.small" || name === "win.big") {
+          ambient?.fade(0.24, 0.08, 160);
+          window.setTimeout(() => ambient?.fade(0.08, 0.24, 700), name === "win.big" ? 3_000 : 2_200);
+        }
+      } catch { /* Game remains playable when audio is blocked. */ }
+    },
+    stop(name) { try { if (name === "reel.loop" && reelLoopId !== undefined) effects?.stop(reelLoopId); } catch { /* Game remains playable when audio is blocked. */ } },
     setMuted(value) { muted = value; localStorage.setItem("trustRoyaleMuted", String(value)); Howler.mute(value); },
     isMuted: () => muted,
   };
