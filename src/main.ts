@@ -116,6 +116,7 @@ async function boot(): Promise<void> {
         const rule = PAYTABLE.find(({ id }) => id === result.ruleId);
         if (!rule) throw new Error(`Unknown paytable rule: ${result.ruleId}`);
         await celebrate(reels, rule, motionQuery.matches);
+        await new Promise((resolve) => window.setTimeout(resolve, motionQuery.matches ? 540 : 560));
         sound.play(result.discount === 20 ? "win.big" : "win.small");
         sound.play("payout");
         marqueeScene.setPattern("win");

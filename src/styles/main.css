@@ -543,6 +543,28 @@ html[data-orientation="portrait"] .prize-carousel__all { font-size: clamp(.55rem
 .result-popup__symbols { display: flex; justify-content: center; gap: .4rem; }
 .result-popup__symbols img { width: 58px; height: 58px; }
 .result-popup button { min-width: 150px; padding: .8rem 1.2rem; border: 1px solid #ffe8a3; border-radius: 999px; color: #fff; background: #b20d29; font: 700 1rem "Trust Royale UI", sans-serif; }
+.result-popup--retry,
+.result-popup--last-chance,
+.result-popup--game-over,
+.result-popup--error {
+  inset: auto 12px max(64px, calc(env(safe-area-inset-bottom) + 56px));
+  width: min(620px, calc(100vw - 24px));
+  margin: auto;
+  padding: 14px 18px;
+  border-radius: 16px;
+  box-shadow: inset 0 0 24px #0007, 0 8px 30px #000b;
+}
+.result-popup--retry h2,
+.result-popup--last-chance h2,
+.result-popup--game-over h2,
+.result-popup--error h2 { margin: 0 0 .35rem; font-size: clamp(1.15rem, 3vw, 1.65rem); }
+.result-popup--retry p,
+.result-popup--last-chance p,
+.result-popup--game-over p,
+.result-popup--error p { display: inline; margin: 0 .7rem 0 0; font-size: .86rem; }
+.result-popup--retry button,
+.result-popup--last-chance button,
+.result-popup--error button { min-width: 118px; padding: .55rem .9rem; }
 .coupon-ticket { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .35rem .8rem; margin: 1.1rem auto; padding: 1rem 1.15rem; border: 2px dashed #ffe8a3; border-radius: 14px; color: #3b070e; background: linear-gradient(135deg, #fff1ad, #d5a136); text-align: left; }
 .coupon-ticket::before, .coupon-ticket::after { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; background: #3d0610; content: ""; transform: translateY(-50%); }
 .coupon-ticket::before { left: -11px; }

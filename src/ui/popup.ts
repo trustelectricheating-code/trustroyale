@@ -88,11 +88,11 @@ export function createPopups(): Popups {
       dialog.querySelector("[data-close-popup]")?.addEventListener("click", () => dialog.close(), { once: true });
     },
     showLastChance(onSpin) {
-      show(`<section aria-labelledby="result-title"><p class="result-popup__eyebrow">Bonus unlocked</p><h2 id="result-title">Last Chance!</h2><p>Take one bonus spin.</p><button type="button" data-last-chance>Spin now</button></section>`, "last-chance");
+      show(`<section aria-labelledby="result-title"><p class="result-popup__eyebrow">Bonus unlocked</p><h2 id="result-title">Last Chance!</h2><p>Take one bonus spin.</p><button type="button" data-last-chance>Spin now</button></section>`, "last-chance", false);
       dialog.querySelector("[data-last-chance]")?.addEventListener("click", () => { dialog.close(); onSpin(); }, { once: true });
     },
     showGameOver() {
-      show(`<section aria-labelledby="result-title"><h2 id="result-title">Thanks for playing</h2><p>Your Trust Royale game is over for today.</p></section>`, "game-over");
+      show(`<section aria-labelledby="result-title"><h2 id="result-title">Thanks for playing</h2><p>Your Trust Royale game is over for today.</p></section>`, "game-over", false);
     },
     showError(kind) {
       const text = kind === "rate" ? "Come back tomorrow" : "Machine hiccup, try again";
