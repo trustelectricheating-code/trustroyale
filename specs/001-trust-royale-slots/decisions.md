@@ -65,3 +65,11 @@ Final Gate B changes made before sign-off:
 - No text overlaps. Full rule wording is shown on every viewport, and Playwright checks every slide at every viewport for overlap and clipping.
 
 Tasks T014–T018 are complete. Gate C (T019–T031, including T024A for Gia's face frames) starts next.
+
+## Gate C — approved (2026-09-29)
+
+The owner reviewed the asset board locally at `http://localhost:5173/assets.html` and approved every asset. Owner's words: "approve all".
+
+All 74 entries in `public/assets/manifest.json` are now `status: "approved"`, and none is `needed`. The library covers the background, cabinet, symbols, faces (idle, half, closed and win frames for Scott, Fiona, Gia and Keith), emblem, FX, UI, fonts and audio groups. Before sign-off, QA round 1 restored the red SPIN button states, replaced `sym.frame` with an empty gold rim, and corrected every blink so both eyes close together.
+
+Nothing was deployed: T031 was completed as a local review, as agreed. The curtain assets are approved but not used by the current slot-hall scene. Task T031 is complete, and the Foundational phase (T032 onward) starts next.
