@@ -15,9 +15,9 @@ export interface ReelsScene {
 }
 
 export const REEL_ROW_LAYOUT = [
-  { y: 0.02, scale: 0.7, alpha: 0.5 },
-  { y: 0.5, scale: 1, alpha: 1 },
-  { y: 0.98, scale: 0.7, alpha: 0.5 },
+  { y: 0.02, scale: 0.7, scaleY: 0.56, alpha: 0.46 },
+  { y: 0.5, scale: 1, scaleY: 1, alpha: 1 },
+  { y: 0.98, scale: 0.7, scaleY: 0.56, alpha: 0.46 },
 ] as const;
 
 function texture(symbol: SymbolId, frame: "idle" | "half" | "closed" | "win" = "idle"): Texture {
@@ -49,7 +49,7 @@ export function createReels(initial: ReelStrip = [
   container.position.set(reelWindow.x, reelWindow.y);
   const mask = new Graphics().roundRect(0, 0, reelWindow.width, reelWindow.height, 24).fill(0xffffff);
   container.mask = mask;
-  container.addChild(mask, new Graphics().roundRect(0, 0, reelWindow.width, reelWindow.height, 24).fill({ color: 0xfff2d1 }));
+  container.addChild(mask, new Graphics().roundRect(0, 0, reelWindow.width, reelWindow.height, 24).fill({ color: 0x1a0b08 }));
   const columns: Container[] = [];
   const sprites: Sprite[][] = [];
   const medallionMasks: Graphics[][] = [];
@@ -58,6 +58,31 @@ export function createReels(initial: ReelStrip = [
   for (let column = 0; column < 3; column += 1) {
     const reel = new Container();
     reel.position.x = cellWidth * column;
+    const drumCanvas = document.createElement("canvas");
+    drumCanvas.width = Math.ceil(cellWidth);
+    drumCanvas.height = Math.ceil(reelWindow.height);
+    const drumContext = drumCanvas.getContext("2d");
+    if (drumContext) {
+      const horizontal = drumContext.createLinearGradient(0, 0, drumCanvas.width, 0);
+      horizontal.addColorStop(0, "#6a351d");
+      horizontal.addColorStop(0.16, "#d8b879");
+      horizontal.addColorStop(0.5, "#fff4cf");
+      horizontal.addColorStop(0.84, "#d8b879");
+      horizontal.addColorStop(1, "#6a351d");
+      drumContext.fillStyle = horizontal;
+      drumContext.fillRect(0, 0, drumCanvas.width, drumCanvas.height);
+      const vertical = drumContext.createLinearGradient(0, 0, 0, drumCanvas.height);
+      vertical.addColorStop(0, "rgba(35,8,3,.72)");
+      vertical.addColorStop(0.3, "rgba(35,8,3,0)");
+      vertical.addColorStop(0.7, "rgba(35,8,3,0)");
+      vertical.addColorStop(1, "rgba(35,8,3,.72)");
+      drumContext.fillStyle = vertical;
+      drumContext.fillRect(0, 0, drumCanvas.width, drumCanvas.height);
+    }
+    const drum = new Sprite(Texture.from(drumCanvas));
+    drum.width = cellWidth;
+    drum.height = reelWindow.height;
+    reel.addChild(drum);
     const reelSprites: Sprite[] = [];
     const reelMasks: Graphics[] = [];
     for (let row = 0; row < 3; row += 1) {
@@ -66,7 +91,7 @@ export function createReels(initial: ReelStrip = [
       const rowLayout = REEL_ROW_LAYOUT[row];
       sprite.position.set(cellWidth / 2, reelWindow.height * rowLayout.y);
       sprite.width = paylineSize * rowLayout.scale;
-      sprite.height = sprite.width;
+      sprite.height = sprite.width * rowLayout.scaleY;
       sprite.alpha = rowLayout.alpha;
       const medallionMask = new Graphics()
         .circle(sprite.x, sprite.y, sprite.width * 0.495)
@@ -79,6 +104,13 @@ export function createReels(initial: ReelStrip = [
     sprites.push(reelSprites);
     medallionMasks.push(reelMasks);
     container.addChild(reel);
+  }
+  for (let divider = 1; divider < 3; divider += 1) {
+    const x = cellWidth * divider;
+    container.addChild(new Graphics()
+      .rect(x - 4, 0, 8, reelWindow.height).fill({ color: 0x100705, alpha: 0.92 })
+      .rect(x - 1.5, 0, 3, reelWindow.height).fill({ color: 0xd4a437, alpha: 0.9 })
+      .rect(x - 0.5, 0, 1, reelWindow.height).fill({ color: 0xffefb0, alpha: 0.9 }));
   }
   const shadeCanvas = document.createElement("canvas");
   shadeCanvas.width = Math.ceil(reelWindow.width);
