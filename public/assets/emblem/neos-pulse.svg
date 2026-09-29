@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Neos heat pulse rings">
+  <defs><radialGradient id="g"><stop offset="0" stop-color="#fff0a8" stop-opacity="0"/><stop offset=".7" stop-color="#ffd15c" stop-opacity=".18"/><stop offset="1" stop-color="#ff7a22" stop-opacity="0"/></radialGradient></defs>
+  <circle cx="256" cy="256" r="118" fill="none" stroke="#ffe7a0" stroke-width="14" opacity=".9"/>
+  <circle cx="256" cy="256" r="168" fill="none" stroke="#ffc24d" stroke-width="10" opacity=".58"/>
+  <circle cx="256" cy="256" r="222" fill="none" stroke="#f06a24" stroke-width="7" opacity=".3"/>
+  <circle cx="256" cy="256" r="250" fill="url(#g)"/>
+</svg>

@@ -1,3 +1,19 @@
+@font-face {
+  font-family: "Trust Royale Display";
+  src: url("/assets/fonts/cinzel-bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Trust Royale UI";
+  src: url("/assets/fonts/nunito-sans-bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
   font-family: Inter, "Segoe UI", sans-serif;

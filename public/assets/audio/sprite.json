@@ -1,0 +1,12 @@
+{
+  "sfx.button": [0, 300],
+  "sfx.reel.loop": [400, 1500],
+  "sfx.reel.stop.1": [2000, 600],
+  "sfx.reel.stop.2": [2700, 600],
+  "sfx.reel.stop.3": [3400, 600],
+  "sfx.nearmiss": [4100, 800],
+  "sfx.win.small": [5000, 1100],
+  "sfx.win.big": [6200, 1800],
+  "sfx.chips": [8100, 400],
+  "sfx.whoosh": [8600, 800]
+}
