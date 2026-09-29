@@ -10,7 +10,7 @@ function randomRow(): [SymbolId, SymbolId, SymbolId] {
   return [SYMBOL_IDS[randomInt(8)], SYMBOL_IDS[randomInt(8)], SYMBOL_IDS[randomInt(8)]];
 }
 
-function forcedReels(): [SymbolId, SymbolId, SymbolId] | null {
+export function forcedReels(): [SymbolId, SymbolId, SymbolId] | null {
   if (process.env.VERCEL_ENV === "production" || !process.env.FORCE_REELS) return null;
   const values = process.env.FORCE_REELS.split(",").map((value) => value.trim());
   return values.length === 3 && values.every((value): value is SymbolId => SYMBOL_IDS.includes(value as SymbolId))

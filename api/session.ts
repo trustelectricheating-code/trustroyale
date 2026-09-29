@@ -50,8 +50,7 @@ export function createSessionHandler({ query = databaseQuery }: { query?: Query 
         } : null,
       });
     } catch (caught) {
-      console.error(caught);
-      error(response, 500, "server_error");
+    error(response, 500, "server_error");
     }
   };
 }

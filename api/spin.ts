@@ -93,8 +93,7 @@ export function createSpinHandler(dependencies: SpinDependencies = {}) {
         isBonus: spinNo === 4,
       });
     } catch (caught) {
-      console.error(caught);
-      error(response, 500, "server_error");
+    error(response, 500, "server_error");
     }
   };
 }

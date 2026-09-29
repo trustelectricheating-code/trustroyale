@@ -14,6 +14,16 @@ function dialogShell(): HTMLDialogElement {
   dialog.id = "result-popup";
   dialog.className = "result-popup";
   dialog.setAttribute("aria-live", "assertive");
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key !== "Tab") return;
+    const focusable = Array.from(dialog.querySelectorAll<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])'))
+      .filter((node) => !node.hasAttribute("disabled"));
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  });
   document.body.appendChild(dialog);
   return dialog;
 }
@@ -23,9 +33,11 @@ export function createPopups(): Popups {
   const show = (content: string, kind: string, modal = true) => {
     if (dialog.open) dialog.close();
     dialog.className = `result-popup result-popup--${kind}`;
+    dialog.setAttribute("aria-modal", String(modal));
     dialog.innerHTML = content;
     if (modal) dialog.showModal();
     else dialog.show();
+    dialog.querySelector<HTMLElement>('button, [tabindex="0"]')?.focus();
   };
   return {
     showWin(win) {

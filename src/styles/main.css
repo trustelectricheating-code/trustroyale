@@ -27,6 +27,8 @@
 
 * { box-sizing: border-box; }
 
+button:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
 html,
 body {
   width: 100dvw;

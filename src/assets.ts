@@ -1,6 +1,7 @@
 import { Assets } from "pixi.js";
 
 export const ASSET_GROUPS = ["background", "cabinet", "symbols", "faces", "emblem", "fx", "ui", "fonts", "audio"] as const;
+export const INITIAL_ASSET_GROUPS = ["symbols", "faces", "emblem", "fx"] as const;
 export type AssetGroup = (typeof ASSET_GROUPS)[number];
 export type AssetStatus = "needed" | "placeholder" | "draft" | "approved";
 export type AssetSource = "supplied" | "generated" | "cc0" | "licensed" | "custom";
@@ -53,7 +54,7 @@ export async function loadInitialAssets(fetcher: typeof fetch = fetch, assets: A
   if (!response.ok) throw new Error(`Manifest request failed: ${response.status}`);
   const manifest = parseAssetManifest(await response.json());
   registerAssetBundles(manifest, assets);
-  await Promise.all(manifest.groups.filter((group) => group !== "audio").map((group) => assets.loadBundle(group)));
+  await Promise.all(INITIAL_ASSET_GROUPS.map((group) => assets.loadBundle(group)));
   return manifest;
 }
 
