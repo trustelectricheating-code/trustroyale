@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { query as databaseQuery, type Query } from "./_lib/db";
-import { error, json, methodNotAllowed } from "./_lib/http";
-import { getOrCreateSession } from "./_lib/session";
-import { couponFor } from "./_lib/coupons";
+import { query as databaseQuery, type Query } from "./_lib/db.js";
+import { error, json, methodNotAllowed } from "./_lib/http.js";
+import { getOrCreateSession } from "./_lib/session.js";
+import { couponFor } from "./_lib/coupons.js";
 
 interface SessionRow {
   spins_used: number;

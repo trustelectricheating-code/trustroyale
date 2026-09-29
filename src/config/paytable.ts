@@ -1,4 +1,4 @@
-import type { SymbolId } from "./symbols";
+import type { SymbolId } from "./symbols.js";
 
 export type Discount = 10 | 15 | 20;
 export type Celebration = "blink" | "pulse" | "glow";

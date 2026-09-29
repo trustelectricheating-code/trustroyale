@@ -1,5 +1,5 @@
-import { PAYTABLE, type PaytableRule } from "../config/paytable";
-import type { SymbolId } from "../config/symbols";
+import { PAYTABLE, type PaytableRule } from "../config/paytable.js";
+import type { SymbolId } from "../config/symbols.js";
 
 const FACES = new Set<SymbolId>(["scott", "fiona", "gia", "keith"]);
 

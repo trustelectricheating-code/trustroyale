@@ -1,6 +1,6 @@
 import { createHash, createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { query as databaseQuery, type Query } from "./db";
+import { query as databaseQuery, type Query } from "./db.js";
 
 export const SESSION_COOKIE = "tr_sid";
 export const SESSION_MAX_AGE_SECONDS = 90 * 24 * 60 * 60;

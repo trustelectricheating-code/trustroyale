@@ -1,4 +1,4 @@
-import type { Discount } from "../../src/config/paytable";
+import type { Discount } from "../../src/config/paytable.js";
 
 const FALLBACKS: Record<Discount, string> = {
   10: "ROYALE10",

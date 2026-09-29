@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { query as databaseQuery, type Query } from "./_lib/db";
-import { error, json, methodNotAllowed } from "./_lib/http";
-import { spinReels as roll, type ReelSpin } from "./_lib/rng";
-import { getOrCreateSession } from "./_lib/session";
-import { newWinRef as makeWinRef } from "./_lib/winRef";
-import { evaluate } from "../src/game/evaluator";
-import { couponFor } from "./_lib/coupons";
+import { query as databaseQuery, type Query } from "./_lib/db.js";
+import { error, json, methodNotAllowed } from "./_lib/http.js";
+import { spinReels as roll, type ReelSpin } from "./_lib/rng.js";
+import { getOrCreateSession } from "./_lib/session.js";
+import { newWinRef as makeWinRef } from "./_lib/winRef.js";
+import { evaluate } from "../src/game/evaluator.js";
+import { couponFor } from "./_lib/coupons.js";
 
 interface SpinDependencies {
   query?: Query;

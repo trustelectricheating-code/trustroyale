@@ -1,5 +1,5 @@
 import { randomInt } from "node:crypto";
-import { SYMBOL_IDS, type SymbolId } from "../../src/config/symbols";
+import { SYMBOL_IDS, type SymbolId } from "../../src/config/symbols.js";
 
 export interface ReelSpin {
   reels: [SymbolId, SymbolId, SymbolId];
