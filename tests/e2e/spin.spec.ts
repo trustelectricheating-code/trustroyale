@@ -91,17 +91,39 @@ test("win popup, keyboard controls, and server errors never show a win", async (
 
 for (const viewport of [{ name: "desktop", width: 1920, height: 1080 }, { name: "mobile", width: 390, height: 844 }]) {
   test(`captures Phase D states at ${viewport.width}x${viewport.height}`, async ({ page }) => {
+    test.setTimeout(90_000);
     await page.setViewportSize(viewport);
     await mockSession(page);
-    await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(win) }));
+    const losses = [loss(1, 2), loss(2, 1), loss(3, 0, true), loss(4, 0)];
+    let next = 0;
+    let captureWin = false;
+    await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(captureWin ? win : losses[next++]) }));
     await ready(page);
     const directory = path.join(process.cwd(), "reference/_work/phase-d");
     await page.screenshot({ path: path.join(directory, `landing-${viewport.width}x${viewport.height}.png`) });
     await page.locator("#spin").click();
+    await page.screenshot({ path: path.join(directory, `idle-${viewport.width}x${viewport.height}.png`) });
     await page.locator("#spin").click();
     await page.waitForTimeout(450);
     await page.screenshot({ path: path.join(directory, `mid-spin-${viewport.width}x${viewport.height}.png`) });
-    await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
+    await page.screenshot({ path: path.join(directory, `retry-${viewport.width}x${viewport.height}.png`) });
+    await page.getByRole("button", { name: "Continue" }).click();
+    await page.locator("#spin").click();
+    await page.getByRole("button", { name: "Continue" }).click();
+    await page.locator("#spin").click();
+    await expect(page.getByRole("heading", { name: "Last Chance!" })).toBeVisible();
+    await page.screenshot({ path: path.join(directory, `last-chance-${viewport.width}x${viewport.height}.png`) });
+    await page.getByRole("button", { name: "Spin now" }).click();
+    await expect(page.getByRole("heading", { name: "Thanks for playing" })).toBeVisible();
+    await page.screenshot({ path: path.join(directory, `game-over-${viewport.width}x${viewport.height}.png`) });
+
+    captureWin = true;
+    await page.reload();
+    await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
+    await page.locator("#spin").click();
+    await page.locator("#spin").click();
+    await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible({ timeout: 15_000 });
     await page.screenshot({ path: path.join(directory, `win-20-${viewport.width}x${viewport.height}.png`) });
   });
 }

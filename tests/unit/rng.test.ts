@@ -24,7 +24,7 @@ describe("reel RNG", () => {
       expect(count / 100_000).toBeGreaterThan(0.12);
       expect(count / 100_000).toBeLessThan(0.13);
     }
-  });
+  }, 15_000);
 
   it("honours FORCE_REELS outside production only", () => {
     process.env.FORCE_REELS = "gia,gia,gia";

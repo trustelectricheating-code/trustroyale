@@ -514,6 +514,7 @@ html[data-orientation="portrait"] .prize-carousel__all { font-size: clamp(.55rem
 }
 
 .result-popup {
+  z-index: 10;
   width: min(520px, calc(100vw - 32px));
   padding: clamp(24px, 6vw, 48px);
   border: 2px solid #d4a437;
