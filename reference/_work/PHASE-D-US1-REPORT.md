@@ -72,7 +72,7 @@ The 20-concurrent-spin test proves the four-row limit logically through the prod
 
 Playwright captured the required mocked states at both target sizes in `reference/_work/phase-d/`:
 
-- `landing-1920x1080.png`, `mid-spin-1920x1080.png`, `win-20-1920x1080.png`
-- `landing-390x844.png`, `mid-spin-390x844.png`, `win-20-390x844.png`
+- At 1920×1080: landing/PLAY, idle, mid-spin, retry, Last Chance, game over, and 20% win.
+- At 390×844: landing/PLAY, idle, mid-spin, retry, Last Chance, game over, and 20% win.
 
 No deployment, push, Vercel command, Neon setting change, remote database write, or `.env.local` change was performed. The existing development server on port 5173 was not touched; Playwright used port 4173.
