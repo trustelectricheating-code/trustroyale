@@ -2,7 +2,7 @@ import { PAYTABLE, PRIZE_SYMBOLS, type PrizeRule, type PrizeSymbol } from "../co
 
 const AUTO_ADVANCE_MS = 3000;
 const INTERACTION_PAUSE_MS = 8000;
-const MIXED_EXAMPLE_MS = 1200;
+const MIXED_EXAMPLE_MS = 1000;
 
 function symbolsFor(rule: PrizeRule, exampleIndex: number): readonly PrizeSymbol[] {
   return rule.examples?.[exampleIndex % rule.examples.length] ?? rule.symbols;
@@ -10,11 +10,8 @@ function symbolsFor(rule: PrizeRule, exampleIndex: number): readonly PrizeSymbol
 
 function iconMarkup(symbol: PrizeSymbol): string {
   const icon = PRIZE_SYMBOLS[symbol];
-  if (icon.src) {
-    const className = symbol === "neos" ? " prize-symbol--neos" : "";
-    return `<img class="prize-symbol${className}" src="${icon.src}" alt="${icon.label}">`;
-  }
-  return `<span class="prize-symbol prize-symbol--disc" role="img" aria-label="${icon.label}">${icon.text}</span>`;
+  const className = symbol === "cherry" || symbol === "seven" ? " prize-symbol--reel" : "";
+  return `<img class="prize-symbol${className}" src="${icon.src}" alt="${icon.label}">`;
 }
 
 function overlayRow(rule: PrizeRule): string {
@@ -44,10 +41,11 @@ export function initPrizeCarousel(root: HTMLElement, dialog: HTMLDialogElement, 
     root.dataset.activeIndex = String(activeIndex);
     root.innerHTML = `<h2 class="prize-carousel__heading">Featured prize</h2>
       <article class="prize-carousel__slide" data-prize-slide aria-label="${rule.ariaLabel}">
-        <div class="prize-carousel__hero">
-          <div class="prize-carousel__icons">${icons}</div>
-          <strong class="prize-carousel__value">${rule.prize}% <span>OFF</span></strong>
-        </div>
+        <div class="prize-carousel__icons">${icons}</div>
+        <strong class="prize-carousel__value">
+          <span class="prize-carousel__value-main">${rule.prize}%</span>
+          <span class="prize-carousel__value-off">OFF</span>
+        </strong>
         <p class="prize-carousel__label">${rule.fullLabel}</p>
       </article>
       <nav class="prize-carousel__controls" aria-label="Choose featured prize">

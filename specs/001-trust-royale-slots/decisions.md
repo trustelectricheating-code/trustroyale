@@ -51,3 +51,17 @@ Owner correction: "Keith DOES count in the two-plus-one rule (Scott, Scott, Keit
 The owner compared the two round 11 options and chose the belly panel. Owner's words: "the belly one looks cleaner".
 
 The "trust" wordmark (brand red, never overdrawn by bulbs) and gold "ROYALE" sit on a black glass panel set into the lower cabinet, framed by real bulb sprites that run chase patterns. `DEFAULT_TITLE_PLACEMENT` in `src/scene/cabinetArt.ts` is `"belly"`; the topper arch keeps only its own animated bulbs.
+
+## Gate B — approved (2026-09-29)
+
+The owner approved the Gate B mock and asked to move to the next stage once the prize table was fixed. Owner's words: "other than that you can move to the next stage".
+
+Final Gate B changes made before sign-off:
+
+- The spinning roulette wheel is gone. The background is now a blurred slot-machine hall: rows of slot machines on a casino floor behind the main cabinet, with nothing moving in it. Owner's choice: "a row of blurred slot machines on the casino floor behind the main machine, like a real slot hall".
+- Nothing flies in or out of the screen. Chips, coins and cards only drift gently in place: 16 items on desktop and 9 on phones, roughly 40% coins.
+- The prize table is a featured-prize carousel that shows one rule at a time, with a "See all prizes" overlay. Every rule shows real symbols: no "?" or "ANY" discs. The Keith × 2 rule uses a cherry as the example third symbol.
+- The prize board uses the same Neos medallion as the reels (`public/assets/mock/neos-medallion.webp`: red enamel, gold rim, cream T). Owner's words: "the t shown in the machine is not the one that is being used so please use that for the prize board as well".
+- No text overlaps. Full rule wording is shown on every viewport, and Playwright checks every slide at every viewport for overlap and clipping.
+
+Tasks T014–T018 are complete. Gate C (T019–T031, including T024A for Gia's face frames) starts next.

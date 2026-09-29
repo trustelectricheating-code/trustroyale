@@ -14,10 +14,9 @@ Every raster below was generated with OpenAI's built-in image tool (`gpt-image-2
 
 | Delivery file | Full-size generated source |
 |---|---|
-| `casino-hall-landscape.webp` | `reference/_work/generated/round3/casino-hall-landscape.png` |
-| `casino-hall-portrait.webp` | `reference/_work/generated/round3/casino-hall-portrait.png` |
+| `casino-hall-landscape.webp` | Retired; replaced by slot-hall generation below. |
+| `casino-hall-portrait.webp` | Retired; replaced by slot-hall generation below. |
 | `cabinet.webp` | `reference/_work/generated/round3/cabinet.png` |
-| `roulette-wheel.webp` | `reference/_work/generated/round3/roulette-wheel.png` |
 | `chip-red-blank.webp` | `reference/_work/generated/round3/chip-red-blank.png` |
 | `chip-gold-blank.webp` | `reference/_work/generated/round3/chip-gold-blank.png` |
 | `chip-navy-blank.webp` | `reference/_work/generated/round3/chip-navy-blank.png` |
@@ -27,7 +26,7 @@ Every raster below was generated with OpenAI's built-in image tool (`gpt-image-2
 | `seven.webp` | `reference/_work/generated/round3/seven.png` |
 | `sweets.webp` | `reference/_work/generated/round3/sweets.png` |
 
-Depth-of-field delivery derivatives are also generated from those recorded sources: `roulette-wheel-soft.webp` from `roulette-wheel.png`; `chip-{red,gold,navy,white}-{far,near}.webp` from the corresponding blank chip plus the vector Neos emblem; and `coin-{far,near}.webp` from `coin.png`. ImageMagick applies only resizing, emblem compositing, WebP compression, alpha cutting, and depth blur; it does not introduce ungenerated raster artwork.
+Depth-of-field delivery derivatives are also generated from those recorded sources: `chip-{red,gold,navy,white}-{far,near}.webp` from the corresponding blank chip plus the vector Neos emblem; and `coin-{far,near}.webp` from `coin.png`. ImageMagick applies only resizing, emblem compositing, WebP compression, alpha cutting, and depth blur; it does not introduce ungenerated raster artwork. Both roulette delivery assets are retired and removed.
 
 Round 5 adds alpha-trimmed reel derivatives `cherry-reel.webp`, `seven-reel.webp`, and `sweets-reel.webp` from their recorded generated sources. ImageMagick trims transparent padding, scales the visible bounds, centres each result on a transparent 256×256 canvas, and writes WebP; no new artwork is introduced.
 
@@ -46,3 +45,11 @@ The eight `chip-{red,gold,navy,white}-{far,near}.webp` depth derivatives were re
 ## Ghost-halo correction
 
 The four `chip-*-near.webp` derivatives and `coin-near.webp` were rebuilt from their clean transparent source faces with a reduced ImageMagick Gaussian blur (`0x2.6`). This removes the previous wide near-field alpha fringe while retaining baked depth softness. No generative model or new artwork was used.
+
+## Declutter follow-up — shared Neos medallion
+
+`neos-medallion.webp` is a 512×512 mechanical render of the reel's glossy red enamel disc, gold rim, cream Trust/Neos T, and highlight. Its editable source is `reference/_work/generated/neos-medallion.svg`. The same delivery image is used by the reels, featured-prize carousel, and all-prizes overlay.
+
+## Slot hall background
+
+`casino-hall-landscape.webp` and `casino-hall-portrait.webp` were generated separately with OpenAI's built-in image generation tool (`gpt-image-2`). Untouched outputs are `reference/_work/generated/casino-slot-hall-landscape.png` and `reference/_work/generated/casino-slot-hall-portrait.png`; exact prompts are stored beside them as `casino-slot-hall-landscape-prompt.txt` and `casino-slot-hall-portrait-prompt.txt`. Delivery processing uses only centre crop, resize, a subtle `0x0.65` Gaussian blur, metadata stripping, and WebP compression. Both files are below 350 KB. No roulette asset remains in the delivery directory.

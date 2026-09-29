@@ -1,13 +1,13 @@
-export type PrizeSymbol = "scott" | "fiona" | "gia" | "keith" | "neos" | "any" | "question";
+export type PrizeSymbol = "scott" | "fiona" | "gia" | "keith" | "neos" | "cherry" | "seven";
 
-export const PRIZE_SYMBOLS: Record<PrizeSymbol, { label: string; src?: string; text?: string }> = {
+export const PRIZE_SYMBOLS: Record<PrizeSymbol, { label: string; src: string }> = {
   scott: { label: "Scott", src: "/assets/mock/scott-medallion.webp" },
   fiona: { label: "Fiona", src: "/assets/mock/fiona-medallion.webp" },
   gia: { label: "Gia", src: "/assets/mock/gia-medallion.webp" },
   keith: { label: "Keith", src: "/assets/mock/keith-medallion.webp" },
-  neos: { label: "Neos", src: "/assets/emblem/neos.svg" },
-  any: { label: "Any symbol", text: "ANY" },
-  question: { label: "Other face", text: "?" },
+  neos: { label: "Neos", src: "/assets/mock/neos-medallion.webp" },
+  cherry: { label: "Cherry", src: "/assets/mock/cherry-reel.webp" },
+  seven: { label: "Seven", src: "/assets/mock/seven-reel.webp" },
 };
 
 export interface PrizeRule {
@@ -31,14 +31,27 @@ export const PAYTABLE: readonly PrizeRule[] = [
     shortLabel: "Any 2 + 1 face",
     fullLabel: "Any 2 same + 1 other face (Scott, Fiona, Gia, Keith)",
     ariaLabel: "Two of Scott, Fiona, Gia, or Keith plus one different person, 15 percent",
-    symbols: ["scott", "scott", "question"],
+    symbols: ["scott", "scott", "fiona"],
     examples: [
-      ["scott", "scott", "question"],
-      ["fiona", "fiona", "question"],
-      ["gia", "gia", "question"],
-      ["keith", "keith", "question"],
+      ["scott", "scott", "fiona"],
+      ["gia", "gia", "keith"],
+      ["fiona", "fiona", "scott"],
+      ["keith", "keith", "gia"],
     ],
   },
-  { id: "keith-2-any", prize: 15, shortLabel: "2 × Keith + any", fullLabel: "2 × Keith + any other symbol", ariaLabel: "Keith times two plus any, 15 percent", symbols: ["keith", "keith", "any"] },
+  {
+    id: "keith-2-any",
+    prize: 15,
+    shortLabel: "2 × Keith + any",
+    fullLabel: "2 × Keith + any other symbol",
+    ariaLabel: "Keith times two plus any, 15 percent",
+    symbols: ["keith", "keith", "cherry"],
+    examples: [
+      ["keith", "keith", "cherry"],
+      ["keith", "keith", "seven"],
+      ["keith", "keith", "scott"],
+      ["keith", "keith", "neos"],
+    ],
+  },
   { id: "neos-3", prize: 10, shortLabel: "3 × Neos", fullLabel: "3 × Neos", ariaLabel: "Neos times three, 10 percent", symbols: ["neos", "neos", "neos"] },
 ] as const;

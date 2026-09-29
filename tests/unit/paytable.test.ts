@@ -14,5 +14,17 @@ describe("paytable v2", () => {
       ["neos-3", 10],
     ]);
     expect(PAYTABLE[4].examples).toHaveLength(4);
+    expect(PAYTABLE[4].examples).toEqual([
+      ["scott", "scott", "fiona"],
+      ["gia", "gia", "keith"],
+      ["fiona", "fiona", "scott"],
+      ["keith", "keith", "gia"],
+    ]);
+    expect(PAYTABLE[5].examples).toEqual([
+      ["keith", "keith", "cherry"],
+      ["keith", "keith", "seven"],
+      ["keith", "keith", "scott"],
+      ["keith", "keith", "neos"],
+    ]);
   });
 });

@@ -4,7 +4,6 @@ import type { SceneLayout } from "./layout";
 const ASSETS = {
   hallLandscape: "/assets/mock/casino-hall-landscape.webp",
   hallPortrait: "/assets/mock/casino-hall-portrait.webp",
-  wheel: "/assets/mock/roulette-wheel-soft.webp",
   chipRed: "/assets/mock/chip-red-blank.webp",
   chipGold: "/assets/mock/chip-gold-blank.webp",
   chipNavy: "/assets/mock/chip-navy-blank.webp",
@@ -13,17 +12,45 @@ const ASSETS = {
   chipGoldFar: "/assets/mock/chip-gold-far.webp",
   chipNavyFar: "/assets/mock/chip-navy-far.webp",
   chipWhiteFar: "/assets/mock/chip-white-far.webp",
-  chipRedNear: "/assets/mock/chip-red-near.webp",
-  chipGoldNear: "/assets/mock/chip-gold-near.webp",
-  chipNavyNear: "/assets/mock/chip-navy-near.webp",
-  chipWhiteNear: "/assets/mock/chip-white-near.webp",
   coin: "/assets/mock/coin.webp",
   coinFar: "/assets/mock/coin-far.webp",
-  coinNear: "/assets/mock/coin-near.webp",
 } as const;
 
-type Depth = "far" | "mid" | "near";
-type FloatingKind = "chip" | "coin" | "card";
+type Depth = "far" | "mid";
+export type FloatingKind = "chip" | "coin" | "card";
+
+export interface FloatingItemSpec {
+  kind: FloatingKind;
+  depth: Depth;
+  nx: number;
+  ny: number;
+  texture: number;
+  baseRotation: number;
+  baseSize: number;
+}
+
+export const FLOATING_ITEM_SPECS: readonly FloatingItemSpec[] = [
+  { kind: "coin", depth: "far", nx: 0.08, ny: 0.13, texture: 0, baseRotation: -0.05, baseSize: 0.44 },
+  { kind: "chip", depth: "mid", nx: 0.91, ny: 0.14, texture: 2, baseRotation: 0.06, baseSize: 0.68 },
+  { kind: "card", depth: "mid", nx: 0.15, ny: 0.27, texture: 0, baseRotation: -0.06, baseSize: 0.58 },
+  { kind: "coin", depth: "far", nx: 0.86, ny: 0.31, texture: 0, baseRotation: 0.04, baseSize: 0.44 },
+  { kind: "chip", depth: "far", nx: 0.07, ny: 0.72, texture: 1, baseRotation: 0.05, baseSize: 0.44 },
+  { kind: "card", depth: "mid", nx: 0.88, ny: 0.68, texture: 0, baseRotation: 0.06, baseSize: 0.58 },
+  { kind: "coin", depth: "mid", nx: 0.14, ny: 0.88, texture: 0, baseRotation: -0.04, baseSize: 0.64 },
+  { kind: "chip", depth: "mid", nx: 0.86, ny: 0.89, texture: 3, baseRotation: -0.05, baseSize: 0.68 },
+  { kind: "coin", depth: "far", nx: 0.94, ny: 0.48, texture: 0, baseRotation: 0.04, baseSize: 0.44 },
+  { kind: "coin", depth: "mid", nx: 0.08, ny: 0.46, texture: 0, baseRotation: 0.03, baseSize: 0.62 },
+  { kind: "chip", depth: "far", nx: 0.92, ny: 0.79, texture: 0, baseRotation: -0.04, baseSize: 0.43 },
+  { kind: "card", depth: "far", nx: 0.07, ny: 0.58, texture: 0, baseRotation: 0.05, baseSize: 0.44 },
+  { kind: "coin", depth: "far", nx: 0.93, ny: 0.6, texture: 0, baseRotation: -0.03, baseSize: 0.42 },
+  { kind: "chip", depth: "mid", nx: 0.13, ny: 0.38, texture: 1, baseRotation: 0.05, baseSize: 0.64 },
+  { kind: "chip", depth: "far", nx: 0.89, ny: 0.39, texture: 3, baseRotation: -0.05, baseSize: 0.43 },
+  { kind: "chip", depth: "far", nx: 0.11, ny: 0.8, texture: 2, baseRotation: 0.04, baseSize: 0.43 },
+] as const;
+
+export function floatingItemCount(width: number, height: number): number {
+  return Math.min(width, height) < 600 ? 9 : FLOATING_ITEM_SPECS.length;
+}
 
 interface FloatingItem {
   node: Container;
@@ -36,7 +63,6 @@ interface FloatingItem {
   baseX: number;
   baseY: number;
   kind: FloatingKind;
-  face?: Container;
 }
 
 export interface EnvironmentScene {
@@ -44,9 +70,6 @@ export interface EnvironmentScene {
   front: Container;
   hallLandscape: Sprite;
   hallPortrait: Sprite;
-  wheel: Container;
-  wheelHead: Sprite;
-  ball: Graphics;
   items: FloatingItem[];
   pointer: { x: number; y: number };
   reducedMotion: boolean;
@@ -75,14 +98,13 @@ function chip(texture: Texture): Container {
   return node;
 }
 
-function card(index: number): Container {
+function card(): Container {
   const node = new Container();
   const back = new Graphics()
     .roundRect(-39, -55, 78, 110, 9).fill({ color: 0xf2dfbd }).stroke({ color: 0xffe8a3, width: 3 })
     .roundRect(-33, -49, 66, 98, 7).fill({ color: 0x7c0715 }).stroke({ color: 0xd4a437, width: 2 })
     .roundRect(-27, -43, 54, 86, 5).stroke({ color: 0xffd878, width: 1, alpha: 0.38 });
   node.addChild(back, neosMark(58, 0xffd878));
-  node.rotation = index % 2 ? -0.18 : 0.22;
   return node;
 }
 
@@ -96,62 +118,28 @@ export async function createBackground(): Promise<EnvironmentScene> {
   const hallPortrait = new Sprite(textures.hallPortrait);
   back.addChild(hallLandscape, hallPortrait);
 
-  const wheel = new Container();
-  wheel.addChild(new Graphics().ellipse(0, 28, 270, 65).fill({ color: 0x000000, alpha: 0.48 }));
-  const wheelTilt = new Container();
-  wheelTilt.scale.y = 0.48;
-  const outerBowl = sprite(textures.wheel, 560);
-  const wheelHead = sprite(textures.wheel, 560);
-  const wheelHeadMask = new Graphics().circle(0, 0, 191).fill(0xffffff);
-  wheelHead.mask = wheelHeadMask;
-  wheelTilt.addChild(outerBowl, wheelHead, wheelHeadMask);
-  const ball = new Graphics().circle(0, 0, 10).fill({ color: 0xfff8df }).stroke({ color: 0x9a6518, width: 2 });
-  wheelTilt.addChild(ball);
-  wheel.addChild(wheelTilt);
-  back.addChild(wheel);
-
   const farLayer = new Container();
   const midLayer = new Container();
-  const nearLayer = new Container();
-  back.addChild(farLayer, midLayer, nearLayer);
+  back.addChild(farLayer, midLayer);
 
   const itemTextures = [textures.chipRed, textures.chipGold, textures.chipNavy, textures.chipWhite];
   const farTextures = [textures.chipRedFar, textures.chipGoldFar, textures.chipNavyFar, textures.chipWhiteFar];
-  const nearTextures = [textures.chipRedNear, textures.chipGoldNear, textures.chipNavyNear, textures.chipWhiteNear];
   const items: FloatingItem[] = [];
-  const pattern = [
-    [0.05, 0.18], [0.15, 0.7], [0.28, 0.12], [0.44, 0.84], [0.58, 0.13],
-    [0.72, 0.74], [0.88, 0.18], [0.95, 0.62], [0.08, 0.48], [0.35, 0.62],
-    [0.63, 0.48], [0.82, 0.42], [0.2, 0.31], [0.48, 0.28], [0.76, 0.3],
-    [0.02, 0.88], [0.3, 0.94], [0.68, 0.92], [0.97, 0.9], [0.54, 0.68],
-    [0.12, 0.06], [0.4, 0.04], [0.62, 0.05], [0.9, 0.07], [0.22, 0.82],
-    [0.78, 0.84], [0.02, 0.32], [0.98, 0.34], [0.39, 0.44], [0.61, 0.58],
-  ] as const;
-
-  pattern.forEach(([nx, ny], index) => {
-    const depth: Depth = index % 5 === 0 ? "near" : index % 3 === 0 ? "far" : "mid";
-    const depthTextures = depth === "near" ? nearTextures : farTextures;
-    const kind: FloatingKind = index % 7 === 0 ? "card" : index % 4 === 3 ? "coin" : "chip";
-    let node: Container;
-    let face: Container | undefined;
-    if (kind === "card") {
-      node = card(index);
-    } else {
-      node = new Container();
-      face = kind === "coin"
-        ? new Container({ children: [sprite(depth === "mid" ? textures.coin : depth === "near" ? textures.coinNear : textures.coinFar, 110)] })
-        : depth === "mid"
-          ? chip(itemTextures[index % itemTextures.length])
-          : new Container({ children: [sprite(depthTextures[index % depthTextures.length], 120)] });
-      node.addChild(face);
-    }
-    (depth === "near" ? nearLayer : depth === "far" ? farLayer : midLayer).addChild(node);
-    const baseRotation = kind === "card" ? node.rotation : ((index % 5) - 2) * 0.12;
-    items.push({ node, depth, kind, face, nx, ny, phase: index * 0.71, baseRotation, baseSize: depth === "near" ? 1.15 : depth === "far" ? 0.52 : 0.82, baseX: 0, baseY: 0 });
+  FLOATING_ITEM_SPECS.forEach((spec, index) => {
+    const node = spec.kind === "card"
+      ? card()
+      : spec.kind === "coin"
+        ? new Container({ children: [sprite(spec.depth === "mid" ? textures.coin : textures.coinFar, 110)] })
+        : spec.depth === "mid"
+          ? chip(itemTextures[spec.texture % itemTextures.length])
+          : new Container({ children: [sprite(farTextures[spec.texture % farTextures.length], 120)] });
+    node.rotation = spec.baseRotation;
+    (spec.depth === "far" ? farLayer : midLayer).addChild(node);
+    items.push({ ...spec, node, phase: index * 0.83, baseX: 0, baseY: 0 });
   });
 
   return {
-    back, front, hallLandscape, hallPortrait, wheel, wheelHead, ball, items,
+    back, front, hallLandscape, hallPortrait, items,
     pointer: { x: 0, y: 0 },
     reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
   };
@@ -172,48 +160,37 @@ export function drawBackground(scene: EnvironmentScene, layout: SceneLayout): vo
   cover(scene.hallLandscape, 1672, 941, width, height);
   cover(scene.hallPortrait, 941, 1672, width, height);
 
-  const wheelSize = portrait ? layout.machine.width * 0.82 : layout.machine.width * 1.04;
-  scene.wheel.position.set(
-    layout.machine.x + layout.machine.width * (portrait ? 0.9 : 0.96),
-    layout.machine.y + layout.machine.height * (portrait ? 0.29 : 0.48),
-  );
-  scene.wheel.scale.set(wheelSize / 560);
-
-  const count = width < 600 ? 16 : width < 1100 ? 22 : 30;
+  const count = floatingItemCount(width, height);
+  const phonePortrait = portrait && Math.min(width, height) < 600;
+  const phoneTopY = (layout.paytable.y + layout.paytable.height + layout.machine.y) / 2;
+  const phoneBottomY = (layout.machine.y + layout.machine.height + height) / 2;
+  const phonePositions = [
+    [0.09, phoneTopY], [0.29, phoneTopY], [0.5, phoneTopY], [0.71, phoneTopY], [0.91, phoneTopY],
+    [0.12, phoneBottomY], [0.37, phoneBottomY], [0.63, phoneBottomY], [0.88, phoneBottomY],
+  ] as const;
   scene.items.forEach((item, index) => {
     item.node.visible = index < count;
-    const edgeBias = item.depth === "near" ? 0.04 : 0;
-    const nx = item.nx > 0.25 && item.nx < 0.75 && item.ny > 0.2 && item.ny < 0.76
-      ? item.nx < 0.5 ? 0.16 : 0.84
-      : item.nx;
-    item.baseX = (edgeBias + nx * (1 - edgeBias * 2)) * width;
-    item.baseY = item.ny * height;
+    const responsive = Math.max(0.5, Math.min(1.25, width / 1280, height / 760));
+    const scale = item.baseSize * responsive;
+    const radius = (item.kind === "card" ? 62 : 64) * scale + 14;
+    const targetX = phonePortrait && phonePositions[index] ? phonePositions[index][0] * width : item.nx * width;
+    const targetY = phonePortrait && phonePositions[index] ? phonePositions[index][1] : item.ny * height;
+    item.baseX = Math.max(radius, Math.min(width - radius, targetX));
+    item.baseY = Math.max(radius, Math.min(height - radius, targetY));
     item.node.position.set(item.baseX, item.baseY);
-    const responsive = Math.min(width / 1280, height / 760);
-    item.node.scale.set(item.baseSize * Math.max(0.48, responsive));
+    item.node.scale.set(scale);
   });
-}
-
-export function floatingFaceScaleY(timeSeconds: number, speed: number, phase: number): number {
-  return 0.925 + Math.cos(timeSeconds * speed * 0.38 + phase) * 0.075;
 }
 
 export function animateBackground(scene: EnvironmentScene, timeSeconds: number): void {
   if (scene.reducedMotion) return;
-  scene.wheelHead.rotation = timeSeconds * Math.PI * 0.18;
-  const ballAngle = -timeSeconds * Math.PI * 0.26;
-  scene.ball.position.set(Math.cos(ballAngle) * 225, Math.sin(ballAngle) * 225);
   scene.items.forEach((item) => {
     if (!item.node.visible) return;
-    const speed = item.depth === "near" ? 1.2 : item.depth === "far" ? 0.45 : 0.72;
-    const parallax = item.depth === "near" ? 22 : item.depth === "far" ? 5 : 11;
-    item.node.x = item.baseX + Math.cos(timeSeconds * speed * 0.35 + item.phase) * 3 + scene.pointer.x * parallax;
-    item.node.y = item.baseY + Math.sin(timeSeconds * speed + item.phase) * (5 + parallax * 0.2) + scene.pointer.y * parallax;
-    const rotationRange = item.kind === "card" ? 0.24 : 0.06;
+    const speed = item.depth === "far" ? 0.35 : 0.55;
+    const parallax = item.depth === "far" ? 4 : 8;
+    item.node.x = item.baseX + Math.cos(timeSeconds * speed + item.phase) * 2 + scene.pointer.x * parallax;
+    item.node.y = item.baseY + Math.sin(timeSeconds * speed + item.phase) * 4 + scene.pointer.y * parallax;
+    const rotationRange = item.kind === "card" ? Math.PI / 30 : Math.PI / 36;
     item.node.rotation = item.baseRotation + Math.sin(timeSeconds * speed * 0.7 + item.phase) * rotationRange;
-    if (item.face) {
-      const perspective = floatingFaceScaleY(timeSeconds, speed, item.phase);
-      item.face.scale.set(1, perspective);
-    }
   });
 }

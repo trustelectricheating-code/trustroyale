@@ -66,7 +66,7 @@ export function computeLayout(width: number, height: number, safeAreaInsets: Saf
 
   if (orientation === "portrait") {
     const gap = Math.max(5, Math.min(14, content.height * 0.012));
-    const paytableHeight = Math.max(104, Math.min(160, safeBounds.height * 0.18));
+    const paytableHeight = Math.max(145, Math.min(190, safeBounds.height * 0.225));
     const availableHeight = content.height - paytableHeight - gap;
     const machineHeight = Math.min(availableHeight, content.width / MACHINE_ASPECT);
     const machineWidth = machineHeight * MACHINE_ASPECT;
@@ -75,8 +75,8 @@ export function computeLayout(width: number, height: number, safeAreaInsets: Saf
     const paytableFrame = scaled(rect(content.x, content.y, content.width, paytableHeight), 960, 150);
     const paytable = {
       ...paytableFrame,
-      iconSize: Math.max(44, Math.min(paytableHeight * 0.34, content.width * 0.14)),
-      prizeSize: Math.max(30, Math.min(paytableHeight * 0.31, content.width * 0.14)),
+      iconSize: Math.max(36, Math.min(50, paytableHeight * 0.27, content.width * 0.13)),
+      prizeSize: Math.max(27, Math.min(42, paytableHeight * 0.22, content.width * 0.12)),
     };
     const wheelSize = Math.min(content.width * 0.48, machine.height * 0.27);
     const chipTray = scaled(rect(content.x + content.width - wheelSize, machine.y + machine.height * 0.1, wheelSize, wheelSize), 560, 560);

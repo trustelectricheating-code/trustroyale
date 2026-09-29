@@ -64,8 +64,7 @@ async function boot(): Promise<void> {
   const motion = gsap.timeline({ repeat: -1, yoyo: true });
   motion
     .to(".scene-effects__beam--left", { rotation: 8, transformOrigin: "50% 0%", duration: 5, ease: "sine.inOut" }, 0)
-    .to(".scene-effects__beam--right", { rotation: -8, transformOrigin: "50% 0%", duration: 6, ease: "sine.inOut" }, 0)
-    .to(".scene-effects__spark", { opacity: 0.18, scale: 0.65, duration: 1.3, stagger: 0.28, ease: "sine.inOut" }, 0);
+    .to(".scene-effects__beam--right", { rotation: -8, transformOrigin: "50% 0%", duration: 6, ease: "sine.inOut" }, 0);
   const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
   const updateMotion = () => {
     environment.reducedMotion = motionQuery.matches;

@@ -56,7 +56,6 @@ body {
 }
 
 .scene-effects__beam { opacity: .18; }
-.scene-effects__spark { transform-box: fill-box; transform-origin: center; }
 
 .ui-layer {
   z-index: 2;
@@ -161,12 +160,12 @@ html[data-title-placement="topper"] .marquee__frame-bulbs { display: none; }
 
 .prize-carousel__slide {
   position: relative;
-  display: flex;
+  display: grid;
   flex: 0 1 auto;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(4px, 1vmin, 14px);
+  grid-template-rows: auto auto minmax(2.36em, auto);
+  gap: clamp(3px, .7vmin, 10px);
   width: 100%;
   min-height: 0;
   overflow: hidden;
@@ -184,16 +183,10 @@ html[data-title-placement="topper"] .marquee__frame-bulbs { display: none; }
   animation: prize-shine 3s ease-in-out infinite;
 }
 
-.prize-carousel__hero,
 .prize-carousel__icons {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.prize-carousel__hero {
-  flex-direction: column;
-  gap: clamp(4px, 1vmin, 14px);
 }
 
 .prize-carousel__icons { gap: clamp(2px, .55vmin, 9px); }
@@ -209,34 +202,33 @@ html[data-title-placement="topper"] .marquee__frame-bulbs { display: none; }
   box-shadow: 0 0 clamp(4px, .8vmin, 12px) rgba(255, 191, 63, .38);
 }
 
-.prize-symbol--neos {
-  padding: 12%;
+.prize-symbol--reel {
+  padding: 8%;
   background: #fff3d1;
-}
-
-.prize-symbol--disc {
-  display: grid;
-  place-items: center;
-  color: #ffe8a3;
-  background: radial-gradient(circle at 35% 25%, #79182a, #240207 72%);
-  font-family: Georgia, serif;
-  font-size: calc(var(--prize-icon-size) * .27);
-  letter-spacing: -.04em;
+  object-fit: contain;
 }
 
 .prize-carousel__value {
+  display: grid;
+  justify-items: center;
+  gap: .14em;
   color: #ffe8a3;
   font-family: Georgia, serif;
   font-size: var(--prize-value-size);
-  line-height: .82;
+  line-height: 1;
   letter-spacing: -.04em;
   text-shadow: 0 2px #4c2507, 0 0 14px rgba(255, 195, 64, .55);
 }
 
-.prize-carousel__value span {
+.prize-carousel__value-main {
   display: block;
-  margin-top: .22em;
+  line-height: 1.08;
+}
+
+.prize-carousel__value-off {
+  display: block;
   font-size: .34em;
+  line-height: 1;
   letter-spacing: .16em;
 }
 
@@ -247,6 +239,10 @@ html[data-title-placement="topper"] .marquee__frame-bulbs { display: none; }
   font-size: clamp(.68rem, 1.55vmin, 1.25rem);
   line-height: 1.18;
   text-wrap: balance;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .prize-carousel__controls {
@@ -371,7 +367,6 @@ html[data-title-placement="topper"] .marquee__frame-bulbs { display: none; }
   height: clamp(32px, 5.4vmin, 58px);
 }
 
-.prize-overlay__icons .prize-symbol--disc { font-size: clamp(.58rem, 1.2vmin, .8rem); }
 .prize-overlay__label { font-size: clamp(.72rem, 1.5vmin, 1.05rem); line-height: 1.2; }
 .prize-overlay__rule strong { color: #ffe8a3; font-size: clamp(1rem, 2.2vmin, 1.5rem); white-space: nowrap; }
 
@@ -381,23 +376,35 @@ html[data-orientation="portrait"] .paytable {
 }
 
 html[data-orientation="portrait"] .prize-carousel__heading { font-size: clamp(.68rem, 3vw, .9rem); }
-html[data-orientation="portrait"] .prize-carousel__slide { gap: 2px; }
-
-html[data-orientation="portrait"] .prize-carousel__hero {
-  flex-direction: row;
-  gap: clamp(8px, 3vw, 22px);
+html[data-orientation="portrait"] .prize-carousel__slide {
+  flex-shrink: 0;
+  gap: 2px;
+  overflow: visible;
 }
+html[data-orientation="portrait"] .prize-symbol {
+  width: min(var(--prize-icon-size), 42px);
+  height: min(var(--prize-icon-size), 42px);
+}
+html[data-orientation="portrait"] .prize-carousel__value { font-size: min(var(--prize-value-size), 34px); }
 
-html[data-orientation="portrait"] .prize-carousel__value { line-height: .76; }
 html[data-orientation="portrait"] .prize-carousel__label { font-size: clamp(.58rem, 2.35vw, .78rem); }
 html[data-orientation="portrait"] .prize-carousel__controls { gap: 4px; }
 html[data-orientation="portrait"] .prize-carousel__controls > button { width: 18px; height: 18px; font-size: 1.15rem; }
 html[data-orientation="portrait"] .prize-carousel__all { font-size: clamp(.55rem, 2vw, .68rem); }
 
+@media (max-height: 650px) {
+  html[data-orientation="portrait"] .prize-carousel__heading { font-size: .62rem; }
+  html[data-orientation="portrait"] .prize-symbol { width: 30px; height: 30px; }
+  html[data-orientation="portrait"] .prize-carousel__value { font-size: 22px; }
+  html[data-orientation="portrait"] .prize-carousel__label { font-size: .55rem; }
+  html[data-orientation="portrait"] .prize-carousel__controls > button { width: 16px; height: 16px; }
+  html[data-orientation="portrait"] .prize-carousel__all { font-size: .5rem; }
+}
+
 @media (max-width: 480px) {
   .prize-overlay__panel { padding: 14px 8px; }
   .prize-overlay__rule { grid-template-columns: auto 1fr auto; gap: 6px; padding: 6px 2px; }
-  .prize-overlay__icons .prize-symbol { width: 28px; height: 28px; }
+  .prize-overlay__icons .prize-symbol { width: 32px; height: 32px; }
   .prize-overlay__label { font-size: .64rem; }
   .prize-overlay__rule strong { font-size: .8rem; }
 }

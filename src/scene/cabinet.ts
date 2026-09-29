@@ -8,7 +8,7 @@ const ASSETS = {
   fiona: "/assets/mock/fiona-medallion.webp",
   gia: "/assets/mock/gia-medallion.webp",
   keith: "/assets/mock/keith-medallion.webp",
-  neos: "/assets/emblem/neos.svg",
+  neos: "/assets/mock/neos-medallion.webp",
   cherry: "/assets/mock/cherry-reel.webp",
   seven: "/assets/mock/seven-reel.webp",
   sweets: "/assets/mock/sweets-reel.webp",
@@ -62,27 +62,12 @@ function maskedMedallion(texture: Texture, x: number, y: number, size: number): 
   return holder;
 }
 
-function enamelNeos(x: number, y: number, size: number): Container {
-  const node = new Container();
-  node.position.set(x, y);
-  const radius = size * 0.46;
-  const emblemScale = size * 0.0048;
-  const emblemX = -80 * emblemScale;
-  const emblemY = -80 * emblemScale;
-  node.addChild(new Graphics()
-    .circle(0, 0, radius).fill({ color: 0xd6a83b }).stroke({ color: 0xffe8a3, width: 2 })
-    .circle(0, 0, radius - 4).fill({ color: 0x9f0d1e })
-    .ellipse(-radius * 0.22, -radius * 0.24, radius * 0.48, radius * 0.2).fill({ color: 0xffffff, alpha: 0.24 })
-    .circle(emblemX + 80 * emblemScale, emblemY + 18 * emblemScale, 12 * emblemScale).fill({ color: 0xffe6a0 })
-    .roundRect(emblemX + 35 * emblemScale, emblemY + 42 * emblemScale, 90 * emblemScale, 18 * emblemScale, 9 * emblemScale).fill({ color: 0xffe6a0 })
-    .roundRect(emblemX + 71 * emblemScale, emblemY + 42 * emblemScale, 18 * emblemScale, 112 * emblemScale, 9 * emblemScale).fill({ color: 0xffe6a0 }));
-  return node;
-}
-
 function reelSymbol(texture: Texture, masked: boolean, neos: boolean, x: number, y: number, size: number, scaleX: number, scaleY: number): Container {
   let node: Container;
   if (neos) {
-    node = enamelNeos(x, y, size);
+    node = new Container();
+    node.position.set(x, y);
+    node.addChild(centredSprite(texture, 0, 0, size));
   } else if (masked) {
     node = maskedMedallion(texture, x, y, size);
   } else {

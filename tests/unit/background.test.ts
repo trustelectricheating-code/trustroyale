@@ -1,12 +1,24 @@
 import { describe, expect, it } from "vitest";
-import { floatingFaceScaleY } from "../../src/scene/background";
+import { FLOATING_ITEM_SPECS, floatingItemCount } from "../../src/scene/background";
 
-describe("floating chip and coin motion", () => {
-  it("never collapses a round face below 85% height", () => {
-    for (let frame = 0; frame <= 3600; frame += 1) {
-      const scaleY = floatingFaceScaleY(frame / 60, 1.2, 0.71);
-      expect(scaleY).toBeGreaterThanOrEqual(0.85);
-      expect(scaleY).toBeLessThanOrEqual(1);
+describe("decluttered floating items", () => {
+  it("uses sixteen desktop items, nine phone items, and no near layer", () => {
+    expect(FLOATING_ITEM_SPECS).toHaveLength(16);
+    expect(floatingItemCount(1920, 1080)).toBe(16);
+    expect(floatingItemCount(390, 844)).toBe(9);
+    expect(floatingItemCount(844, 390)).toBe(9);
+    expect(FLOATING_ITEM_SPECS.filter(({ kind }) => kind === "coin")).toHaveLength(6);
+    expect(FLOATING_ITEM_SPECS.filter(({ kind }) => kind === "card")).toHaveLength(3);
+    expect(FLOATING_ITEM_SPECS.slice(0, 9).filter(({ kind }) => kind === "coin")).toHaveLength(4);
+    expect(FLOATING_ITEM_SPECS.every(({ depth }) => depth === "far" || depth === "mid")).toBe(true);
+  });
+
+  it("keeps every home position away from the screen edge", () => {
+    for (const item of FLOATING_ITEM_SPECS) {
+      expect(item.nx).toBeGreaterThanOrEqual(0.05);
+      expect(item.nx).toBeLessThanOrEqual(0.95);
+      expect(item.ny).toBeGreaterThanOrEqual(0.1);
+      expect(item.ny).toBeLessThanOrEqual(0.9);
     }
   });
 });
