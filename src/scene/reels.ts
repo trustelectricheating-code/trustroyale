@@ -13,6 +13,11 @@ export interface ReelsScene {
   strip: ReelStrip;
 }
 
+export interface SpinController {
+  finish(strip: ReelStrip, onStop?: (reel: 1 | 2 | 3) => void, nearMiss?: boolean): Promise<void>;
+  cancel(): void;
+}
+
 export const REEL_ROW_LAYOUT = [
   { y: 0.02, scale: 0.7, scaleY: 0.56, alpha: 0.46 },
   { y: 0.5, scale: 1, scaleY: 1, alpha: 1 },
@@ -36,6 +41,61 @@ function setStrip(scene: ReelsScene, strip: ReelStrip): void {
   for (let column = 0; column < 3; column += 1) for (let row = 0; row < 3; row += 1) {
     setSymbol(scene, column, row, strip[row][column]);
   }
+}
+
+export function startFreeSpin(scene: ReelsScene, reducedMotion = false): SpinController {
+  const previous = scene.strip.map((row) => [...row]) as ReelStrip;
+  const startedAt = performance.now();
+  const blur = scene.columns.map(() => new BlurFilter({ strength: reducedMotion ? 0 : 11, quality: 2 }));
+  let animationFrame = 0;
+  let active = true;
+  const offsets = [-1, -1, -1];
+  document.documentElement.dataset.spinning = "true";
+  document.documentElement.dataset.spinMotionAt = String(startedAt);
+  document.querySelectorAll<HTMLElement>("[data-reel]").forEach((node) => { node.dataset.stopped = "false"; });
+  scene.columns.forEach((column, index) => { column.filters = reducedMotion ? [] : [blur[index]]; });
+
+  const tick = (now: number): void => {
+    if (!active) return;
+    if (!reducedMotion) {
+      const elapsed = now - startedAt;
+      scene.columns.forEach((column, index) => {
+        const turn = elapsed * (0.011 + index * 0.0007);
+        column.y = -14 + (turn % 1) * 58;
+        const offset = Math.floor(turn);
+        if (offset !== offsets[index]) {
+          offsets[index] = offset;
+          for (let row = 0; row < 3; row += 1) setSymbol(scene, index, row, SYMBOL_IDS[(offset + row + index * 2) % SYMBOL_IDS.length]);
+        }
+      });
+    }
+    animationFrame = requestAnimationFrame(tick);
+  };
+  animationFrame = requestAnimationFrame(tick);
+
+  const stopFreeSpin = (): void => {
+    if (!active) return;
+    active = false;
+    cancelAnimationFrame(animationFrame);
+    scene.columns.forEach((column) => { column.y = 0; column.filters = []; });
+  };
+
+  return {
+    async finish(strip, onStop, nearMiss = false) {
+      const minimum = reducedMotion ? 100 : 700;
+      const remaining = minimum - (performance.now() - startedAt);
+      if (remaining > 0) await new Promise((resolve) => window.setTimeout(resolve, remaining));
+      stopFreeSpin();
+      await animateSpin(scene, strip, reducedMotion, onStop, nearMiss);
+    },
+    cancel() {
+      stopFreeSpin();
+      setStrip(scene, previous);
+      document.querySelectorAll<HTMLElement>("[data-reel]").forEach((node) => { node.dataset.stopped = "true"; });
+      delete document.documentElement.dataset.nearMiss;
+      delete document.documentElement.dataset.spinning;
+    },
+  };
 }
 
 export function createReels(initial: ReelStrip = [

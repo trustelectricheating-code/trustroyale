@@ -51,18 +51,12 @@ const PAGES = [
   },
 ] as const;
 
-export function createIntro(dialog: HTMLDialogElement, onFirstGesture: () => void): IntroUi {
+export function createIntro(dialog: HTMLDialogElement, onMenuClick: () => Promise<void>): IntroUi {
   let page = 0;
   let done = () => {};
   let prizesOnly = false;
   let winningRuleId: string | undefined;
-  let gestureHandled = false;
-
-  const firstGesture = (): void => {
-    if (gestureHandled) return;
-    gestureHandled = true;
-    onFirstGesture();
-  };
+  const playClick = (): void => { void onMenuClick(); };
 
   const handover = async (): Promise<void> => {
     if (prizesOnly || page !== PAGES.length - 1) return;
@@ -111,22 +105,27 @@ export function createIntro(dialog: HTMLDialogElement, onFirstGesture: () => voi
         <p>${item.body}</p>
         ${prizes}
         <div class="intro__actions">
-          ${prizesOnly ? '<button type="button" data-close>Close</button>' : page < PAGES.length - 1 ? '<button type="button" data-next>Next</button><button type="button" class="intro__skip" data-skip>Skip</button>' : '<button type="button" data-play>Let\'s play!</button><button type="button" class="intro__skip" data-skip>Skip</button>'}
+          ${prizesOnly
+            ? '<button type="button" data-close>Close</button>'
+            : page < PAGES.length - 1
+              ? `${page > 0 ? '<button type="button" class="intro__back" data-back>Back</button>' : ""}<button type="button" data-next>Next</button><button type="button" class="intro__skip" data-skip>Skip</button>`
+              : '<button type="button" class="intro__back" data-back>Back</button><button type="button" data-play>Let\'s play!</button><button type="button" class="intro__skip" data-skip>Skip</button>'}
         </div>
         ${prizesOnly ? "" : `<p class="intro__progress" aria-label="Page ${page + 1} of ${PAGES.length}">${page + 1} / ${PAGES.length}</p>`}
       </div>
     </section>`;
     if (winningRuleId) dialog.querySelector(`[data-rule-id="${CSS.escape(winningRuleId)}"]`)?.classList.add("is-winning");
-    dialog.querySelector("[data-next]")?.addEventListener("click", () => { firstGesture(); page += 1; render(); });
-    dialog.querySelector("[data-play]")?.addEventListener("click", () => { firstGesture(); void close(); });
-    dialog.querySelector("[data-skip]")?.addEventListener("click", () => { firstGesture(); void close(); });
-    dialog.querySelector("[data-close]")?.addEventListener("click", () => void close());
+    dialog.querySelector("[data-back]")?.addEventListener("click", () => { playClick(); page -= 1; render(); });
+    dialog.querySelector("[data-next]")?.addEventListener("click", () => { playClick(); page += 1; render(); });
+    dialog.querySelector("[data-play]")?.addEventListener("click", () => { playClick(); void close(); });
+    dialog.querySelector("[data-skip]")?.addEventListener("click", () => { playClick(); void close(); });
+    dialog.querySelector("[data-close]")?.addEventListener("click", () => { playClick(); void close(); });
     const mute = dialog.querySelector<HTMLButtonElement>("[data-intro-mute]");
     const mainMute = document.querySelector<HTMLButtonElement>("#mute");
     if (mute && mainMute) {
       mute.setAttribute("aria-label", mainMute.getAttribute("aria-label") ?? "Mute sound");
-      mute.addEventListener("click", () => {
-        firstGesture();
+      mute.addEventListener("click", async () => {
+        await onMenuClick();
         mainMute.click();
         mute.setAttribute("aria-label", mainMute.getAttribute("aria-label") ?? "Mute sound");
       });

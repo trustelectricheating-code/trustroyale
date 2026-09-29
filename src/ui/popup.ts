@@ -29,8 +29,11 @@ function dialogShell(): HTMLDialogElement {
   return dialog;
 }
 
-export function createPopups(onViewPrizes: (ruleId?: string) => void): Popups {
+export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonClick: () => void): Popups {
   const dialog = dialogShell();
+  dialog.addEventListener("click", (event) => {
+    if ((event.target as Element).closest("button")) onButtonClick();
+  });
   const show = (content: string, kind: string, modal = true) => {
     if (dialog.open) dialog.close();
     dialog.className = `result-popup result-popup--${kind}`;

@@ -14,7 +14,7 @@ import { celebrate } from "./scene/faces";
 import { burstWin, createChips } from "./scene/chips";
 import { createMarquee } from "./scene/marquee";
 import { computeLayout, type LayoutRect, type SafeAreaInsets } from "./scene/layout";
-import { animateSpin, createReels } from "./scene/reels";
+import { createReels, startFreeSpin } from "./scene/reels";
 import { createSound } from "./audio/sound";
 import { createControls } from "./ui/controls";
 import { createPopups } from "./ui/popup";
@@ -96,9 +96,14 @@ async function boot(): Promise<void> {
   updateMotion();
   const controls = createControls(spinButton, sound.isMuted());
   controls.onMute((muted) => sound.setMuted(muted));
-  const intro = createIntro(introDialog, () => { void sound.unlock().then(() => sound.ambient.start()); });
-  const popups = createPopups((ruleId) => intro.showPrizes(ruleId));
-  prizesButton.addEventListener("click", () => intro.showPrizes());
+  const playMenuClick = async (): Promise<void> => {
+    await sound.unlock();
+    sound.ambient.start();
+    sound.play("button");
+  };
+  const intro = createIntro(introDialog, playMenuClick);
+  const popups = createPopups((ruleId) => intro.showPrizes(ruleId), () => sound.play("button"));
+  prizesButton.addEventListener("click", () => { sound.play("button"); intro.showPrizes(); });
   const machine = new GameStateMachine("IDLE");
   let spinsLeft = 3;
   let best: BestSummary | undefined;
@@ -119,13 +124,14 @@ async function boot(): Promise<void> {
   const playSpin = async () => {
     if (machine.state !== "IDLE" && machine.state !== "LAST_CHANCE") return;
     popups.close();
-    sound.play("button");
-    sound.play("reel.loop");
     marqueeScene.setPattern("spin");
     machine.send({ type: "SPIN" });
+    const spinMotion = startFreeSpin(reels, motionQuery.matches);
+    document.documentElement.dataset.spinSoundAt = String(performance.now());
+    sound.play("reel.loop");
     try {
       const result: SpinResponse = await spin();
-      await animateSpin(reels, result.strip, motionQuery.matches, (reel) => sound.play(`reel.stop.${reel}`), result.nearMiss);
+      await spinMotion.finish(result.strip, (reel) => sound.play(`reel.stop.${reel}`), result.nearMiss);
       sound.stop("reel.loop");
       await controls.consumeChip();
       sound.play("coin.use");
@@ -162,6 +168,7 @@ async function boot(): Promise<void> {
       else if (resolvedState === "GAME_OVER") popups.showGameOver();
       else popups.showRetry(result.nearMiss);
     } catch (caught) {
+      spinMotion.cancel();
       sound.stop("reel.loop");
       marqueeScene.setPattern("idle");
       if ((machine.state as GameState) === "SPINNING") machine.send({ type: "NETWORK_ERROR" });
@@ -173,6 +180,7 @@ async function boot(): Promise<void> {
   };
 
   controls.onAction(() => {
+    sound.play("button");
     void playSpin();
   });
 

@@ -55,6 +55,8 @@ export function createSound(): SoundSystem {
     unlock,
     play(name) {
       try {
+        document.documentElement.dataset.lastSound = name;
+        document.documentElement.dataset.soundPlayCount = String(Number(document.documentElement.dataset.soundPlayCount ?? 0) + 1);
         const id = effects?.play(name);
         if (name === "reel.loop") reelLoopId = id;
         if (name === "win.small" || name === "win.big") {
@@ -63,7 +65,7 @@ export function createSound(): SoundSystem {
         }
       } catch { /* Game remains playable when audio is blocked. */ }
     },
-    stop(name) { try { if (name === "reel.loop" && reelLoopId !== undefined) effects?.stop(reelLoopId); } catch { /* Game remains playable when audio is blocked. */ } },
+    stop(name) { try { document.documentElement.dataset.lastStoppedSound = name; if (name === "reel.loop" && reelLoopId !== undefined) effects?.stop(reelLoopId); } catch { /* Game remains playable when audio is blocked. */ } },
     setMuted(value) { muted = value; localStorage.setItem("trustRoyaleMuted", String(value)); Howler.mute(value); },
     isMuted: () => muted,
   };

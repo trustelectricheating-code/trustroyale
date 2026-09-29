@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -134,6 +134,80 @@ test("touch tap at 390x844 starts exactly one spin", async ({ browser }) => {
   await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
   expect(requests).toBe(1);
   await context.close();
+});
+
+test("spin motion and sound start before a delayed API response", async ({ page }) => {
+  await mockSession(page);
+  await page.route("**/api/spin", async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 2_000));
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(loss(1, 2)) });
+  });
+  await ready(page);
+  await enterGame(page);
+  const timing = await page.evaluate(() => {
+    const pressed = performance.now();
+    document.querySelector<HTMLButtonElement>("#spin")?.click();
+    return {
+      pressed,
+      motion: Number(document.documentElement.dataset.spinMotionAt),
+      sound: Number(document.documentElement.dataset.spinSoundAt),
+      spinning: document.documentElement.dataset.spinning,
+    };
+  });
+  expect(timing.spinning).toBe("true");
+  expect(timing.motion - timing.pressed).toBeLessThan(100);
+  expect(timing.sound - timing.pressed).toBeLessThan(100);
+  await page.waitForTimeout(250);
+  await expect(page.locator("html")).toHaveAttribute("data-spinning", "true");
+  await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible({ timeout: 10_000 });
+});
+
+test("failed spin restores the machine without stuck motion or sound", async ({ page }) => {
+  await mockSession(page);
+  await page.route("**/api/spin", async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 2_000));
+    await route.fulfill({ status: 500, contentType: "application/json", body: JSON.stringify({ error: "server_error" }) });
+  });
+  await ready(page);
+  await enterGame(page);
+  expect(await page.evaluate(() => { document.querySelector<HTMLButtonElement>("#spin")?.click(); return document.documentElement.dataset.spinning; })).toBe("true");
+  await expect(page.getByRole("heading", { name: "Machine hiccup, try again" })).toBeVisible();
+  await expect(page.locator("html")).not.toHaveAttribute("data-spinning", "true");
+  await expect(page.locator("html")).toHaveAttribute("data-last-stopped-sound", "reel.loop");
+  await expect(page.locator("#spin")).toBeEnabled();
+});
+
+test("intro and popup menu buttons play the soft click, including the first gesture", async ({ page }) => {
+  test.setTimeout(60_000);
+  const expectLarge = async (button: Locator): Promise<void> => {
+    const box = await button.boundingBox();
+    expect(box?.height).toBeGreaterThanOrEqual(48);
+    expect(box?.width).toBeGreaterThanOrEqual(48);
+  };
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await mockSession(page);
+  await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(loss(1, 2)) }));
+  await ready(page);
+  expect(await page.locator("html").getAttribute("data-sound-play-count")).toBeNull();
+  await expectLarge(page.getByRole("button", { name: "Next" }));
+  await page.getByRole("button", { name: "Next" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-last-sound", "button");
+  const afterNext = Number(await page.locator("html").getAttribute("data-sound-play-count"));
+  await expectLarge(page.getByRole("button", { name: "Back" }));
+  await page.getByRole("button", { name: "Back" }).click();
+  await expect.poll(async () => Number(await page.locator("html").getAttribute("data-sound-play-count"))).toBeGreaterThan(afterNext);
+  await page.getByRole("button", { name: "Skip" }).click();
+  const afterSkip = Number(await page.locator("html").getAttribute("data-sound-play-count"));
+  await expectLarge(page.getByRole("button", { name: "Prizes" }));
+  await page.getByRole("button", { name: "Prizes" }).click();
+  await page.getByRole("button", { name: "Close" }).click();
+  await expect.poll(async () => Number(await page.locator("html").getAttribute("data-sound-play-count"))).toBeGreaterThan(afterSkip + 1);
+  await page.locator("#spin").click();
+  await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
+  await expectLarge(page.getByRole("button", { name: "Continue" }));
+  const beforeContinue = Number(await page.locator("html").getAttribute("data-sound-play-count"));
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect.poll(async () => Number(await page.locator("html").getAttribute("data-sound-play-count"))).toBeGreaterThan(beforeContinue);
 });
 
 test("best-of-three waits for presses and reveals only final coupon", async ({ page }) => {
