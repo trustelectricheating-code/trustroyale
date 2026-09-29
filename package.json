@@ -21,6 +21,7 @@
     "pixi.js": "^8.13.2"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@playwright/test": "^1.55.1",
     "@types/howler": "^2.2.12",
     "@vercel/functions": "^2.2.13",
