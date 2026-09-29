@@ -16,8 +16,6 @@ export const CABINET_ART = {
     [409, 105], [449, 115], [487, 129], [520, 151], [546, 181], [563, 213],
   ] as const,
   reelWindow: { x: 143, y: 312, width: 434, height: 242 },
-  // Measured black opening in source pixels: (451, 876) through (576, 978).
-  spinButtonOpening: { x: 317, y: 616, width: 88, height: 72 },
-  leftReadout: { x: 205, y: 660 },
-  rightReadout: { x: 515, y: 660 },
+  // Owner round 1: one wide control replaces the two stale readouts and small centre button.
+  spinButtonOpening: { x: 205, y: 616, width: 310, height: 72 },
 } as const;

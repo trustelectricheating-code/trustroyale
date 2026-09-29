@@ -1,4 +1,4 @@
-import { Assets, Container, Graphics, Sprite, Text, TextStyle, Texture } from "pixi.js";
+import { Assets, Container, Graphics, Sprite, Texture } from "pixi.js";
 import { CABINET_ART, CABINET_DESIGN } from "./cabinetArt";
 import type { SceneLayout } from "./layout";
 
@@ -131,41 +131,6 @@ function createDrum(textures: Record<keyof typeof ASSETS, Texture>, index: numbe
   return drum;
 }
 
-function readout(label: string, value: string, x: number, y: number): Container {
-  const node = new Container();
-  node.position.set(x, y);
-  const labelNode = new Text({
-    text: label,
-    style: new TextStyle({
-      fill: 0xffb746,
-      fontFamily: "Courier New, monospace",
-      fontSize: 10,
-      fontWeight: "700",
-      align: "center",
-      letterSpacing: 0.7,
-      dropShadow: { color: 0xff601c, alpha: 0.8, blur: 3, distance: 0 },
-    }),
-  });
-  labelNode.anchor.set(0.5);
-  labelNode.y = -9;
-  const valueNode = new Text({
-    text: value,
-    style: new TextStyle({
-      fill: 0xffd76a,
-      fontFamily: "Courier New, monospace",
-      fontSize: 19,
-      fontWeight: "700",
-      align: "center",
-      letterSpacing: 1.4,
-      dropShadow: { color: 0xff4218, alpha: 0.95, blur: 5, distance: 0 },
-    }),
-  });
-  valueNode.anchor.set(0.5);
-  valueNode.y = 9;
-  node.addChild(labelNode, valueNode);
-  return node;
-}
-
 export async function createCabinet(): Promise<CabinetScene> {
   const entries = Object.entries(ASSETS) as [keyof typeof ASSETS, string][];
   const loaded = await Assets.load<Texture>(entries.map(([, url]) => url));
@@ -218,10 +183,6 @@ export async function createCabinet(): Promise<CabinetScene> {
       .lineTo(reelWindow.x + reelWindow.width - 17, reelWindow.y + reelWindow.height * 0.56)
       .closePath().fill({ color: 0xffd66d }));
 
-  machine.addChild(
-    readout("SPINS LEFT", "3", CABINET_ART.leftReadout.x, CABINET_ART.leftReadout.y),
-    readout("TOP PRIZE", "20%", CABINET_ART.rightReadout.x, CABINET_ART.rightReadout.y),
-  );
   return { machine, reelMount, reelSymbols, bulbs };
 }
 

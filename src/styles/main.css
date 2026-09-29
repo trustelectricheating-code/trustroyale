@@ -440,9 +440,9 @@ html[data-orientation="portrait"] .prize-carousel__all { font-size: clamp(.55rem
   border: clamp(1px, .2vmin, 3px) solid #9f701c;
   border-radius: 999px;
   color: #fff8e8;
-  background: radial-gradient(circle at 50% 24%, #ff5860 0 12%, #c41224 42%, #65040e 74%, #250104 100%);
-  box-shadow: inset 0 clamp(2px, .35vmin, 5px) rgba(255, 255, 255, .38), inset 0 clamp(-8px, -1vmin, -3px) rgba(20, 0, 0, .75), inset 0 0 clamp(8px, 1.5vmin, 20px) rgba(255, 55, 45, .52), inset 0 0 0 clamp(2px, .35vmin, 5px) rgba(30, 0, 0, .52);
-  font-size: clamp(.48rem, calc(.82rem * var(--ui-scale)), 1rem);
+  background: radial-gradient(ellipse at 50% 18%, #ff7777 0 8%, #ef2638 30%, #a30719 67%, #48030b 100%);
+  box-shadow: inset 0 4px 3px rgba(255, 255, 255, .58), inset 0 -9px 9px rgba(32, 0, 5, .72), 0 5px 0 #4a2708, 0 8px 13px #000b, 0 0 22px rgba(255, 43, 48, .62);
+  font-size: clamp(.64rem, calc(1.05rem * var(--ui-scale)), 1.2rem);
   font-weight: 900;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -451,7 +451,7 @@ html[data-orientation="portrait"] .prize-carousel__all { font-size: clamp(.55rem
 }
 
 @keyframes spin-glow {
-  to { box-shadow: inset 0 clamp(2px, .35vmin, 5px) rgba(255, 255, 255, .52), inset 0 clamp(-8px, -1vmin, -3px) rgba(20, 0, 0, .75), inset 0 0 clamp(12px, 2vmin, 26px) rgba(255, 75, 55, .82), inset 0 0 0 clamp(2px, .35vmin, 5px) rgba(30, 0, 0, .45); }
+  to { box-shadow: inset 0 5px 4px rgba(255, 255, 255, .68), inset 0 -9px 9px rgba(32, 0, 5, .65), 0 5px 0 #4a2708, 0 8px 13px #000b, 0 0 34px rgba(255, 67, 57, .95); }
 }
 
 .loading {
@@ -511,19 +511,16 @@ html[data-orientation="portrait"] .prize-carousel__all { font-size: clamp(.55rem
 }
 
 .spin:disabled {
-  filter: grayscale(.75) brightness(.65);
+  filter: grayscale(.9) brightness(.48);
   animation: none;
+  box-shadow: inset 0 2px 5px #000b, 0 2px 0 #2f240f;
 }
 
-.spin[data-visual-state="up"] { background-image: url("/assets/cabinet/spin-up.webp"); background-size: cover; }
-.spin[data-visual-state="down"] { background-image: url("/assets/cabinet/spin-down.webp"); background-size: cover; }
-.spin[data-visual-state="disabled"] { background-image: url("/assets/cabinet/spin-disabled.webp"); background-size: cover; }
+.spin[data-visual-state="down"] { transform: translateY(5px) scale(.985); box-shadow: inset 0 7px 12px #280007, 0 1px 0 #4a2708, 0 3px 7px #0009; }
 .spin__label { pointer-events: none; }
-html:not([data-game-state="landing"]) .spin__label { visibility: hidden; }
-html[data-game-state="landing"] .spin { background-image: none; }
 
 .spin:active:not(:disabled) {
-  transform: translateY(3px) scale(.96);
+  transform: translateY(5px) scale(.985);
 }
 
 .result-popup {

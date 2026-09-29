@@ -28,7 +28,7 @@ describe("computeLayout", () => {
     expect(layout.background.x + layout.background.width).toBeGreaterThanOrEqual(width);
     expect(layout.background.y + layout.background.height).toBeGreaterThanOrEqual(height);
     expectInside(layout.spinButton, layout.machine);
-    expect(layout.spinButton.width / layout.machine.width).toBeLessThanOrEqual(0.35);
+    expect(layout.spinButton.width / layout.machine.width).toBeLessThanOrEqual(0.5);
     if (orientation === "landscape") expect(layout.machine.height / layout.safeBounds.height).toBeGreaterThanOrEqual(0.75);
   });
 
