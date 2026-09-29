@@ -1,19 +1,20 @@
 import { Howl, Howler } from "howler";
 
-export type SoundName = "button" | "reel.loop" | "reel.stop.1" | "reel.stop.2" | "reel.stop.3" | "nearmiss" | "win.small" | "win.big" | "payout" | "chips" | "whoosh";
+export type SoundName = "button" | "reel.loop" | "reel.stop.1" | "reel.stop.2" | "reel.stop.3" | "nearmiss" | "win.small" | "win.big" | "payout" | "chips" | "whoosh" | "coin.use";
 
 const SPRITES: Record<SoundName, [number, number] | [number, number, boolean]> = {
   button: [0, 300],
-  "reel.loop": [400, 2400, true],
-  "reel.stop.1": [2900, 550],
-  "reel.stop.2": [3550, 550],
-  "reel.stop.3": [4200, 550],
-  nearmiss: [4850, 700],
-  "win.small": [5650, 1900],
-  "win.big": [7650, 2500],
-  payout: [10250, 1600],
-  chips: [11950, 650],
-  whoosh: [12700, 550],
+  "reel.loop": [400, 3050, true],
+  "reel.stop.1": [3550, 550],
+  "reel.stop.2": [4200, 550],
+  "reel.stop.3": [4850, 550],
+  nearmiss: [5500, 700],
+  "win.small": [6300, 1900],
+  "win.big": [8300, 2500],
+  payout: [10900, 1600],
+  chips: [12600, 650],
+  whoosh: [13350, 550],
+  "coin.use": [14000, 900],
 };
 
 export interface SoundSystem {
@@ -28,6 +29,7 @@ export interface SoundSystem {
 export function createSound(): SoundSystem {
   let effects: Howl | undefined;
   let ambient: Howl | undefined;
+  let ambientId: number | undefined;
   let reelLoopId: number | undefined;
   let muted = localStorage.getItem("trustRoyaleMuted") === "true";
   document.documentElement.dataset.audioStatus = "locked";
@@ -35,7 +37,7 @@ export function createSound(): SoundSystem {
 
   const load = (): void => {
     effects ??= new Howl({ src: ["/assets/audio/sfx-sprite.webm", "/assets/audio/sfx-sprite.mp3"], sprite: SPRITES, preload: true });
-    ambient ??= new Howl({ src: ["/assets/audio/ambient-loop.webm", "/assets/audio/ambient-loop.mp3"], loop: true, volume: 0.24, preload: true });
+    ambient ??= new Howl({ src: ["/assets/audio/ambient-loop.webm", "/assets/audio/ambient-loop.mp3"], loop: true, volume: 0.2, preload: true, html5: true });
   };
 
   const unlock = async (): Promise<void> => {
@@ -49,7 +51,7 @@ export function createSound(): SoundSystem {
   };
 
   return {
-    ambient: { start() { try { ambient?.play(); } catch { document.documentElement.dataset.audioStatus = "blocked"; } } },
+    ambient: { start() { try { if (ambient && (ambientId === undefined || !ambient.playing(ambientId))) ambientId = ambient.play(); } catch { document.documentElement.dataset.audioStatus = "blocked"; } } },
     unlock,
     play(name) {
       try {

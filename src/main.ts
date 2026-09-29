@@ -106,7 +106,7 @@ async function boot(): Promise<void> {
   controls.setProgress(spinsLeft, false);
   machine.subscribe(({ current }) => {
     controls.setState(current);
-    controls.setProgress(spinsLeft, current === "LAST_CHANCE", best?.discount);
+    controls.setProgress(spinsLeft, current === "LAST_CHANCE" || (current === "SPINNING" && spinsLeft === 0), best?.discount);
   });
 
   const displayWin = (win: WinSummary) => {
@@ -127,6 +127,8 @@ async function boot(): Promise<void> {
       const result: SpinResponse = await spin();
       await animateSpin(reels, result.strip, motionQuery.matches, (reel) => sound.play(`reel.stop.${reel}`), result.nearMiss);
       sound.stop("reel.loop");
+      await controls.consumeChip();
+      sound.play("coin.use");
       machine.send({ type: "RESULT" });
       spinsLeft = result.spinsLeft;
       if (result.best) best = result.best;

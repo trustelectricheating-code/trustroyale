@@ -61,6 +61,8 @@ test("production CSP is present and fresh players see all four intro pages", asy
   await expect(page.locator(".intro-prize")).toHaveCount(7);
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.getByRole("heading", { name: "Your code appears at the end" })).toBeVisible();
+  await page.getByRole("button", { name: "Next" }).click();
+  await expect(page.getByRole("heading", { name: "Here are your 3 lucky chips — one per spin!" })).toBeVisible();
   await page.getByRole("button", { name: "Let's play!" }).click();
   await expect(page.locator("#spin")).toBeEnabled();
   await expect(page.locator("#spin")).toHaveText("SPIN");
@@ -164,7 +166,7 @@ test("returning mid-game player skips intro and resumes tracker", async ({ page 
   await mockSession(page, { spinsLeft: 1, bonusAvailable: false, state: "idle", best: banked15.best, win: null });
   await ready(page);
   await expect(page.locator("#intro")).not.toBeVisible();
-  await expect(page.locator("#tries-tracker")).toContainText("Try 3");
+  await expect(page.locator("#tries-tracker")).toHaveAttribute("aria-label", "1 chip left");
   await expect(page.locator("#tries-tracker")).toContainText("Best: 15%");
 });
 

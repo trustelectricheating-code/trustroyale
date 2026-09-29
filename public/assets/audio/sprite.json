@@ -1,13 +1,14 @@
 {
   "sfx.button": [0, 300],
-  "sfx.reel.loop": [400, 2400],
-  "sfx.reel.stop.1": [2900, 550],
-  "sfx.reel.stop.2": [3550, 550],
-  "sfx.reel.stop.3": [4200, 550],
-  "sfx.nearmiss": [4850, 700],
-  "sfx.win.small": [5650, 1900],
-  "sfx.win.big": [7650, 2500],
-  "sfx.payout": [10250, 1600],
-  "sfx.chips": [11950, 650],
-  "sfx.whoosh": [12700, 550]
+  "sfx.reel.loop": [400, 3050],
+  "sfx.reel.stop.1": [3550, 550],
+  "sfx.reel.stop.2": [4200, 550],
+  "sfx.reel.stop.3": [4850, 550],
+  "sfx.nearmiss": [5500, 700],
+  "sfx.win.small": [6300, 1900],
+  "sfx.win.big": [8300, 2500],
+  "sfx.payout": [10900, 1600],
+  "sfx.chips": [12600, 650],
+  "sfx.whoosh": [13350, 550],
+  "sfx.coin.use": [14000, 900]
 }

@@ -38,7 +38,7 @@ test("arrival animates in place, unlocks audio, and persists mute", async ({ pag
   expect(before).toBeDefined();
   expect(after).not.toEqual(before);
 
-  await page.getByRole("button", { name: "Play" }).click();
+  await page.getByRole("button", { name: "Skip" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-game-state", "idle");
   await page.waitForTimeout(900);
   const chipsStayInside = await page.evaluate(() => ((window as Window & { __trustRoyaleDebug?: { chipPositions?: () => number[][] } }).__trustRoyaleDebug?.chipPositions?.() ?? [])
@@ -49,7 +49,7 @@ test("arrival animates in place, unlocks audio, and persists mute", async ({ pag
   await expect.poll(() => page.evaluate(() => localStorage.getItem("trustRoyaleMuted"))).toBe("true");
   await page.reload();
   await ready(page);
-  await expect(page.getByRole("button", { name: "Unmute sound" })).toBeVisible();
+  await expect(page.locator("#mute")).toHaveAttribute("aria-label", "Unmute sound");
 });
 
 test("reduced motion can play and resolve a spin", async ({ page }) => {
@@ -57,7 +57,7 @@ test("reduced motion can play and resolve a spin", async ({ page }) => {
   await mockApis(page);
   await page.goto("/");
   await ready(page);
-  await page.getByRole("button", { name: "Play" }).click();
+  await page.getByRole("button", { name: "Skip" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-game-state", "idle");
   await page.getByRole("button", { name: "Spin the reels" }).click();
   await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();

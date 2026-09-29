@@ -66,7 +66,7 @@ export function computeLayout(width: number, height: number, safeAreaInsets: Saf
 
   if (orientation === "portrait") {
     const gap = Math.max(5, Math.min(14, content.height * 0.012));
-    const paytableHeight = Math.max(145, Math.min(190, safeBounds.height * 0.225));
+    const paytableHeight = Math.max(68, Math.min(104, safeBounds.height * 0.12));
     const availableHeight = content.height - paytableHeight - gap;
     const machineHeight = Math.min(availableHeight, content.width / MACHINE_ASPECT);
     const machineWidth = machineHeight * MACHINE_ASPECT;
@@ -88,8 +88,8 @@ export function computeLayout(width: number, height: number, safeAreaInsets: Saf
   const machine = scaled(rect(content.x + (content.width - machineWidth) / 2, content.y, machineWidth, machineHeight), CABINET_DESIGN.width, CABINET_DESIGN.height);
   const sideGap = Math.max(8, Math.min(28, content.width * 0.014));
   const sideWidth = Math.max(0, (content.width - machineWidth) / 2 - sideGap * 2);
-  const panelWidth = Math.min(sideWidth * 0.72, content.height * 0.5);
-  const panelHeight = Math.min(safeBounds.height * 0.55, Math.max(safeBounds.height * 0.45, panelWidth * 1.2));
+  const panelWidth = Math.min(sideWidth * 0.72, content.height * 0.42);
+  const panelHeight = Math.min(150, Math.max(92, content.height * 0.16));
   const paytableFrame = scaled(rect(content.x, content.y + (content.height - panelHeight) / 2, panelWidth, panelHeight), 390, 620);
   const paytable = {
     ...paytableFrame,

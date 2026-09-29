@@ -48,6 +48,7 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void): Popups {
         ? '<div class="result-popup__symbols" aria-label="Three Neos chips"><img src="/assets/symbols/neos-chip-red.webp" alt=""><img src="/assets/symbols/neos-chip-red.webp" alt=""><img src="/assets/symbols/neos-chip-red.webp" alt=""></div>'
         : "";
       show(`<section aria-labelledby="result-title">
+        <img class="result-popup__keith" src="/assets/keith/celebrate.webp" alt="Keith celebrating">
         <p class="result-popup__eyebrow">Trust Royale winner</p>
         <h2 id="result-title">You've won ${win.discount}% off your order</h2>
         ${neosSymbols}
@@ -94,6 +95,7 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void): Popups {
     },
     showLastChance(onSpin) {
       show(`<section aria-labelledby="result-title"><p class="result-popup__eyebrow">Bonus unlocked</p><h2 id="result-title">Last Chance!</h2><p>Take one bonus spin.</p><button type="button" data-last-chance>Spin now</button></section>`, "last-chance", false);
+      dialog.querySelector("section")?.insertAdjacentHTML("afterbegin", '<img class="result-popup__keith result-popup__keith--small" src="/assets/keith/last-chance.webp" alt="Keith presents a gold Last Chance chip"><img class="result-popup__gold-chip" src="/assets/fx/chip-gold-face.webp" alt="Gold Last Chance chip">');
       dialog.querySelector("[data-last-chance]")?.addEventListener("click", () => { dialog.close(); onSpin(); }, { once: true });
     },
     showGameOver() {

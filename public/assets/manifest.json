@@ -71,12 +71,21 @@
     {"key":"ui.play","group":"ui","file":"ui/play.svg","status":"approved","source":"custom","licence":"Trust Electric Heating — internal","sourceUrl":null},
     {"key":"logo.trust.white","group":"ui","file":"ui/trust-logo-white.svg","status":"approved","source":"custom","licence":"Trust Electric Heating — internal","sourceUrl":null,"notes":"Vector wrapper preserves exact supplied Trust wordmark geometry."},
 
+    {"key":"keith.pose.wave","group":"ui","file":"keith/wave.webp","status":"approved","source":"generated","licence":"Trust Electric Heating — internal","sourceUrl":null,"notes":"Owner-requested full-body Keith intro pose; untouched PNG and prompt retained under reference/_work/generated/round1-keith/."},
+    {"key":"keith.pose.point","group":"ui","file":"keith/point.webp","status":"approved","source":"generated","licence":"Trust Electric Heating — internal","sourceUrl":null,"notes":"Owner-requested full-body Keith intro pose."},
+    {"key":"keith.pose.prizes","group":"ui","file":"keith/prizes.webp","status":"approved","source":"generated","licence":"Trust Electric Heating — internal","sourceUrl":null,"notes":"Owner-requested full-body Keith intro pose."},
+    {"key":"keith.pose.chips","group":"ui","file":"keith/chips.webp","status":"approved","source":"generated","licence":"Trust Electric Heating — internal","sourceUrl":null,"notes":"Owner-requested three-chip hand-over pose."},
+    {"key":"keith.pose.good-luck","group":"ui","file":"keith/good-luck.webp","status":"approved","source":"generated","licence":"Trust Electric Heating — internal","sourceUrl":null,"notes":"Owner-requested full-body Keith intro pose."},
+    {"key":"keith.pose.celebrate","group":"ui","file":"keith/celebrate.webp","status":"approved","source":"generated","licence":"Trust Electric Heating — internal","sourceUrl":null,"notes":"Owner-requested full-body Keith win pose."},
+    {"key":"keith.pose.last-chance","group":"ui","file":"keith/last-chance.webp","status":"approved","source":"generated","licence":"Trust Electric Heating — internal","sourceUrl":null,"notes":"Owner-requested full-body Keith pose presenting one gold Last Chance chip."},
+
     {"key":"font.display","group":"fonts","file":"fonts/cinzel-bold.woff2","status":"approved","source":"licensed","licence":"OFL-1.1","sourceUrl":"https://fonts.google.com/specimen/Cinzel"},
     {"key":"font.ui","group":"fonts","file":"fonts/nunito-sans-bold.woff2","status":"approved","source":"licensed","licence":"OFL-1.1","sourceUrl":"https://fonts.google.com/specimen/Nunito+Sans"},
 
-    {"key":"sfx.ambient.loop","group":"audio","file":"audio/ambient-loop.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://opengameart.org/content/jazz-n-brass-loop","notes":"82.32 s loop; MP3 fallback at audio/ambient-loop.mp3."},
+
+    {"key":"sfx.ambient.loop","group":"audio","file":"audio/ambient-loop.webm","status":"approved","source":"supplied","licence":"Pixabay Content License","sourceUrl":"https://pixabay.com/","notes":"Owner-supplied Casino VIP Music Game Casino Music 3; 118 s crossfaded loop; streamed WebM with MP3 fallback."},
     {"key":"sfx.button","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/ui-audio","notes":"Sprite 0–300 ms; MP3 fallback at audio/sfx-sprite.mp3."},
-    {"key":"sfx.reel.loop","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/interface-sounds","notes":"Sprite 400–2800 ms."},
+    {"key":"sfx.reel.loop","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"supplied","licence":"Pixabay Content License","sourceUrl":"https://pixabay.com/","notes":"Owner-supplied Freesound Community reel sound; crossfaded sprite loop 400–3450 ms."},
     {"key":"sfx.reel.stop.1","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/impact-sounds","notes":"Sprite 2900–3450 ms."},
     {"key":"sfx.reel.stop.2","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/impact-sounds","notes":"Sprite 3550–4100 ms."},
     {"key":"sfx.reel.stop.3","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/impact-sounds","notes":"Sprite 4200–4750 ms."},
@@ -85,6 +94,7 @@
     {"key":"sfx.win.big","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/music-jingles","notes":"Sprite 7650–10150 ms."},
     {"key":"sfx.payout","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Sprite 10250–11850 ms."},
     {"key":"sfx.chips","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/casino-audio","notes":"Sprite 11950–12600 ms."},
-    {"key":"sfx.whoosh","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/interface-sounds","notes":"Sprite 12700–13250 ms."}
+    {"key":"sfx.whoosh","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"cc0","licence":"CC0-1.0","sourceUrl":"https://kenney.nl/assets/interface-sounds","notes":"Sprite 13350–13900 ms."},
+    {"key":"sfx.coin.use","group":"audio","file":"audio/sfx-sprite.webm","status":"approved","source":"supplied","licence":"Pixabay Content License","sourceUrl":"https://pixabay.com/","notes":"Owner-supplied Freesound Community coin-up sound; sprite 14000–14900 ms."}
   ]
 }

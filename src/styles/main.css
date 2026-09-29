@@ -669,3 +669,55 @@ html[data-ready="true"] .spin__label { visibility: hidden; }
 }
 
 html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
+
+/* Owner round: physical chip tray replaces abstract try lamps. */
+.tries-tracker {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-content: center;
+  gap: 4px;
+  min-height: 72px;
+  padding: 8px 12px;
+  border: 2px solid #d4a437;
+  border-radius: 18px 18px 38px 38px;
+  background: linear-gradient(180deg, rgba(91, 16, 29, .96), rgba(31, 3, 8, .96));
+  box-shadow: inset 0 -12px 20px #0008, inset 0 2px 8px rgba(255, 225, 138, .22), 0 10px 28px #0009;
+}
+.tries-tracker__title { font-size: clamp(.68rem, 1.4vmin, .92rem); }
+.tries-tracker__chips { display: flex; min-width: 0; align-items: center; justify-content: center; gap: clamp(4px, 1vmin, 12px); }
+.tries-tracker__chip { position: relative; width: clamp(38px, 6.8vmin, 76px); height: clamp(38px, 6.8vmin, 76px); filter: drop-shadow(0 7px 5px #0009); }
+.tries-tracker__chip > img:first-child { display: block; width: 100%; height: 100%; object-fit: contain; }
+.tries-tracker__mark { position: absolute; inset: 30%; width: 40%; height: 40%; filter: grayscale(1) brightness(0) invert(1); }
+.tries-tracker__chip.is-playing { z-index: 1; animation: chip-ready .58s ease-in-out infinite alternate; }
+.tries-tracker__empty { align-self: center; color: rgba(255, 232, 163, .72); font: 700 .72rem "Trust Royale UI", sans-serif; }
+.tries-tracker output { font-size: clamp(.66rem, 1.4vmin, .9rem); }
+@keyframes chip-ready { to { transform: translateY(-12%) scale(1.06); filter: drop-shadow(0 0 16px #ffe075); } }
+
+.intro__panel { grid-template-areas: "host speech"; }
+.intro__host { grid-area: host; align-self: stretch; min-height: 0; }
+.intro__host img { width: 100%; height: min(72vh, 860px); max-width: 440px; aspect-ratio: auto; border: 0; border-radius: 0; object-fit: contain; object-position: center bottom; filter: drop-shadow(0 18px 28px #000b) drop-shadow(0 0 22px rgba(255, 190, 56, .35)); }
+.intro__speech { grid-area: speech; }
+.intro__handover-chip { position: fixed; z-index: 4; width: clamp(42px, 6vw, 78px); height: clamp(42px, 6vw, 78px); object-fit: contain; pointer-events: none; }
+.result-popup__keith { float: left; width: min(34%, 180px); max-height: 280px; margin: -18px 10px -10px -18px; object-fit: contain; }
+.result-popup__keith--small { width: 72px; height: 82px; margin: -8px 8px -8px 0; }
+.result-popup__gold-chip { width: 48px; height: 48px; margin-right: 8px; vertical-align: middle; filter: drop-shadow(0 0 10px #ffe075); }
+
+@media (orientation: portrait) {
+  .tries-tracker { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: 1fr; padding: 5px 8px; }
+  .tries-tracker__chip { width: clamp(34px, 12vw, 56px); height: clamp(34px, 12vw, 56px); }
+  .intro__panel { grid-template: minmax(0, 1fr) minmax(86px, 24vh) / 1fr; grid-template-areas: "speech" "host"; gap: 6px; }
+  .intro__host { display: grid; grid-template-columns: 1fr; align-self: stretch; }
+  .intro__host img { width: 100%; height: 100%; max-width: none; object-position: center top; }
+  .intro__host span { position: absolute; overflow: hidden; width: 1px; height: 1px; clip-path: inset(50%); }
+  .intro__speech { max-height: 100%; min-height: 0; }
+  .result-popup__keith { width: 96px; max-height: 150px; }
+}
+
+@media (max-height: 620px) and (orientation: portrait) {
+  .intro__panel { grid-template-rows: minmax(0, 1fr) 86px; }
+  .intro__speech { padding: 12px 10px; }
+  .intro h1 { font-size: 1.25rem; }
+  .intro__speech > p:not(.intro__eyebrow, .intro__progress) { font-size: .72rem; }
+  .intro-prize { font-size: .52rem; }
+  .intro-prize__icons img { width: 20px; height: 20px; }
+}
