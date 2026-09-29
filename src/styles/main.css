@@ -508,6 +508,9 @@ html[data-orientation="portrait"] .prize-carousel__all { font-size: clamp(.55rem
 .spin[data-visual-state="up"] { background-image: url("/assets/cabinet/spin-up.webp"); background-size: cover; }
 .spin[data-visual-state="down"] { background-image: url("/assets/cabinet/spin-down.webp"); background-size: cover; }
 .spin[data-visual-state="disabled"] { background-image: url("/assets/cabinet/spin-disabled.webp"); background-size: cover; }
+.spin__label { pointer-events: none; }
+html:not([data-game-state="landing"]) .spin__label { visibility: hidden; }
+html[data-game-state="landing"] .spin { background-image: none; }
 
 .spin:active:not(:disabled) {
   transform: translateY(3px) scale(.96);

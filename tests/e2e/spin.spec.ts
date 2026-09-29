@@ -43,6 +43,8 @@ test("PLAY, staggered reels, retry, Last Chance, and game over", async ({ page }
   await expect(button).toHaveText("PLAY");
   await button.click();
   await expect(button).toHaveText("SPIN");
+  await expect(button.locator(".spin__label")).toBeHidden();
+  await expect(button).toHaveCSS("background-image", /spin-up\.webp/);
   await expect(page.locator("#spins-left")).toHaveText("Spins left: 3");
 
   await button.click();

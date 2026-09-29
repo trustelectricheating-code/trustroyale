@@ -12,6 +12,12 @@ export interface ReelsScene {
   strip: ReelStrip;
 }
 
+export const REEL_ROW_LAYOUT = [
+  { y: 0.02, scale: 0.7, alpha: 0.5 },
+  { y: 0.5, scale: 1, alpha: 1 },
+  { y: 0.98, scale: 0.7, alpha: 0.5 },
+] as const;
+
 function texture(symbol: SymbolId, frame: "idle" | "half" | "closed" | "win" = "idle"): Texture {
   const frames = SYMBOLS[symbol].frames as Record<string, string | undefined>;
   const key = frames[frame] ?? SYMBOLS[symbol].frames.idle;
@@ -31,15 +37,13 @@ export function createReels(initial: ReelStrip = [
   const { reelWindow } = CABINET_ART;
   const container = new Container();
   container.position.set(reelWindow.x, reelWindow.y);
-  const mask = new Sprite(Assets.get<Texture>("cabinet.reelWindow.mask") ?? Texture.WHITE);
-  mask.width = reelWindow.width;
-  mask.height = reelWindow.height;
+  const mask = new Graphics().roundRect(0, 0, reelWindow.width, reelWindow.height, 24).fill(0xffffff);
   container.mask = mask;
   container.addChild(mask, new Graphics().roundRect(0, 0, reelWindow.width, reelWindow.height, 24).fill({ color: 0xfff2d1 }));
   const columns: Container[] = [];
   const sprites: Sprite[][] = [];
   const cellWidth = reelWindow.width / 3;
-  const cellHeight = reelWindow.height / 3;
+  const paylineSize = Math.min(cellWidth - 10, reelWindow.height * 0.62);
   for (let column = 0; column < 3; column += 1) {
     const reel = new Container();
     reel.position.x = cellWidth * column;
@@ -47,10 +51,11 @@ export function createReels(initial: ReelStrip = [
     for (let row = 0; row < 3; row += 1) {
       const sprite = new Sprite(Texture.EMPTY);
       sprite.anchor.set(0.5);
-      sprite.position.set(cellWidth / 2, cellHeight * (row + 0.5));
-      sprite.width = Math.min(cellWidth - 16, cellHeight - 8);
+      const rowLayout = REEL_ROW_LAYOUT[row];
+      sprite.position.set(cellWidth / 2, reelWindow.height * rowLayout.y);
+      sprite.width = paylineSize * rowLayout.scale;
       sprite.height = sprite.width;
-      if (row !== 1) sprite.scale.y *= 0.76;
+      sprite.alpha = rowLayout.alpha;
       reel.addChild(sprite);
       reelSprites.push(sprite);
     }
@@ -58,10 +63,23 @@ export function createReels(initial: ReelStrip = [
     sprites.push(reelSprites);
     container.addChild(reel);
   }
-  container.addChild(new Graphics()
-    .rect(0, 0, reelWindow.width, reelWindow.height * 0.22).fill({ color: 0x321c12, alpha: 0.32 })
-    .rect(0, reelWindow.height * 0.78, reelWindow.width, reelWindow.height * 0.22).fill({ color: 0x321c12, alpha: 0.32 })
-    .rect(0, reelWindow.height * 0.34, reelWindow.width, reelWindow.height * 0.32).fill({ color: 0xffffff, alpha: 0.08 }));
+  const shadeCanvas = document.createElement("canvas");
+  shadeCanvas.width = Math.ceil(reelWindow.width);
+  shadeCanvas.height = Math.ceil(reelWindow.height);
+  const context = shadeCanvas.getContext("2d");
+  if (context) {
+    const gradient = context.createLinearGradient(0, 0, 0, shadeCanvas.height);
+    gradient.addColorStop(0, "rgba(45,20,13,.56)");
+    gradient.addColorStop(0.28, "rgba(45,20,13,0)");
+    gradient.addColorStop(0.72, "rgba(45,20,13,0)");
+    gradient.addColorStop(1, "rgba(45,20,13,.56)");
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, shadeCanvas.width, shadeCanvas.height);
+  }
+  const cylinderShade = new Sprite(Texture.from(shadeCanvas));
+  cylinderShade.width = reelWindow.width;
+  cylinderShade.height = reelWindow.height;
+  container.addChild(cylinderShade);
   const scene = { container, columns, sprites, paylineSprites: sprites.map((reel) => reel[1]), strip: initial };
   setStrip(scene, initial);
   return scene;

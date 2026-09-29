@@ -9,6 +9,9 @@ export interface Controls {
 }
 
 export function createControls(button: HTMLButtonElement): Controls {
+  const label = document.createElement("span");
+  label.className = "spin__label";
+  button.replaceChildren(label);
   const counter = document.createElement("output");
   counter.id = "spins-left";
   counter.className = "spins-left";
@@ -39,7 +42,7 @@ export function createControls(button: HTMLButtonElement): Controls {
     setState(state) {
       document.documentElement.dataset.gameState = state.toLowerCase();
       button.disabled = ["SPINNING", "RESOLVING", "WON", "CLAIMED", "GAME_OVER"].includes(state);
-      button.textContent = state === "LANDING" ? "PLAY" : state === "LAST_CHANCE" ? "LAST CHANCE" : "SPIN";
+      label.textContent = state === "LANDING" ? "PLAY" : state === "LAST_CHANCE" ? "LAST CHANCE" : "SPIN";
       button.dataset.visualState = button.disabled ? "disabled" : "up";
     },
     setSpinsLeft(spins) { counter.textContent = `Spins left: ${spins}`; },
