@@ -6,9 +6,11 @@ export interface Controls {
   setState(state: GameState): void;
   setSpinsLeft(spins: number): void;
   onAction(listener: () => void): void;
+  onMute(listener: (muted: boolean) => void): void;
+  setMuted(muted: boolean): void;
 }
 
-export function createControls(button: HTMLButtonElement): Controls {
+export function createControls(button: HTMLButtonElement, initialMuted = false): Controls {
   const label = document.createElement("span");
   label.className = "spin__label";
   button.replaceChildren(label);
@@ -25,6 +27,19 @@ export function createControls(button: HTMLButtonElement): Controls {
     button.insertAdjacentElement("beforebegin", marker);
   }
   let action = () => {};
+  let muteAction = (_muted: boolean) => {};
+  let muted = initialMuted;
+  const muteButton = document.createElement("button");
+  muteButton.id = "mute";
+  muteButton.className = "mute";
+  muteButton.type = "button";
+  button.parentElement?.appendChild(muteButton);
+  const renderMute = (): void => {
+    muteButton.setAttribute("aria-label", muted ? "Unmute sound" : "Mute sound");
+    muteButton.style.backgroundImage = `url("/assets/ui/mute-${muted ? "off" : "on"}.svg")`;
+  };
+  muteButton.addEventListener("click", () => { muted = !muted; renderMute(); muteAction(muted); });
+  renderMute();
   button.addEventListener("click", () => action());
   button.addEventListener("pointerdown", () => { if (!button.disabled) button.dataset.visualState = "down"; });
   button.addEventListener("pointerup", () => { if (!button.disabled) button.dataset.visualState = "up"; });
@@ -47,5 +62,7 @@ export function createControls(button: HTMLButtonElement): Controls {
     },
     setSpinsLeft(spins) { counter.textContent = `Spins left: ${spins}`; },
     onAction(listener) { action = listener; },
+    onMute(listener) { muteAction = listener; },
+    setMuted(value) { muted = value; renderMute(); },
   };
 }

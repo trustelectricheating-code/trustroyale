@@ -51,7 +51,11 @@ export async function glow(scene: ReelsScene, rule: PaytableRule): Promise<void>
   await wait(0.96);
 }
 
-export async function celebrate(scene: ReelsScene, rule: PaytableRule): Promise<void> {
+export async function celebrate(scene: ReelsScene, rule: PaytableRule, reducedMotion = false): Promise<void> {
+  if (reducedMotion) {
+    scene.strip[1].forEach((symbol, index) => { if (SYMBOLS[symbol].kind === "face") setPaylineFrame(scene, index, "win"); });
+    return;
+  }
   if (rule.celebration === "blink") return blink(scene);
   if (rule.celebration === "pulse") return pulse(scene);
   return glow(scene, rule);

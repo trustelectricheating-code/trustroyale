@@ -5,12 +5,15 @@ import { loadInitialAssets } from "./assets";
 import { GameApiError, getSession, spin, type SpinResponse, type WinSummary } from "./game/api";
 import { GameStateMachine, type GameState } from "./game/state";
 import { PAYTABLE } from "./config/paytable";
-import { animateBackground, createBackground, drawBackground } from "./scene/background";
+import { createBackground, drawBackground } from "./scene/background";
 import { animateCabinet, createCabinet, layoutCabinet } from "./scene/cabinet";
 import { DEFAULT_TITLE_PLACEMENT, type TitlePlacement } from "./scene/cabinetArt";
 import { celebrate } from "./scene/faces";
+import { burstWin, createChips } from "./scene/chips";
+import { createMarquee } from "./scene/marquee";
 import { computeLayout, type LayoutRect, type SafeAreaInsets } from "./scene/layout";
 import { animateSpin, createReels } from "./scene/reels";
+import { createSound } from "./audio/sound";
 import { createControls } from "./ui/controls";
 import { createPopups } from "./ui/popup";
 import { createPaytable } from "./ui/paytable";
@@ -54,14 +57,21 @@ async function boot(): Promise<void> {
   const titlePlacement: TitlePlacement = requestedPlacement === "topper" || requestedPlacement === "belly" ? requestedPlacement : DEFAULT_TITLE_PLACEMENT;
   document.documentElement.dataset.titlePlacement = titlePlacement;
   app.stage.addChild(environment.back, cabinet.machine, environment.front);
-  (window as Window & { __trustRoyaleDebug?: { reelSymbols: typeof cabinet.reelSymbols } }).__trustRoyaleDebug = { reelSymbols: cabinet.reelSymbols };
-
   const motion = gsap.timeline({ repeat: -1, yoyo: true })
     .to(".scene-effects__beam--left", { rotation: 8, transformOrigin: "50% 0%", duration: 5, ease: "sine.inOut" }, 0)
     .to(".scene-effects__beam--right", { rotation: -8, transformOrigin: "50% 0%", duration: 6, ease: "sine.inOut" }, 0);
   const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
+  const marqueeScene = createMarquee(marquee, motionQuery.matches);
+  const chipsScene = createChips(environment, motionQuery.matches);
+  const sound = createSound();
+  (window as Window & { __trustRoyaleDebug?: { reelSymbols: typeof cabinet.reelSymbols; chipPositions: () => number[][] } }).__trustRoyaleDebug = {
+    reelSymbols: cabinet.reelSymbols,
+    chipPositions: chipsScene.positions,
+  };
   const updateMotion = () => {
     environment.reducedMotion = motionQuery.matches;
+    marqueeScene.setReducedMotion(motionQuery.matches);
+    chipsScene.setReducedMotion(motionQuery.matches);
     document.querySelectorAll<SVGSVGElement>("svg").forEach((svg) => motionQuery.matches ? svg.pauseAnimations() : svg.unpauseAnimations());
     if (motionQuery.matches) motion.pause(0); else motion.resume();
   };
@@ -69,7 +79,8 @@ async function boot(): Promise<void> {
   updateMotion();
   const paytableUi = createPaytable(paytable, prizeOverlay, motionQuery);
 
-  const controls = createControls(spinButton);
+  const controls = createControls(spinButton, sound.isMuted());
+  controls.onMute((muted) => sound.setMuted(muted));
   const popups = createPopups();
   const machine = new GameStateMachine();
   let spinsLeft = 3;
@@ -89,28 +100,37 @@ async function boot(): Promise<void> {
   const playSpin = async () => {
     if (machine.state !== "IDLE" && machine.state !== "LAST_CHANCE") return;
     popups.close();
+    sound.play("button");
+    sound.play("reel.loop");
+    marqueeScene.setPattern("spin");
     machine.send({ type: "SPIN" });
     try {
       const result: SpinResponse = await spin();
-      await animateSpin(reels, result.strip, motionQuery.matches);
+      await animateSpin(reels, result.strip, motionQuery.matches, (reel) => sound.play(`reel.stop.${reel}`));
       machine.send({ type: "RESULT" });
       spinsLeft = result.spinsLeft;
       controls.setSpinsLeft(spinsLeft);
       if (result.outcome === "win" && result.ruleId && result.discount && result.winRef && result.couponCode) {
         const rule = PAYTABLE.find(({ id }) => id === result.ruleId);
         if (!rule) throw new Error(`Unknown paytable rule: ${result.ruleId}`);
-        await celebrate(reels, rule);
+        await celebrate(reels, rule, motionQuery.matches);
+        sound.play(result.discount === 20 ? "win.big" : "win.small");
+        marqueeScene.setPattern("win");
+        burstWin(environment.front, motionQuery.matches);
         const win: WinSummary = { spinId: result.spinId, winRef: result.winRef, ruleId: result.ruleId, discount: result.discount, couponCode: result.couponCode, reels: result.reels };
         machine.send({ type: "RESOLVE", outcome: "win", spinsLeft: 0, bonusAvailable: false, isBonus: result.isBonus });
         displayWin(win);
         return;
       }
       machine.send({ type: "RESOLVE", outcome: "retry", spinsLeft: result.spinsLeft, bonusAvailable: result.bonusAvailable, isBonus: result.isBonus });
+      marqueeScene.setPattern("idle");
+      if (result.nearMiss) sound.play("nearmiss");
       const resolvedState = machine.state as GameState;
       if (resolvedState === "LAST_CHANCE") popups.showLastChance(playSpin);
       else if (resolvedState === "GAME_OVER") popups.showGameOver();
       else popups.showRetry(result.nearMiss);
     } catch (caught) {
+      marqueeScene.setPattern("idle");
       if ((machine.state as GameState) === "SPINNING") machine.send({ type: "NETWORK_ERROR" });
       if (caught instanceof GameApiError && caught.code === "no_spins_left" && caught.state) {
         machine.send({ type: "SERVER_STATE", state: caught.state });
@@ -121,6 +141,12 @@ async function boot(): Promise<void> {
 
   controls.onAction(() => {
     if (machine.state === "LANDING") {
+      void sound.unlock();
+      sound.ambient.start();
+      sound.play("button");
+      sound.play("chips");
+      sound.play("whoosh");
+      chipsScene.settle();
       machine.send({ type: "PLAY" });
       spinButton.setAttribute("aria-label", "Spin the reels");
       return;
@@ -133,6 +159,7 @@ async function boot(): Promise<void> {
     spinsLeft = session.spinsLeft;
     controls.setSpinsLeft(spinsLeft);
     if (session.state !== "idle") {
+      chipsScene.settle();
       machine.send({ type: "SERVER_STATE", state: session.state });
       if ((session.state === "won" || session.state === "claimed") && session.win) displayWin(session.win);
       else if (session.state === "last_chance") popups.showLastChance(playSpin);
@@ -161,10 +188,10 @@ async function boot(): Promise<void> {
   const scheduleLayout = () => { if (pendingFrame) cancelAnimationFrame(pendingFrame); pendingFrame = requestAnimationFrame(renderLayout); };
   addEventListener("resize", scheduleLayout, { passive: true });
   addEventListener("orientationchange", scheduleLayout, { passive: true });
-  app.ticker.add(() => { const time = performance.now() / 1000; animateBackground(environment, time); animateCabinet(cabinet, time, environment.reducedMotion); });
+  app.ticker.add((ticker) => { const time = performance.now() / 1000; chipsScene.tick(time, ticker.deltaMS); animateCabinet(cabinet, time, environment.reducedMotion); });
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) { app.stop(); motion.pause(); }
-    else { app.start(); if (!motionQuery.matches) motion.resume(); }
+    if (document.hidden) { app.stop(); motion.pause(); marqueeScene.pause(); }
+    else { app.start(); marqueeScene.resume(); if (!motionQuery.matches) motion.resume(); }
   });
   renderLayout();
   loading.remove();

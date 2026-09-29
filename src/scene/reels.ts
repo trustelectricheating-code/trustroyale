@@ -85,12 +85,12 @@ export function createReels(initial: ReelStrip = [
   return scene;
 }
 
-export async function animateSpin(scene: ReelsScene, strip: ReelStrip, reducedMotion = false): Promise<void> {
+export async function animateSpin(scene: ReelsScene, strip: ReelStrip, reducedMotion = false, onStop?: (reel: 1 | 2 | 3) => void): Promise<void> {
   document.documentElement.dataset.spinning = "true";
   document.querySelectorAll<HTMLElement>("[data-reel]").forEach((node) => { node.dataset.stopped = "false"; });
   if (reducedMotion) {
     setStrip(scene, strip);
-    document.querySelectorAll<HTMLElement>("[data-reel]").forEach((node) => { node.dataset.stopped = "true"; });
+    document.querySelectorAll<HTMLElement>("[data-reel]").forEach((node, index) => { node.dataset.stopped = "true"; onStop?.((index + 1) as 1 | 2 | 3); });
     delete document.documentElement.dataset.spinning;
     return;
   }
@@ -104,6 +104,7 @@ export async function animateSpin(scene: ReelsScene, strip: ReelStrip, reducedMo
         .call(() => {
           for (let row = 0; row < 3; row += 1) scene.sprites[index][row].texture = texture(strip[row][index]);
           document.querySelector<HTMLElement>(`[data-reel="${index}"]`)?.setAttribute("data-stopped", "true");
+          onStop?.((index + 1) as 1 | 2 | 3);
         }, [], 0.78 + index * 0.22)
         .to(column, { y: 0, duration: 0.28, ease: "back.out(2)" }, 0.78 + index * 0.22)
         .to(blur[index], { strength: 0, duration: 0.18 }, 0.78 + index * 0.22);

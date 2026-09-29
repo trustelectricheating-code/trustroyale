@@ -128,6 +128,11 @@ html[data-title-placement="topper"] .marquee__frame-bulbs { display: none; }
   animation-delay: calc(var(--i) * -80ms);
 }
 
+.marquee--runtime .marquee__frame-bulb .marquee__bulb-lit { animation: none; }
+
+.mute { position: fixed; z-index: 5; top: max(12px, env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right)); width: 46px; height: 46px; padding: 0; border: 1px solid #ffe8a3; border-radius: 50%; background-color: rgba(54, 4, 13, .9); background-position: center; background-repeat: no-repeat; background-size: 72%; box-shadow: 0 0 12px rgba(255, 191, 53, .5); cursor: pointer; pointer-events: auto; }
+.mute:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
 .marquee__frame-bulb .marquee__bulb-unlit { opacity: .82; }
 
 @keyframes wordmark-bulb-pattern {

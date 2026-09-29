@@ -4,14 +4,14 @@ import type { SceneLayout } from "./layout";
 const ASSETS = {
   hallLandscape: "/assets/mock/casino-hall-landscape.webp",
   hallPortrait: "/assets/mock/casino-hall-portrait.webp",
-  chipRed: "/assets/mock/chip-red-blank.webp",
-  chipGold: "/assets/mock/chip-gold-blank.webp",
-  chipNavy: "/assets/mock/chip-navy-blank.webp",
-  chipWhite: "/assets/mock/chip-white-blank.webp",
-  chipRedFar: "/assets/mock/chip-red-far.webp",
-  chipGoldFar: "/assets/mock/chip-gold-far.webp",
-  chipNavyFar: "/assets/mock/chip-navy-far.webp",
-  chipWhiteFar: "/assets/mock/chip-white-far.webp",
+  chipRed: "/assets/fx/chip-red-face.webp",
+  chipGold: "/assets/fx/chip-gold-face.webp",
+  chipNavy: "/assets/fx/chip-navy-face.webp",
+  chipWhite: "/assets/fx/chip-white-face.webp",
+  chipRedFar: "/assets/fx/chip-red-tilt.webp",
+  chipGoldFar: "/assets/fx/chip-gold-tilt.webp",
+  chipNavyFar: "/assets/fx/chip-navy-tilt.webp",
+  chipWhiteFar: "/assets/fx/chip-white-tilt.webp",
   coin: "/assets/mock/coin.webp",
   coinFar: "/assets/mock/coin-far.webp",
 } as const;
@@ -52,7 +52,7 @@ export function floatingItemCount(width: number, height: number): number {
   return Math.min(width, height) < 600 ? 9 : FLOATING_ITEM_SPECS.length;
 }
 
-interface FloatingItem {
+export interface FloatingItem {
   node: Container;
   depth: Depth;
   nx: number;
