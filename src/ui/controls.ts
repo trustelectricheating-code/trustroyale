@@ -44,13 +44,6 @@ export function createControls(button: HTMLButtonElement, initialMuted = false):
   button.addEventListener("pointerdown", () => { if (!button.disabled) button.dataset.visualState = "down"; });
   button.addEventListener("pointerup", () => { if (!button.disabled) button.dataset.visualState = "up"; });
   button.addEventListener("pointercancel", () => { if (!button.disabled) button.dataset.visualState = "up"; });
-  window.addEventListener("keydown", (event) => {
-    if ((event.key !== " " && event.key !== "Enter") || button.disabled || event.repeat) return;
-    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLButtonElement) return;
-    event.preventDefault();
-    action();
-  });
-
   return {
     button,
     counter,

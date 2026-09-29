@@ -8,6 +8,7 @@ export interface ReelsScene {
   container: Container;
   columns: Container[];
   sprites: Sprite[][];
+  medallionMasks: Graphics[][];
   paylineSprites: Sprite[];
   paylineFlash: Graphics;
   strip: ReelStrip;
@@ -25,10 +26,18 @@ function texture(symbol: SymbolId, frame: "idle" | "half" | "closed" | "win" = "
   return Assets.get<Texture>(key) ?? Texture.EMPTY;
 }
 
+export function usesCircularMask(symbol: SymbolId): boolean { return SYMBOLS[symbol].kind === "face"; }
+
+function setSymbol(scene: ReelsScene, column: number, row: number, symbol: SymbolId, frame: "idle" | "half" | "closed" | "win" = "idle"): void {
+  const sprite = scene.sprites[column][row];
+  sprite.texture = texture(symbol, frame);
+  sprite.mask = usesCircularMask(symbol) ? scene.medallionMasks[column][row] : null;
+}
+
 function setStrip(scene: ReelsScene, strip: ReelStrip): void {
   scene.strip = strip;
   for (let column = 0; column < 3; column += 1) for (let row = 0; row < 3; row += 1) {
-    scene.sprites[column][row].texture = texture(strip[row][column]);
+    setSymbol(scene, column, row, strip[row][column]);
   }
 }
 
@@ -43,12 +52,14 @@ export function createReels(initial: ReelStrip = [
   container.addChild(mask, new Graphics().roundRect(0, 0, reelWindow.width, reelWindow.height, 24).fill({ color: 0xfff2d1 }));
   const columns: Container[] = [];
   const sprites: Sprite[][] = [];
+  const medallionMasks: Graphics[][] = [];
   const cellWidth = reelWindow.width / 3;
   const paylineSize = Math.min(cellWidth - 10, reelWindow.height * 0.62);
   for (let column = 0; column < 3; column += 1) {
     const reel = new Container();
     reel.position.x = cellWidth * column;
     const reelSprites: Sprite[] = [];
+    const reelMasks: Graphics[] = [];
     for (let row = 0; row < 3; row += 1) {
       const sprite = new Sprite(Texture.EMPTY);
       sprite.anchor.set(0.5);
@@ -60,12 +71,13 @@ export function createReels(initial: ReelStrip = [
       const medallionMask = new Graphics()
         .circle(sprite.x, sprite.y, sprite.width * 0.495)
         .fill(0xffffff);
-      sprite.mask = medallionMask;
       reel.addChild(sprite, medallionMask);
       reelSprites.push(sprite);
+      reelMasks.push(medallionMask);
     }
     columns.push(reel);
     sprites.push(reelSprites);
+    medallionMasks.push(reelMasks);
     container.addChild(reel);
   }
   const shadeCanvas = document.createElement("canvas");
@@ -90,7 +102,7 @@ export function createReels(initial: ReelStrip = [
     .stroke({ color: 0xffe8a3, width: 6, alpha: 0.95 });
   paylineFlash.alpha = 0;
   container.addChild(paylineFlash);
-  const scene = { container, columns, sprites, paylineSprites: sprites.map((reel) => reel[1]), paylineFlash, strip: initial };
+  const scene = { container, columns, sprites, medallionMasks, paylineSprites: sprites.map((reel) => reel[1]), paylineFlash, strip: initial };
   setStrip(scene, initial);
   return scene;
 }
@@ -126,12 +138,12 @@ export async function animateSpin(scene: ReelsScene, strip: ReelStrip, reducedMo
             const offset = Math.floor(turn);
             for (let row = 0; row < 3; row += 1) {
               const id = SYMBOL_IDS[(offset + row + index * 2) % SYMBOL_IDS.length];
-              scene.sprites[index][row].texture = texture(id);
+              setSymbol(scene, index, row, id);
             }
           },
         }, start + 0.12)
         .call(() => {
-          for (let row = 0; row < 3; row += 1) scene.sprites[index][row].texture = texture(strip[row][index]);
+          for (let row = 0; row < 3; row += 1) setSymbol(scene, index, row, strip[row][index]);
           column.y = 24;
           document.querySelector<HTMLElement>(`[data-reel="${index}"]`)?.setAttribute("data-stopped", "true");
           onStop?.((index + 1) as 1 | 2 | 3);
@@ -151,5 +163,5 @@ export async function animateSpin(scene: ReelsScene, strip: ReelStrip, reducedMo
 }
 
 export function setPaylineFrame(scene: ReelsScene, index: number, frame: "idle" | "half" | "closed" | "win"): void {
-  scene.paylineSprites[index].texture = texture(scene.strip[1][index], frame);
+  setSymbol(scene, index, 1, scene.strip[1][index], frame);
 }
