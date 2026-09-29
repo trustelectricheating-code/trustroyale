@@ -73,3 +73,12 @@ The owner reviewed the asset board locally at `http://localhost:5173/assets.html
 All 74 entries in `public/assets/manifest.json` are now `status: "approved"`, and none is `needed`. The library covers the background, cabinet, symbols, faces (idle, half, closed and win frames for Scott, Fiona, Gia and Keith), emblem, FX, UI, fonts and audio groups. Before sign-off, QA round 1 restored the red SPIN button states, replaced `sym.frame` with an empty gold rim, and corrected every blink so both eyes close together.
 
 Nothing was deployed: T031 was completed as a local review, as agreed. The curtain assets are approved but not used by the current slot-hall scene. Task T031 is complete, and the Foundational phase (T032 onward) starts next.
+
+## Claiming a win: predefined coupon, no form (2026-09-29)
+
+The owner removed the in-game claim form. Owner's words: "leave the form it will be taken care of in another landing page just give them a predefined coupon to claim the discount".
+
+- A win shows a predefined coupon code for its discount tier (10%, 15% or 20%), with a copy button, alongside the win reference. The player redeems it on the separate landing page, which is outside this project.
+- The coupon codes are server-side configuration (`COUPON_CODE_10`, `COUPON_CODE_15`, `COUPON_CODE_20`) and are returned only in a winning spin or session response, so they never ship in the client bundle. Until the owner supplies the real codes, the placeholders `ROYALE10`, `ROYALE15` and `ROYALE20` are used and flagged in reports.
+- Out of scope from User Story 5: the claim form, lead validation, `POST /api/lead`, SharpSpring sync and its retry cron, the staff phone-claim and CSV export, and `admin.html`. The `leads` table already created by `001_init.sql` stays unused rather than being dropped.
+- A returning winner still sees their win, win reference and coupon after a reload, and SPIN stays locked.
