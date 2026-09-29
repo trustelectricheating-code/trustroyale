@@ -2,6 +2,8 @@ import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
 
 let client: NeonQueryFunction<false, false> | undefined;
 
+export type Query = <T = Record<string, unknown>>(text: string, params?: unknown[]) => Promise<T[]>;
+
 function databaseClient(): NeonQueryFunction<false, false> {
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) throw new Error("DATABASE_URL is required");
@@ -16,3 +18,7 @@ export const sql = new Proxy(taggedSql, {
     return typeof value === "function" ? value.bind(databaseClient()) : value;
   },
 }) as NeonQueryFunction<false, false>;
+
+export const query: Query = async <T>(text: string, params: unknown[] = []) => {
+  return await sql.query(text, params) as T[];
+};

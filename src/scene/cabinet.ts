@@ -25,6 +25,7 @@ export interface ReelSymbolMetric {
 
 export interface CabinetScene {
   machine: Container;
+  reelMount: Container;
   reelSymbols: ReelSymbolMetric[];
   bulbs: Graphics[];
 }
@@ -181,6 +182,9 @@ export async function createCabinet(): Promise<CabinetScene> {
     .fill({ color: 0x100b09 }));
   for (let index = 0; index < 3; index += 1) machine.addChild(createDrum(textures, index, reelSymbols));
 
+  const reelMount = new Container();
+  machine.addChild(reelMount);
+
   const cabinet = new Sprite(textures.cabinet);
   cabinet.width = CABINET_DESIGN.width;
   cabinet.height = CABINET_DESIGN.height;
@@ -218,7 +222,7 @@ export async function createCabinet(): Promise<CabinetScene> {
     readout("SPINS LEFT", "3", CABINET_ART.leftReadout.x, CABINET_ART.leftReadout.y),
     readout("TOP PRIZE", "20%", CABINET_ART.rightReadout.x, CABINET_ART.rightReadout.y),
   );
-  return { machine, reelSymbols, bulbs };
+  return { machine, reelMount, reelSymbols, bulbs };
 }
 
 export function animateCabinet(scene: CabinetScene, timeSeconds: number, reducedMotion: boolean): void {

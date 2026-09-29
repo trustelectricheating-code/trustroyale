@@ -1,6 +1,6 @@
 import { createHash, createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { sql } from "./db";
+import { query as databaseQuery, type Query } from "./db";
 
 export const SESSION_COOKIE = "tr_sid";
 export const SESSION_MAX_AGE_SECONDS = 90 * 24 * 60 * 60;
@@ -84,12 +84,12 @@ export function readUtm(request: VercelRequest): Record<string, string> | null {
   return Object.keys(utm).length > 0 ? utm : null;
 }
 
-export async function getOrCreateSession(request: VercelRequest, response: VercelResponse): Promise<string> {
+export async function getOrCreateSession(request: VercelRequest, response: VercelResponse, query: Query = databaseQuery): Promise<string> {
   const existing = readSessionId(request);
   if (existing) return existing;
 
   const sessionId = randomUUID();
-  await sql`INSERT INTO sessions (id, ip_hash, utm) VALUES (${sessionId}, ${hashIp(clientIp(request))}, ${readUtm(request)})`;
+  await query("INSERT INTO sessions (id, ip_hash, utm) VALUES ($1, $2, $3)", [sessionId, hashIp(clientIp(request)), readUtm(request)]);
   issueSessionCookie(response, sessionId);
   return sessionId;
 }
