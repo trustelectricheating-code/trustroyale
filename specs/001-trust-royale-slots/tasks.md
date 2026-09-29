@@ -189,9 +189,9 @@ Single Vite project at repo root (plan.md → Structure Decision): pages at root
 
 **Independent Test**: On portrait phone and landscape desktop all seven paytable rules are readable at the top of the screen; forcing a win highlights the matching row (quickstart.md → Phase B viewports).
 
-- [ ] T075 [P] [US3] Playwright test `tests/e2e/paytable.spec.ts`: at 390×844 the compact paytable is visible above the reels and expands to full detail on tap; at 1920×1080 all seven rules (from `src/config/paytable.ts`) show with face icons and percentages; after a mocked `keith-2-any` win the "Keith × 2 + any" row has the highlighted state
-- [ ] T076 [US3] Implement `src/ui/paytable.ts`: render rows from `src/config/paytable.ts` (single source of truth) using `ui.paytable.panel` art and symbol icons, ordered by discount; compact strip in portrait with an expand/collapse control (accessible button, `aria-expanded`), full lit panel in landscape; position driven by `computeLayout` from `src/scene/layout.ts` (FR-008)
-- [ ] T077 [US3] Subscribe `src/ui/paytable.ts` to the state machine: on `WON` highlight the row whose `id` equals the result `ruleId` (glow + pulse), clear on reload into a non-won state (makes T075 pass)
+- [x] T075 [P] [US3] Playwright test `tests/e2e/paytable.spec.ts`: at 390×844 the compact paytable is visible above the reels and expands to full detail on tap; at 1920×1080 all seven rules (from `src/config/paytable.ts`) show with face icons and percentages; after a mocked `keith-2-any` win the "Keith × 2 + any" row has the highlighted state
+- [x] T076 [US3] Implement `src/ui/paytable.ts`: render rows from `src/config/paytable.ts` (single source of truth) using `ui.paytable.panel` art and symbol icons, ordered by discount; compact strip in portrait with an expand/collapse control (accessible button, `aria-expanded`), full lit panel in landscape; position driven by `computeLayout` from `src/scene/layout.ts` (FR-008)
+- [x] T077 [US3] Subscribe `src/ui/paytable.ts` to the state machine: on `WON` highlight the row whose `id` equals the result `ruleId` (glow + pulse), clear on reload into a non-won state (makes T075 pass)
 
 **Checkpoint**: Players can read prizes before spinning; the winning rule is highlighted.
 

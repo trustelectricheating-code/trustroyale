@@ -17,7 +17,7 @@ function iconMarkup(symbol: PrizeSymbol): string {
 }
 
 function overlayRow(rule: PrizeRule): string {
-  return `<li class="prize-overlay__rule" aria-label="${rule.ariaLabel}">
+  return `<li class="prize-overlay__rule" data-rule-id="${rule.id}" aria-label="${rule.ariaLabel}">
     <span class="prize-overlay__icons">${rule.symbols.map(iconMarkup).join("")}</span>
     <span class="prize-overlay__label">${rule.fullLabel}</span>
     <strong>${rule.prize}% OFF</strong>
@@ -55,7 +55,7 @@ export function initPrizeCarousel(root: HTMLElement, dialog: HTMLDialogElement, 
         <span class="prize-carousel__dots">${PAYTABLE.map((item, index) => `<button type="button" data-index="${index}" aria-label="Show ${item.shortLabel}" aria-current="${index === activeIndex ? "true" : "false"}"></button>`).join("")}</span>
         <button type="button" data-direction="1" aria-label="Next prize">›</button>
       </nav>
-      <button class="prize-carousel__all" type="button">See all prizes</button>`;
+      <button class="prize-carousel__all" type="button" aria-controls="prize-overlay" aria-expanded="${dialog.open}">See all prizes</button>`;
   };
 
   const show = (index: number, userInitiated = false): void => {
@@ -71,6 +71,7 @@ export function initPrizeCarousel(root: HTMLElement, dialog: HTMLDialogElement, 
     if (target.classList.contains("prize-carousel__all")) {
       pauseUntil = performance.now() + INTERACTION_PAUSE_MS;
       dialog.showModal();
+      target.setAttribute("aria-expanded", "true");
       return;
     }
     const requestedIndex = target.dataset.index;
@@ -85,6 +86,7 @@ export function initPrizeCarousel(root: HTMLElement, dialog: HTMLDialogElement, 
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) dialog.close();
   });
+  dialog.addEventListener("close", () => root.querySelector(".prize-carousel__all")?.setAttribute("aria-expanded", "false"));
 
   window.setInterval(() => {
     if (!reducedMotion.matches && !hovered && !dialog.open && performance.now() >= pauseUntil) show(activeIndex + 1);

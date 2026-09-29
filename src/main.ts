@@ -13,7 +13,7 @@ import { computeLayout, type LayoutRect, type SafeAreaInsets } from "./scene/lay
 import { animateSpin, createReels } from "./scene/reels";
 import { createControls } from "./ui/controls";
 import { createPopups } from "./ui/popup";
-import { initPrizeCarousel } from "./ui/prizeCarousel";
+import { createPaytable } from "./ui/paytable";
 
 function readSafeAreaInsets(): SafeAreaInsets {
   const probe = document.createElement("div");
@@ -67,7 +67,7 @@ async function boot(): Promise<void> {
   };
   motionQuery.addEventListener("change", updateMotion);
   updateMotion();
-  initPrizeCarousel(paytable, prizeOverlay, motionQuery);
+  const paytableUi = createPaytable(paytable, prizeOverlay, motionQuery);
 
   const controls = createControls(spinButton);
   const popups = createPopups();
@@ -75,10 +75,14 @@ async function boot(): Promise<void> {
   let spinsLeft = 3;
   controls.setState(machine.state);
   controls.setSpinsLeft(spinsLeft);
-  machine.subscribe(({ current }) => controls.setState(current));
+  machine.subscribe(({ current }) => {
+    controls.setState(current);
+    if (current !== "WON") paytableUi.setState(current);
+  });
 
   const displayWin = (win: WinSummary) => {
     localStorage.setItem("trustRoyaleWin", JSON.stringify(win));
+    paytableUi.setState("WON", win.ruleId);
     popups.showWin(win);
   };
 
