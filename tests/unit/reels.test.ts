@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { REEL_ROW_LAYOUT, usesCircularMask } from "../../src/scene/reels";
+import { REEL_ROW_LAYOUT } from "../../src/scene/reels";
 
 describe("reel row presentation", () => {
   it("centres the payline and shows only soft partial neighbouring rows", () => {
@@ -12,8 +12,11 @@ describe("reel row presentation", () => {
     expect(REEL_ROW_LAYOUT[2].scaleY).toBeLessThan(REEL_ROW_LAYOUT[2].scale);
   });
 
-  it("masks only face medallions, never filler symbols or the chip", () => {
-    for (const symbol of ["scott", "fiona", "gia", "keith"] as const) expect(usesCircularMask(symbol)).toBe(true);
-    for (const symbol of ["cherry", "seven", "sweets", "neos"] as const) expect(usesCircularMask(symbol)).toBe(false);
+  it("keeps every row inside each curved drum without per-symbol masks", () => {
+    for (const row of REEL_ROW_LAYOUT) {
+      expect(row.y).toBeGreaterThanOrEqual(0);
+      expect(row.y).toBeLessThanOrEqual(1);
+      expect(row.scaleY).toBeLessThanOrEqual(row.scale);
+    }
   });
 });

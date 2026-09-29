@@ -56,10 +56,7 @@ function centredSprite(texture: Texture, x: number, y: number, width: number, he
 function maskedMedallion(texture: Texture, x: number, y: number, size: number): Container {
   const holder = new Container();
   holder.position.set(x, y);
-  const sprite = centredSprite(texture, 0, 0, size);
-  const mask = new Graphics().circle(0, 0, size * 0.49).fill(0xffffff);
-  sprite.mask = mask;
-  holder.addChild(sprite, mask);
+  holder.addChild(centredSprite(texture, 0, 0, size));
   return holder;
 }
 

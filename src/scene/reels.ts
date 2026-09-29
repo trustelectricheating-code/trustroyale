@@ -8,7 +8,6 @@ export interface ReelsScene {
   container: Container;
   columns: Container[];
   sprites: Sprite[][];
-  medallionMasks: Graphics[][];
   paylineSprites: Sprite[];
   paylineFlash: Graphics;
   strip: ReelStrip;
@@ -26,15 +25,10 @@ function texture(symbol: SymbolId, frame: "idle" | "half" | "closed" | "win" = "
   return Assets.get<Texture>(key) ?? Texture.EMPTY;
 }
 
-export function usesCircularMask(symbol: SymbolId): boolean { return SYMBOLS[symbol].kind === "face"; }
-
 function setSymbol(scene: ReelsScene, column: number, row: number, symbol: SymbolId, frame: "idle" | "half" | "closed" | "win" = "idle"): void {
   const sprite = scene.sprites[column][row];
-  const medallionMask = scene.medallionMasks[column][row];
   sprite.texture = texture(symbol, frame);
-  sprite.mask = usesCircularMask(symbol) ? medallionMask : null;
-  // Pixi restores a detached mask's renderability; keep mask geometry out of the reel artwork.
-  medallionMask.renderable = false;
+  sprite.mask = null;
 }
 
 function setStrip(scene: ReelsScene, strip: ReelStrip): void {
@@ -55,7 +49,6 @@ export function createReels(initial: ReelStrip = [
   container.addChild(mask, new Graphics().roundRect(0, 0, reelWindow.width, reelWindow.height, 24).fill({ color: 0x1a0b08 }));
   const columns: Container[] = [];
   const sprites: Sprite[][] = [];
-  const medallionMasks: Graphics[][] = [];
   const cellWidth = reelWindow.width / 3;
   const paylineSize = Math.min(cellWidth - 10, reelWindow.height * 0.62);
   for (let column = 0; column < 3; column += 1) {
@@ -87,7 +80,6 @@ export function createReels(initial: ReelStrip = [
     drum.height = reelWindow.height;
     reel.addChild(drum);
     const reelSprites: Sprite[] = [];
-    const reelMasks: Graphics[] = [];
     for (let row = 0; row < 3; row += 1) {
       const sprite = new Sprite(Texture.EMPTY);
       sprite.anchor.set(0.5);
@@ -96,16 +88,11 @@ export function createReels(initial: ReelStrip = [
       sprite.width = paylineSize * rowLayout.scale;
       sprite.height = sprite.width * rowLayout.scaleY;
       sprite.alpha = rowLayout.alpha;
-      const medallionMask = new Graphics()
-        .circle(sprite.x, sprite.y, sprite.width * 0.495)
-        .fill(0xffffff);
-      reel.addChild(sprite, medallionMask);
+      reel.addChild(sprite);
       reelSprites.push(sprite);
-      reelMasks.push(medallionMask);
     }
     columns.push(reel);
     sprites.push(reelSprites);
-    medallionMasks.push(reelMasks);
     container.addChild(reel);
   }
   for (let divider = 1; divider < 3; divider += 1) {
@@ -137,7 +124,7 @@ export function createReels(initial: ReelStrip = [
     .stroke({ color: 0xffe8a3, width: 6, alpha: 0.95 });
   paylineFlash.alpha = 0;
   container.addChild(paylineFlash);
-  const scene = { container, columns, sprites, medallionMasks, paylineSprites: sprites.map((reel) => reel[1]), paylineFlash, strip: initial };
+  const scene = { container, columns, sprites, paylineSprites: sprites.map((reel) => reel[1]), paylineFlash, strip: initial };
   setStrip(scene, initial);
   return scene;
 }
