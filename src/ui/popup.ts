@@ -37,7 +37,9 @@ export function createPopups(): Popups {
     dialog.innerHTML = content;
     if (modal) dialog.showModal();
     else dialog.show();
-    dialog.querySelector<HTMLElement>('button, [tabindex="0"]')?.focus();
+    const title = dialog.querySelector<HTMLElement>("#result-title");
+    title?.setAttribute("tabindex", "-1");
+    title?.focus();
   };
   return {
     showWin(win) {
@@ -53,6 +55,7 @@ export function createPopups(): Popups {
         </div>
         <p class="result-popup__instruction">Use this code on our offer page to claim your discount.</p>
         <p class="result-popup__reference">Win reference <strong>${win.winRef}</strong></p>
+        <button type="button" data-view-prizes>View prize table</button>
       </section>`, "win");
       const code = dialog.querySelector<HTMLElement>(".coupon-ticket__code")!;
       code.textContent = win.couponCode;
@@ -70,6 +73,10 @@ export function createPopups(): Popups {
           code.focus();
           status.textContent = "Code selected — copy it.";
         }
+      });
+      dialog.querySelector<HTMLButtonElement>("[data-view-prizes]")?.addEventListener("click", () => {
+        dialog.close();
+        document.querySelector<HTMLButtonElement>(".prize-carousel__all")?.click();
       });
     },
     showRetry(nearMiss) {

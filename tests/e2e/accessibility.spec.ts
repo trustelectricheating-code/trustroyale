@@ -26,6 +26,7 @@ test("result dialog announces, traps focus, and shows keyboard focus", async ({ 
   await expect(dialog).toHaveAttribute("aria-live", "assertive");
   await expect(dialog).toHaveAttribute("aria-modal", "true");
   await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Copy code" })).toBeFocused();
   expect(await page.getByRole("button", { name: "Copy code" }).evaluate((node) => getComputedStyle(node).outlineStyle)).not.toBe("none");
   const contrast = await page.getByRole("button", { name: "Copy code" }).evaluate((node) => {

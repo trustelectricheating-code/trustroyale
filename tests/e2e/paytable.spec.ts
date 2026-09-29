@@ -61,5 +61,7 @@ test("desktop lists all rules and highlights the winning rule", async ({ page })
   await page.getByRole("button", { name: "Play" }).click();
   await page.getByRole("button", { name: "Spin the reels" }).click();
   await expect(page.getByRole("heading", { name: "You've won 15% off your order" })).toBeVisible();
+  await page.getByRole("button", { name: "View prize table" }).click();
+  await expect(page.locator('[data-rule-id="keith-2-any"]')).toBeVisible();
   await expect(page.locator('[data-rule-id="keith-2-any"]')).toHaveClass(/is-winning/);
 });

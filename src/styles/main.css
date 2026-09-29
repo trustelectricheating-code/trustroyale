@@ -27,7 +27,8 @@
 
 * { box-sizing: border-box; }
 
-button:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+button:focus-visible, a:focus-visible, [tabindex]:not([tabindex="-1"]):focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+[tabindex="-1"]:focus { outline: none; }
 
 html,
 body {
@@ -552,5 +553,11 @@ html[data-game-state="landing"] .spin { background-image: none; }
 .coupon-ticket button { grid-column: 2; grid-row: 1 / span 2; min-width: 112px; color: #fff; background: #720918; }
 .coupon-ticket__status { grid-column: 1 / -1; min-height: 1.1em; color: #510713; font: 700 .8rem "Trust Royale UI", sans-serif; text-align: center; }
 .result-popup__instruction { margin: .7rem 0; }
+
+@media (max-width: 360px) {
+  .coupon-ticket { gap: .25rem; padding: .7rem; }
+  .coupon-ticket__code { min-width: 0; font-size: 1.15rem; letter-spacing: .03em; }
+  .coupon-ticket button { min-width: 78px; padding: .55rem .6rem; font-size: .78rem; }
+}
 
 html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
