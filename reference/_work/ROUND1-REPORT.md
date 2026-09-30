@@ -2,7 +2,7 @@
 
 Branch: `phase-d-game`
 
-Scope: owner feedback items 1–17, including 12a and the 15A/15C/15D corrections
+Scope: owner feedback items 1–18, including 12a and the 15A/15C/15D corrections
 Date: 2026-09-30
 
 ## Delivery status
@@ -15,6 +15,7 @@ All requested Round 1 implementation, automated checks, responsive evidence, and
 - The 15A update replaced the rejected MFCC music track with the owner-selected Casino VIP Music Game track.
 - The 15C correction replaced the first Keith pose set with seven corrected, full-body croupier poses.
 - The 15D clarification established that the white-disc fault affected the four face symbols and required transparent, single-rim face medallions.
+- Item 18 added the senior-phone usability pass, corrected the misleading win cue, and expanded evidence to every distinct screen at all 11 release-gate sizes.
 
 No deployment or push was performed. No `vercel`, `neonctl`, or Neon migration command was run, and `.env.local` was not accessed. Port 5173 was not changed or stopped.
 
@@ -169,13 +170,41 @@ For every size, Playwright checked viewport overflow and scroll, text containmen
 
 ### 17. Menu audio and synchronized reel startup
 
-Every intro, prize, and result control now plays the soft button sound. On the first intro click, audio is unlocked first, ambient starts, and that same gesture's click is audible. All controls retain the mute setting and have at least a 48×48 px touch target, with larger mobile text for the intended older phone audience.
+Every intro, prize, and result control now plays the soft button sound. On the first intro click, audio is unlocked first, ambient starts, and that same gesture's click is audible. All controls retain the mute setting. Phone controls are at least 56 px high, with larger mobile text for the intended older phone audience.
 
 SPIN now starts free reel motion and the reel loop in the same press tick, while `/api/spin` runs in parallel. A delayed-response Playwright test holds the API for two seconds and records both first motion and first sound invocation under 100 ms from the press. Normal motion guarantees at least 700 ms of free spin; reduced motion uses 100 ms. If the request fails, the previous symbols return, free motion stops, the loop sound stops, the error appears, and SPIN re-enables.
 
+## Item 18
+
+### 18A. Correct win audio cue
+
+The effects sprite ranges matched their intended source clips; extracting and checking the declared ranges ruled out a win/near-miss offset mix-up. The misleading cue came from `coin.use` playing after the chip animation, directly before every result. On a win, that short coin sound read as part of the result and masked the start of the celebratory cue. It now plays when chip consumption begins, where its meaning is unambiguous. Win result selection is also isolated in `resultSoundNames()`, and unit coverage proves that no win result can include `nearmiss`.
+
+`ffprobe`-backed unit coverage checks every declared MP3 and WebM sprite range against the real file duration. That check also found the final MP3 range ending 14.5 ms after the 14.8855-second file; the final coin declaration was shortened to 880 ms so every range is inside both encodings.
+
+### 18B. Senior-friendly phone sizing
+
+The phone interface now uses 56 px minimum control heights and 12 px gaps between neighbouring intro actions. SPIN remains the largest action at a 64 px minimum. Phone body copy is at least 18 px, headings are at least 24 px, and coupon codes are at least 28 px. Body type remains bold and high contrast. The 320×568 senior browser gate measures the rendered controls, spacing, typography, containment, and visible speech copy rather than relying only on stylesheet declarations.
+
+### 18C. Mobile chip tray and layout
+
+Portrait phones use one centred two-row tray: the Lucky Chips heading occupies the first row, and the 46 px chips and `Best: X%` value align in the second. Landscape phones place the same tray above the cabinet. The tray does not overlap reels, SPIN, Keith, or fixed controls. The mute control moves to the lower-left in portrait, opposite Prizes. Decorative phone chips were reduced from 14 to six edge-only pieces so they no longer compete with game information.
+
+The final phone stack is consistent at 320×568, 375×667, 390×844, 430×932, and 844×390: tray, cabinet, and SPIN remain centred and visually connected with no duplicate try monitor.
+
+### 18D. Copy and alignment
+
+Every user-visible em dash and en dash was removed from `index.html` and `src/`, with sentences rewritten using natural stops and commas. Headings use balanced wrapping, body text uses pretty wrapping, and popup/menu copy follows consistent centred headings and readable paragraph alignment. Phone panels retain at least 16 px inner padding. The coupon changes to a vertical phone layout instead of shrinking its code or action.
+
+### 18E. Complete 11-size screen matrix
+
+`tests/e2e/item18.capture.ts` deterministically drives 22 ordered states with intercepted session and spin responses: all five intro pages, idle with three chips, mid-spin, four chip-vanish states, retry, banked 10%, banked 15%, final 20% coupon, Last Chance, game over, 500 error, 429 rate limit, prize table, returning finished game, and muted state. Capture-only presses call the real DOM button action directly so animated evidence controls do not trigger Playwright's stability wait.
+
+The suite passed all 11 release-gate viewports in 14.9 minutes. Each size directory contains exactly 22 non-empty PNGs, for 242 captures total, under `reference/_work/round1/screens/<width>x<height>/`. The narrow portrait intro now reserves a dedicated 56 px Sound row, removing the overlap previously visible on the prize heading and rules.
+
 ## Evidence
 
-`reference/_work/round1/` contains final evidence at 1920×1080, 390×844, and 320×568 for all five intro pages, Keith chip hand-over, cabinet match, idle machine, SPIN control, curved drums at rest and mid-spin, near miss, landed loss, Scott/Keith/T face payline, win line and final popup, highlighted prize overlay, trays with 3/2/1/0 chips, gold Last Chance chip, chip-vanish frames, and the complete best-of-three sequence. `spin-frames/` contains the required 10-frame sequence.
+`reference/_work/round1/` contains final evidence at 1920×1080, 390×844, and 320×568 for all five intro pages, Keith chip hand-over, cabinet match, idle machine, SPIN control, curved drums at rest and mid-spin, near miss, landed loss, Scott/Keith/T face payline, win line and final popup, highlighted prize overlay, trays with 3/2/1/0 chips, gold Last Chance chip, chip-vanish frames, and the complete best-of-three sequence. `spin-frames/` contains the required 10-frame sequence. `screens/` adds the complete 242-image item 18 matrix at all 11 release-gate sizes.
 
 The dedicated evidence suite passed all four cases:
 
@@ -185,6 +214,8 @@ The dedicated evidence suite passed all four cases:
 - Ten-frame sequence and frame-rate sample.
 
 Capture-only interactions use direct DOM button presses. This avoids Playwright's stability wait on intentionally animated controls without weakening the normal pointer, touch, keyboard, timing, or accessibility interaction tests in the main suite.
+
+Final verification passed on 2026-09-30: production build, complete unit suite, `tsc --noEmit`, full Playwright regression suite, the four-case Round 1 capture suite, and the 11-case item 18 matrix. `git diff --check` reported no whitespace errors. The item 18 evidence audit found exactly 242 non-empty PNGs, 22 in each required size directory.
 
 ## Build, budget, and launch notes
 
