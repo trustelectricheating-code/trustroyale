@@ -9,22 +9,25 @@ afterEach(() => {
 });
 
 describe("reel RNG", () => {
-  it("stays uniform with the expected win rate over 100,000 spins", () => {
-    const frequencies = Array.from({ length: 3 }, () => Object.fromEntries(SYMBOL_IDS.map((id) => [id, 0])));
-    let wins = 0;
+  it("deals no 20% prize and 20/40/40 no prize, 15%, 10% over 100,000 spins", () => {
+    const counts = { none: 0, 10: 0, 15: 0, 20: 0 };
     for (let spin = 0; spin < 100_000; spin += 1) {
       const { reels, strip } = spinReels();
-      if (evaluate(reels).rule) wins += 1;
       expect(strip[1]).toEqual(reels);
-      reels.forEach((symbol, reel) => { frequencies[reel][symbol] += 1; });
+      counts[evaluate(reels).rule?.discount ?? "none"] += 1;
     }
-    expect(wins / 100_000).toBeGreaterThanOrEqual(0.1005);
-    expect(wins / 100_000).toBeLessThanOrEqual(0.1065);
-    for (const reel of frequencies) for (const count of Object.values(reel)) {
-      expect(count / 100_000).toBeGreaterThan(0.12);
-      expect(count / 100_000).toBeLessThan(0.13);
-    }
-  }, 15_000);
+    expect(counts[20]).toBe(0);
+    expect(counts.none / 100_000).toBeCloseTo(0.2, 1);
+    expect(counts[15] / 100_000).toBeCloseTo(0.4, 1);
+    expect(counts[10] / 100_000).toBeCloseTo(0.4, 1);
+  }, 30_000);
+
+  it("always pays 10% or 15% on the Last Chance bonus spin", () => {
+    const counts = { none: 0, 10: 0, 15: 0, 20: 0 };
+    for (let spin = 0; spin < 20_000; spin += 1) counts[evaluate(spinReels({ bonus: true }).reels).rule?.discount ?? "none"] += 1;
+    expect(counts.none + counts[20]).toBe(0);
+    expect(counts[15] / 20_000).toBeCloseTo(0.5, 1);
+  });
 
   it("honours FORCE_REELS outside production only", () => {
     process.env.FORCE_REELS = "gia,gia,gia";
@@ -33,9 +36,4 @@ describe("reel RNG", () => {
     expect(Array.from({ length: 30 }, () => spinReels().reels).some((reels) => reels.some((id) => id !== "gia"))).toBe(true);
   });
 
-  it("excludes 20 percent triples from try one", () => {
-    process.env.FORCE_REELS = "gia,gia,gia";
-    expect(evaluate(spinReels({ excludeTwenty: true }).reels).rule?.discount).not.toBe(20);
-    expect(evaluate(spinReels().reels).rule?.discount).toBe(20);
-  });
 });

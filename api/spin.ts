@@ -52,13 +52,7 @@ export function createSpinHandler(dependencies: SpinDependencies = {}) {
       }
 
       const sessionRows = await query<{ spins_used: number }>("SELECT spins_used FROM sessions WHERE id = $1", [sessionId]);
-      const firstTry = Number(sessionRows[0]?.spins_used ?? 0) === 0;
-      let rolled = spinReels({ excludeTwenty: firstTry });
-      for (let attempt = 0; attempt < 31 && firstTry && evaluate(rolled.reels).rule?.discount === 20; attempt += 1) rolled = spinReels({ excludeTwenty: true });
-      if (firstTry && evaluate(rolled.reels).rule?.discount === 20) {
-        const safe: ReelSpin["reels"] = ["neos", "cherry", "seven"];
-        rolled = { reels: safe, strip: [rolled.strip[0], safe, rolled.strip[2]] };
-      }
+      const rolled = spinReels({ bonus: Number(sessionRows[0]?.spins_used ?? 0) >= 3 });
       const { reels, strip } = rolled;
       if (strip[1].some((symbol, index) => symbol !== reels[index])) throw new Error("strip[1] must equal reels");
       const evaluation = evaluate(reels);

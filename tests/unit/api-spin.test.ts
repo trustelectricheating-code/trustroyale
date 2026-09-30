@@ -51,19 +51,12 @@ describe("POST /api/spin with PGlite", () => {
     expect(denied.body).toEqual({ error: "no_spins_left", state: "game_over" });
   });
 
-  it("never returns 20 percent on try one but allows it on try two", async () => {
+  it("asks the reels for a guaranteed prize only on the Last Chance spin", async () => {
     const session = await testSession(setup.query);
-    let calls = 0;
-    const handler = createSpinHandler({ query: setup.query, spinReels: () => calls++ === 0 ? win : calls < 33 ? win : loss, newWinRef: () => "TR-ABC234" });
-    const first = response();
-    await handler(request("POST", session.cookie), first);
-    expect(first.body).toMatchObject({ spinNo: 1, outcome: "retry", discount: null, gameOver: false });
-    const second = response();
-    await createSpinHandler({ query: setup.query, spinReels: () => win, newWinRef: () => "TR-ABC234" })(request("POST", session.cookie), second);
-    expect(second.body).toMatchObject({ spinNo: 2, outcome: "win", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", spinsLeft: 0, gameOver: true });
-    const denied = response();
-    await handler(request("POST", session.cookie), denied);
-    expect(denied.body).toEqual({ error: "no_spins_left", state: "won" });
+    const bonusFlags: boolean[] = [];
+    const handler = createSpinHandler({ query: setup.query, spinReels: (options) => { bonusFlags.push(Boolean(options?.bonus)); return loss; }, newWinRef: () => "TR-ABC234" });
+    for (let spin = 0; spin < 4; spin += 1) await handler(request("POST", session.cookie), response());
+    expect(bonusFlags).toEqual([false, false, false, true]);
   });
 
   it("keeps the highest prize through three tries and hides coupon until the end", async () => {
