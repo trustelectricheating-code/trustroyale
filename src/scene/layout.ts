@@ -67,33 +67,34 @@ export function computeLayout(width: number, height: number, safeAreaInsets: Saf
 
   if (orientation === "portrait") {
     const gap = Math.max(5, Math.min(14, content.height * 0.012));
-    const paytableHeight = Math.max(68, Math.min(104, safeBounds.height * 0.12));
+    const paytableHeight = Math.max(88, Math.min(112, safeBounds.height * 0.13));
     const availableHeight = content.height - paytableHeight - gap;
     const machineHeight = Math.min(availableHeight, content.width / MACHINE_ASPECT);
     const machineWidth = machineHeight * MACHINE_ASPECT;
     const machineY = content.y + paytableHeight + gap + (availableHeight - machineHeight) * 0.48;
     const machine = scaled(rect(content.x + (content.width - machineWidth) / 2, machineY, machineWidth, machineHeight), CABINET_DESIGN.width, CABINET_DESIGN.height);
-    const paytableFrame = scaled(rect(content.x, content.y, content.width, paytableHeight), 960, 150);
+    const trayWidth = Math.min(content.width, 420);
+    const paytableFrame = scaled(rect(content.x + (content.width - trayWidth) / 2, content.y, trayWidth, paytableHeight), 420, 112);
     const paytable = {
       ...paytableFrame,
       iconSize: Math.max(36, Math.min(50, paytableHeight * 0.27, content.width * 0.13)),
       prizeSize: Math.max(27, Math.min(42, paytableHeight * 0.22, content.width * 0.12)),
     };
-    const wheelSize = Math.min(content.width * 0.48, machine.height * 0.27);
-    const chipTray = scaled(rect(content.x + content.width - wheelSize, machine.y + machine.height * 0.1, wheelSize, wheelSize), 560, 560);
+    const chipTray = paytableFrame;
     return { orientation, viewport, safeBounds, background, paytable, machine, chipTray, ...overlays(machine, titlePlacement) };
   }
 
   if (phone) {
-    const gap = 8;
-    const trackerHeight = 72;
-    const machineHeight = content.height - trackerHeight - gap;
+    const gap = 10;
+    const trackerWidth = Math.min(170, Math.max(140, content.width * 0.2));
+    const machineHeight = Math.min(content.height, Math.max(1, content.width - trackerWidth - gap) / MACHINE_ASPECT);
     const machineWidth = machineHeight * MACHINE_ASPECT;
-    const machine = scaled(rect(content.x + (content.width - machineWidth) / 2, content.y + trackerHeight + gap, machineWidth, machineHeight), CABINET_DESIGN.width, CABINET_DESIGN.height);
-    const trackerWidth = Math.min(content.width, Math.max(320, machineWidth * 1.8));
-    const paytableFrame = scaled(rect(content.x + (content.width - trackerWidth) / 2, content.y, trackerWidth, trackerHeight), 960, 150);
+    const groupWidth = trackerWidth + gap + machineWidth;
+    const groupX = content.x + (content.width - groupWidth) / 2;
+    const machine = scaled(rect(groupX + trackerWidth + gap, content.y + (content.height - machineHeight) / 2, machineWidth, machineHeight), CABINET_DESIGN.width, CABINET_DESIGN.height);
+    const paytableFrame = scaled(rect(groupX, content.y + (content.height - 112) / 2, trackerWidth, 112), trackerWidth, 112);
     const paytable = { ...paytableFrame, iconSize: 44, prizeSize: 32 };
-    const chipTray = scaled(paytableFrame, 960, 150);
+    const chipTray = paytableFrame;
     return { orientation, viewport, safeBounds, background, paytable, machine, chipTray, ...overlays(machine, titlePlacement) };
   }
 
@@ -110,6 +111,6 @@ export function computeLayout(width: number, height: number, safeAreaInsets: Saf
     iconSize: Math.max(44, Math.min(140, panelWidth / 3.8, panelHeight * 0.21)),
     prizeSize: Math.max(40, Math.min(110, panelHeight * 0.16)),
   };
-  const chipTray = scaled(rect(content.x + content.width - panelWidth, content.y + (content.height - panelHeight) / 2, panelWidth, panelHeight), 390, 620);
+  const chipTray = paytableFrame;
   return { orientation, viewport, safeBounds, background, paytable, machine, chipTray, ...overlays(machine, titlePlacement) };
 }

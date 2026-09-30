@@ -37,23 +37,24 @@ describe("computeLayout", () => {
     for (const frame of [layout.marquee, layout.paytable, layout.machine, layout.spinButton, layout.chipTray]) expectInside(frame, layout.safeBounds);
   });
 
-  it("balances landscape side panels around the cabinet", () => {
+  it("docks landscape tray beside the cabinet", () => {
     const layout = computeLayout(1920, 1080, NONE);
     expect(layout.paytable.width).toBeCloseTo(layout.chipTray.width);
     expect(layout.paytable.height).toBeCloseTo(layout.chipTray.height);
     expect(layout.paytable.width / layout.safeBounds.width).toBeLessThan(0.21);
     expect(layout.paytable.height / layout.safeBounds.height).toBeGreaterThanOrEqual(0.08);
     expect(layout.paytable.height / layout.safeBounds.height).toBeLessThanOrEqual(0.16);
-    expect(layout.paytable.x - layout.safeBounds.x).toBeCloseTo(
-      layout.safeBounds.x + layout.safeBounds.width - (layout.chipTray.x + layout.chipTray.width),
-    );
+    expect(layout.paytable.x + layout.paytable.width).toBeLessThan(layout.machine.x);
+    expect(layout.chipTray.x + layout.chipTray.width).toBeLessThan(layout.machine.x);
+    expect(layout.chipTray.x).toBeCloseTo(layout.paytable.x);
   });
 
-  it("stacks the tracker above the machine on a landscape phone", () => {
+  it("docks the tracker beside the machine on a landscape phone", () => {
     const layout = computeLayout(844, 390, NONE);
-    expect(layout.paytable.x + layout.paytable.width / 2).toBeCloseTo(layout.machine.x + layout.machine.width / 2);
-    expect(layout.paytable.y + layout.paytable.height).toBeLessThan(layout.machine.y);
-    expect(layout.paytable.width).toBeGreaterThan(layout.machine.width);
+    expect(layout.paytable.x + layout.paytable.width).toBeLessThan(layout.machine.x);
+    expect(layout.paytable.x + layout.paytable.width / 2).toBeLessThan(layout.machine.x);
+    expect(layout.paytable.y + layout.paytable.height / 2).toBeCloseTo(layout.machine.y + layout.machine.height / 2);
+    expect(layout.paytable.width).toBeLessThan(layout.machine.width);
   });
 
   it("seats SPIN inside the measured cabinet opening", () => {

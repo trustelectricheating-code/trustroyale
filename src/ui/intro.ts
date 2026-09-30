@@ -11,9 +11,10 @@ function icon(symbol: PrizeSymbol): string {
 }
 
 function prize(rule: PaytableRule): string {
+  const label = rule.id === "people-2-plus-1" ? "2 matching faces + 1 other face" : rule.fullLabel;
   return `<li class="intro-prize" data-rule-id="${rule.id}" aria-label="${rule.ariaLabel}">
     <span class="intro-prize__icons">${rule.symbols.map(icon).join("")}</span>
-    <span>${rule.fullLabel}</span>
+    <span>${label}</span>
     <strong>${rule.discount}% off</strong>
   </li>`;
 }

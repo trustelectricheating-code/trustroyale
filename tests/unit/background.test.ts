@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import { FLOATING_ITEM_SPECS, floatingItemCount } from "../../src/scene/background";
 
 describe("decluttered floating items", () => {
-  it("uses thirty-two desktop items, six edge-only phone items, and no near layer", () => {
+  it("uses six edge-only items at every viewport size", () => {
     expect(FLOATING_ITEM_SPECS).toHaveLength(32);
-    expect(floatingItemCount(1920, 1080)).toBe(32);
+    expect(floatingItemCount(1920, 1080)).toBe(6);
     expect(floatingItemCount(390, 844)).toBe(6);
     expect(floatingItemCount(844, 390)).toBe(6);
     expect(FLOATING_ITEM_SPECS.filter(({ kind }) => kind === "coin")).toHaveLength(8);

@@ -97,8 +97,7 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
       dialog.querySelector("[data-close-popup]")?.addEventListener("click", () => dialog.close(), { once: true });
     },
     showLastChance(onSpin) {
-      show(`<section aria-labelledby="result-title"><p class="result-popup__eyebrow">Bonus unlocked</p><h2 id="result-title">Last Chance!</h2><p>Take one bonus spin.</p><button type="button" data-last-chance>Spin now</button></section>`, "last-chance", false);
-      dialog.querySelector("section")?.insertAdjacentHTML("afterbegin", '<img class="result-popup__keith result-popup__keith--small" src="/assets/keith/last-chance.webp" alt="Keith presents a gold Last Chance chip"><img class="result-popup__gold-chip" src="/assets/fx/chip-gold-face.webp" alt="Gold Last Chance chip">');
+      show(`<section aria-labelledby="result-title"><div class="result-popup__bonus-badge"><img class="result-popup__keith result-popup__keith--small" src="/assets/keith/last-chance.webp" alt="Keith presents a gold Last Chance chip"><img class="result-popup__gold-chip" src="/assets/fx/chip-gold-face.webp" alt="Gold Last Chance chip"></div><p class="result-popup__eyebrow">Bonus unlocked</p><h2 id="result-title">Last Chance!</h2><p>Take one bonus spin.</p><button type="button" data-last-chance>Spin now</button></section>`, "last-chance", false);
       dialog.querySelector("[data-last-chance]")?.addEventListener("click", () => { dialog.close(); onSpin(); }, { once: true });
     },
     showGameOver() {

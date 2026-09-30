@@ -65,7 +65,7 @@ export const FLOATING_ITEM_SPECS: readonly FloatingItemSpec[] = [
 ] as const;
 
 export function floatingItemCount(width: number, height: number): number {
-  return Math.min(width, height) < 600 ? 6 : FLOATING_ITEM_SPECS.length;
+  return Math.min(6, FLOATING_ITEM_SPECS.length);
 }
 
 export interface FloatingItem {
@@ -178,17 +178,17 @@ export function drawBackground(scene: EnvironmentScene, layout: SceneLayout): vo
   cover(scene.hallPortrait, 941, 1672, width, height);
 
   const count = floatingItemCount(width, height);
-  const phone = Math.min(width, height) < 600;
-  const phonePositions = [
-    [0.04, 0.25], [0.96, 0.25], [0.04, 0.48], [0.96, 0.48], [0.04, 0.7], [0.96, 0.7],
+  const marginPositions = [
+    [0.04, 0.16], [0.96, 0.36], [0.04, 0.34], [0.96, 0.5], [0.04, 0.84], [0.96, 0.84],
   ] as const;
   scene.items.forEach((item, index) => {
     item.node.visible = index < count;
+    if (!item.node.visible) return;
     const responsive = Math.max(0.5, Math.min(1.25, width / 1280, height / 760));
     const scale = item.baseSize * responsive;
     const radius = (item.kind === "card" ? 62 : 64) * scale + 14;
-    const targetX = phone && phonePositions[index] ? phonePositions[index][0] * width : item.nx * width;
-    const targetY = phone && phonePositions[index] ? phonePositions[index][1] * height : item.ny * height;
+    const targetX = marginPositions[index][0] * width;
+    const targetY = marginPositions[index][1] * height;
     item.baseX = Math.max(radius, Math.min(width - radius, targetX));
     item.baseY = Math.max(radius, Math.min(height - radius, targetY));
     item.node.position.set(item.baseX, item.baseY);

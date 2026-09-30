@@ -17,9 +17,10 @@ function iconMarkup(symbol: PrizeSymbol): string {
 }
 
 function overlayRow(rule: PrizeRule): string {
+  const label = rule.id === "people-2-plus-1" ? "2 matching faces + 1 other face" : rule.fullLabel;
   return `<li class="prize-overlay__rule" data-rule-id="${rule.id}" aria-label="${rule.ariaLabel}">
     <span class="prize-overlay__icons">${rule.symbols.map(iconMarkup).join("")}</span>
-    <span class="prize-overlay__label">${rule.fullLabel}</span>
+    <span class="prize-overlay__label">${label}</span>
     <strong>${rule.prize}% OFF</strong>
   </li>`;
 }
@@ -34,6 +35,7 @@ export function initPrizeCarousel(root: HTMLElement, dialog: HTMLDialogElement, 
   dialog.innerHTML = `<section class="prize-overlay__panel">
     <button class="prize-overlay__close" type="button" aria-label="Close all prizes">×</button>
     <h2>All prizes</h2>
+    <p class="prize-overlay__subtitle">Match any rule below on the centre payline.</p>
     <ol class="prize-overlay__list">${PAYTABLE.map(overlayRow).join("")}</ol>
   </section>`;
 
