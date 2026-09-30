@@ -826,13 +826,14 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 @media (max-width: 480px) and (orientation: portrait) {
   .mute { inset: auto auto max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
   .intro__panel {
-    grid-template: 56px minmax(0, 1fr) minmax(190px, 40vh) / 1fr;
+    grid-template: 56px minmax(0, 1fr) minmax(120px, 24vh) / 1fr;
     grid-template-areas: "mute" "speech" "host";
     gap: 8px;
   }
   .intro__speech { padding: 14px 16px 38px; border-radius: 24px; }
   .intro__speech::after { position: absolute; z-index: 2; bottom: -24px; left: 50%; width: 24px; height: 24px; border-right: 2px solid #d4a437; border-bottom: 2px solid #d4a437; background: #4c0b1c; content: ""; pointer-events: none; transform: translateX(-50%) rotate(45deg); }
   .intro__host { position: relative; z-index: 1; }
+  .intro__host { height: 34vh; }
   .intro__host img { height: 100%; filter: drop-shadow(0 12px 20px #000b) drop-shadow(0 0 18px rgba(255, 190, 56, .22)); }
   .intro__actions > button { flex: 1 1 140px; }
   .intro__actions .intro__skip { flex-basis: 100%; }
@@ -849,6 +850,13 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
  .tries-tracker output { grid-column: 2; grid-row: 2; }
 }
 
+@media (max-width: 480px) and (min-height: 701px) and (orientation: portrait) {
+  .intro__panel {
+    grid-template-rows: 56px auto auto;
+    align-content: center;
+  }
+}
+
 @media (max-width: 480px) {
   .coupon-ticket { grid-template-columns: 1fr; gap: .5rem; padding: 16px; text-align: center; }
   .coupon-ticket__code,
@@ -862,11 +870,18 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
   .intro__host img { max-height: calc(100vh - 80px); }
 }
 
-@media (max-width: 480px) and (max-height: 620px) and (orientation: portrait) {
-  .intro__panel { grid-template-rows: 56px minmax(0, 1fr) minmax(160px, 32vh); }
-  .intro__speech { padding-top: 12px; padding-bottom: 30px; }
-  .intro__actions { margin-top: .45rem; gap: 7px; }
-  .intro__progress { margin-top: .35rem; }
+@media (max-width: 480px) and (max-height: 700px) and (orientation: portrait) {
+  .intro__panel { grid-template-rows: 56px minmax(0, 1fr); }
+  .intro__panel .intro__host { display: none; }
+  .intro__speech { padding: 6px 12px 8px; }
+  .intro__eyebrow { margin-bottom: .2rem; }
+  .intro h1 { margin-bottom: .35rem; }
+  .intro__speech > p:not(.intro__eyebrow, .intro__progress) { line-height: 1.25; }
+  .intro__actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-top: .35rem; }
+  .intro__actions > button { min-width: 0; padding-right: 0; padding-left: 0; white-space: nowrap; }
+  .intro__actions .intro__skip { grid-column: 1 / -1; justify-self: center; min-width: 96px; }
+  .intro__actions:not(:has(.intro__back)) > button:not(.intro__skip) { grid-column: 1 / -1; }
+  .intro__progress { margin-top: .2rem; }
 }
 
 /* Stage lane: compact tray and fixed-size controls. */
@@ -926,6 +941,21 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
   .tries-tracker__chips { gap: 4px; }
   .tries-tracker__chip { width: clamp(34px, 8vmin, 52px); height: clamp(34px, 8vmin, 52px); }
   .spin { min-width: 56px; min-height: 56px; padding: 0; }
+}
+
+@media (orientation: portrait) and (min-width: 600px) {
+  .intro__panel {
+    grid-template: clamp(240px, 34vh, 400px) auto / minmax(0, 1fr);
+    grid-template-areas: "host" "speech";
+    gap: 12px;
+    align-content: center;
+    justify-items: center;
+  }
+  .intro__host { width: min(360px, 70vw); height: 34vh; align-self: center; }
+  .intro__host img { width: 100%; height: 100%; max-height: none; }
+  .intro__speech { width: min(640px, 86vw); max-height: 100%; }
+  .intro__speech > p:not(.intro__eyebrow, .intro__progress) { font-size: max(20px, 1.7vw); line-height: 1.4; }
+  .intro-prize { font-size: 18px; line-height: 1.2; }
 }
 
 @media (min-width: 601px) {
