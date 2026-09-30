@@ -793,6 +793,12 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 
 @media (max-width: 480px) and (orientation: portrait) {
   .mute { inset: auto auto max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
+  .intro__panel {
+    grid-template: 56px minmax(0, 1fr) minmax(86px, 18vh) / 1fr;
+    grid-template-areas: "mute" "speech" "host";
+    gap: 8px;
+  }
+  .intro__mute { position: static; grid-area: mute; justify-self: end; }
   .tries-tracker {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: 14px 46px;

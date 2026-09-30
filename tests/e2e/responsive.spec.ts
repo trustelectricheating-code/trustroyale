@@ -107,7 +107,7 @@ for (const [width, height] of sizes) {
     await page.screenshot({ path: path.join(directory, `${width}x${height}-chips-2-banked.png`) });
     await page.getByRole("button", { name: "Continue" }).click();
     await spin.click();
-    await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
     await expect(tracker).toHaveAttribute("aria-label", "1 chip left");
     await expect(tracker.locator(".tries-tracker__chip")).toHaveCount(1);
     await page.screenshot({ path: path.join(directory, `${width}x${height}-chips-1.png`) });

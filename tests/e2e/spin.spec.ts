@@ -62,7 +62,7 @@ test("production CSP is present and fresh players see all four intro pages", asy
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.getByRole("heading", { name: "Your code appears at the end" })).toBeVisible();
   await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.getByRole("heading", { name: "Here are your 3 lucky chips — one per spin!" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Here are your 3 lucky chips, one per spin!" })).toBeVisible();
   await page.getByRole("button", { name: "Let's play!" }).click();
   await expect(page.locator("#spin")).toBeEnabled();
   await expect(page.locator("#spin")).toHaveText("SPIN");
@@ -107,7 +107,7 @@ test("only deliberate spin actions issue requests, including retry and Last Chan
 
   const button = page.locator("#spin");
   await button.click();
-  await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
   await page.waitForTimeout(10_000);
   expect(requests).toBe(1);
   await button.click();
@@ -131,7 +131,7 @@ test("touch tap at 390x844 starts exactly one spin", async ({ browser }) => {
   await ready(page);
   await enterGame(page);
   await page.locator("#spin").tap();
-  await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
   expect(requests).toBe(1);
   await context.close();
 });
@@ -159,7 +159,7 @@ test("spin motion and sound start before a delayed API response", async ({ page 
   expect(timing.sound - timing.pressed).toBeLessThan(100);
   await page.waitForTimeout(250);
   await expect(page.locator("html")).toHaveAttribute("data-spinning", "true");
-  await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible({ timeout: 10_000 });
 });
 
 test("failed spin restores the machine without stuck motion or sound", async ({ page }) => {
@@ -203,7 +203,7 @@ test("intro and popup menu buttons play the soft click, including the first gest
   await page.getByRole("button", { name: "Close" }).click();
   await expect.poll(async () => Number(await page.locator("html").getAttribute("data-sound-play-count"))).toBeGreaterThan(afterSkip + 1);
   await page.locator("#spin").click();
-  await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
   await expectLarge(page.getByRole("button", { name: "Continue" }));
   const beforeContinue = Number(await page.locator("html").getAttribute("data-sound-play-count"));
   await page.getByRole("button", { name: "Continue" }).click();
@@ -227,7 +227,7 @@ test("best-of-three waits for presses and reveals only final coupon", async ({ p
   await page.waitForTimeout(1_000);
   expect(requests).toBe(1);
   await button.click();
-  await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
   await button.click();
   await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible();
   await expect(page.getByText("ROYALE20")).toBeVisible();
@@ -250,7 +250,7 @@ test("non-face payline symbols contain artwork, never blank white discs", async 
   await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(loss(1, 2)) }));
   await ready(page); await enterGame(page);
   await page.locator("#spin").click();
-  await expect(page.getByRole("heading", { name: "So close — spin again!" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
   const screenshot = path.join(mkdtempSync(path.join(tmpdir(), "trust-royale-pixels-")), "payline.png");
   await page.screenshot({ path: screenshot });
   const viewport = page.viewportSize()!;
