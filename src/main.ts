@@ -15,7 +15,7 @@ import { burstWin, createChips } from "./scene/chips";
 import { createMarquee } from "./scene/marquee";
 import { computeLayout, type LayoutRect, type SafeAreaInsets } from "./scene/layout";
 import { createReels, startFreeSpin } from "./scene/reels";
-import { createSound } from "./audio/sound";
+import { createSound, resultSoundNames } from "./audio/sound";
 import { createControls } from "./ui/controls";
 import { createPopups } from "./ui/popup";
 import { createIntro } from "./ui/intro";
@@ -133,8 +133,8 @@ async function boot(): Promise<void> {
       const result: SpinResponse = await spin();
       await spinMotion.finish(result.strip, (reel) => sound.play(`reel.stop.${reel}`), result.nearMiss);
       sound.stop("reel.loop");
-      await controls.consumeChip();
       sound.play("coin.use");
+      await controls.consumeChip();
       machine.send({ type: "RESULT" });
       spinsLeft = result.spinsLeft;
       if (result.best) best = result.best;
@@ -144,8 +144,7 @@ async function boot(): Promise<void> {
         if (!rule) throw new Error(`Unknown paytable rule: ${result.ruleId}`);
         await celebrate(reels, rule, motionQuery.matches);
         await new Promise((resolve) => window.setTimeout(resolve, motionQuery.matches ? 540 : 560));
-        sound.play(result.discount === 20 ? "win.big" : "win.small");
-        sound.play("payout");
+        for (const name of resultSoundNames("win", result.discount, result.nearMiss)) sound.play(name);
         marqueeScene.setPattern("win");
         burstWin(environment.front, motionQuery.matches);
         machine.send({ type: "RESOLVE", outcome: "win", spinsLeft: result.spinsLeft, bonusAvailable: result.bonusAvailable, isBonus: result.isBonus, gameOver: result.gameOver });
@@ -162,7 +161,7 @@ async function boot(): Promise<void> {
         return;
       }
       marqueeScene.setPattern("idle");
-      if (result.nearMiss) sound.play("nearmiss");
+        for (const name of resultSoundNames("retry", result.discount, result.nearMiss)) sound.play(name);
       const resolvedState = machine.state as GameState;
       if (resolvedState === "LAST_CHANCE") popups.showLastChance(playSpin);
       else if (resolvedState === "GAME_OVER") popups.showGameOver();

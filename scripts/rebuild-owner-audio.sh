@@ -30,7 +30,7 @@ ffmpeg -hide_banner -loglevel error -y \
    [0:a]atrim=10.25:11.85,asetpts=PTS-STARTPTS[p];
    [0:a]atrim=11.95:12.6,asetpts=PTS-STARTPTS[ch];
    [0:a]atrim=12.7:13.25,asetpts=PTS-STARTPTS[wh];
-   [2:a]atrim=0:0.9,asetpts=PTS-STARTPTS,loudnorm=I=-20:TP=-2:LRA=5[coin];
+   [2:a]atrim=0:0.88,asetpts=PTS-STARTPTS,loudnorm=I=-20:TP=-2:LRA=5[coin];
    anullsrc=r=48000:cl=stereo:d=0.1[s1];anullsrc=r=48000:cl=stereo:d=0.1[s2];
    anullsrc=r=48000:cl=stereo:d=0.1[s3];anullsrc=r=48000:cl=stereo:d=0.1[s4];
    anullsrc=r=48000:cl=stereo:d=0.1[s5];anullsrc=r=48000:cl=stereo:d=0.1[s6];

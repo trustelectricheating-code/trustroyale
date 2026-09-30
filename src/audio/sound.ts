@@ -2,7 +2,7 @@ import { Howl, Howler } from "howler";
 
 export type SoundName = "button" | "reel.loop" | "reel.stop.1" | "reel.stop.2" | "reel.stop.3" | "nearmiss" | "win.small" | "win.big" | "payout" | "chips" | "whoosh" | "coin.use";
 
-const SPRITES: Record<SoundName, [number, number] | [number, number, boolean]> = {
+export const SPRITES: Record<SoundName, [number, number] | [number, number, boolean]> = {
   button: [0, 300],
   "reel.loop": [400, 3050, true],
   "reel.stop.1": [3550, 550],
@@ -14,8 +14,13 @@ const SPRITES: Record<SoundName, [number, number] | [number, number, boolean]> =
   payout: [10900, 1600],
   chips: [12600, 650],
   whoosh: [13350, 550],
-  "coin.use": [14000, 900],
+  "coin.use": [14000, 880],
 };
+
+export function resultSoundNames(outcome: "win" | "retry", discount: number | null, nearMiss: boolean): SoundName[] {
+  if (outcome === "win") return [discount === 20 ? "win.big" : "win.small", "payout"];
+  return nearMiss ? ["nearmiss"] : [];
+}
 
 export interface SoundSystem {
   ambient: { start(): void };
