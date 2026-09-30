@@ -1,6 +1,8 @@
 import { expect, test, type Route } from "@playwright/test";
 import path from "node:path";
 
+test.skip(!process.env.CAPTURE_PHASE_5_8, "Superseded Phase 5–8 captures run only with CAPTURE_PHASE_5_8=1");
+
 const idleSession = { spinsLeft: 3, bonusAvailable: false, state: "idle", win: null };
 const win = {
   spinId: "00000000-0000-4000-8000-000000000015",

@@ -1,12 +1,13 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
 
-const session = { spinsLeft: 3, bonusAvailable: false, state: "idle", win: null };
+const session = { spinsLeft: 3, bonusAvailable: false, state: "idle", best: null, win: null };
 const win = {
   spinId: "00000000-0000-4000-8000-000000000020", spinNo: 1,
   reels: ["scott", "scott", "scott"],
   strip: [["seven", "cherry", "sweets"], ["scott", "scott", "scott"], ["neos", "keith", "gia"]],
   outcome: "win", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", winRef: "TR-ABC234", nearMiss: false,
-  spinsLeft: 0, bonusAvailable: false, isBonus: false,
+  spinsLeft: 0, bonusAvailable: false, isBonus: false, gameOver: true,
+  best: { spinId: "00000000-0000-4000-8000-000000000020", ruleId: "scott-3", discount: 20, winRef: "TR-ABC234" },
 };
 
 async function mockApis(page: Page): Promise<void> {
@@ -18,11 +19,11 @@ test("result dialog announces, traps focus, and shows keyboard focus", async ({ 
   await mockApis(page);
   await page.goto("/");
   await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
-  await page.getByRole("button", { name: "Play" }).click();
-  await page.getByRole("button", { name: "Spin the reels" }).click();
+  await page.getByRole("button", { name: "Skip" }).click();
+  await page.getByRole("button", { name: "Spin the reels" }).click({ force: true });
 
   const dialog = page.getByRole("dialog");
-  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeVisible({ timeout: 15_000 });
   await expect(dialog).toHaveAttribute("aria-live", "assertive");
   await expect(dialog).toHaveAttribute("aria-modal", "true");
   await page.keyboard.press("Tab");

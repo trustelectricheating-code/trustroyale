@@ -30,6 +30,6 @@ test("asset board renders the complete manifest without broken images", async ({
   await expect(page.locator(".face-row")).toHaveCount(4);
   await expect(page.locator(".face-row [data-asset-key]")).toHaveCount(16);
   await expect(page.locator(".pulse-preview__rings")).toHaveCount(1);
-  await expect(page.locator("[data-audio-key]")).toHaveCount(11);
+  await expect(page.locator("[data-audio-key]")).toHaveCount(manifest.assets.filter((asset) => asset.group === "audio").length);
   expect(consoleErrors).toEqual([]);
 });
