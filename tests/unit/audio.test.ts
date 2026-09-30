@@ -7,8 +7,8 @@ import { resultSoundNames, SPRITES } from "../../src/audio/sound";
 
 describe("result audio", () => {
   it("never plays the near-miss cue for a win", () => {
-    expect(resultSoundNames("win", 15, true)).toEqual(["win.small", "payout"]);
-    expect(resultSoundNames("win", 20, true)).toEqual(["win.big", "payout"]);
+    expect(resultSoundNames("win", 15, true)).toEqual(["payout"]);
+    expect(resultSoundNames("win", 20, true)).toEqual(["payout"]);
   });
 
   it("keeps every sprite range inside both shipped files", () => {

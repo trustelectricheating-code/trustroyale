@@ -17,8 +17,9 @@ export const SPRITES: Record<SoundName, [number, number] | [number, number, bool
   "coin.use": [14000, 880],
 };
 
-export function resultSoundNames(outcome: "win" | "retry", discount: number | null, nearMiss: boolean): SoundName[] {
-  if (outcome === "win") return [discount === 20 ? "win.big" : "win.small", "payout"];
+export function resultSoundNames(outcome: "win" | "retry", _discount: number | null, nearMiss: boolean): SoundName[] {
+  // The owner found the saxophone win jingles harsh, so a win plays only the coin payout.
+  if (outcome === "win") return ["payout"];
   return nearMiss ? ["nearmiss"] : [];
 }
 
