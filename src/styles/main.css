@@ -747,3 +747,28 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
   .intro__actions { gap: 6px; margin-top: .35rem; }
   .intro__actions button { min-width: 104px; min-height: 48px; padding: .45rem .7rem; font-size: .9rem; }
 }
+
+@media (max-width: 480px), (max-height: 430px) and (orientation: landscape) {
+  .mute { width: 56px; height: 56px; }
+  .prizes-button,
+  .intro__mute,
+  .intro__actions button,
+  .result-popup button { min-height: 56px; font-size: 18px; }
+  .spin { min-height: 64px; }
+  .intro__actions { gap: 12px; }
+  .intro__speech { padding: 16px; }
+  .intro h1,
+  .result-popup h2,
+  .result-popup--retry h2,
+  .result-popup--last-chance h2,
+  .result-popup--game-over h2,
+  .result-popup--error h2 { font-size: 24px; line-height: 1.2; }
+  .intro__speech > p:not(.intro__eyebrow, .intro__progress),
+  .intro-prize,
+  .result-popup p,
+  .result-popup--retry p,
+  .result-popup--last-chance p,
+  .result-popup--game-over p,
+  .result-popup--error p { font-size: 18px; line-height: 1.45; }
+  .coupon-ticket__code { font-size: 28px; }
+}
