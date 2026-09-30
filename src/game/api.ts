@@ -46,4 +46,8 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 export function getSession(): Promise<SessionResponse> { return request<SessionResponse>(`/api/session${location.search}`); }
-export function spin(): Promise<SpinResponse> { return request<SpinResponse>("/api/spin", { method: "POST" }); }
+export async function spin(): Promise<SpinResponse> {
+  const body = await request<SpinResponse>("/api/spin", { method: "POST" });
+  if (!Array.isArray(body.reels) || !Array.isArray(body.strip) || body.strip.length !== 3) throw new GameApiError("server_error", 200);
+  return body;
+}
