@@ -7,7 +7,7 @@
   "sfx.nearmiss": [5500, 700],
   "sfx.win.small": [6300, 1900],
   "sfx.win.big": [8300, 2500],
-  "sfx.payout": [10900, 1600],
+  "sfx.payout": [15200, 3000],
   "sfx.chips": [12600, 650],
   "sfx.whoosh": [13350, 550],
   "sfx.coin.use": [14000, 880]

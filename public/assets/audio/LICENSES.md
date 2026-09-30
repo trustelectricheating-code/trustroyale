@@ -14,7 +14,7 @@ All shipped audio permits commercial use without in-game attribution. These reco
 - `sfx.nearmiss` — `question_004.ogg`, Kenney Interface Sounds. Source: https://kenney.nl/assets/interface-sounds. Author: Kenney. Licence: CC0 1.0.
 - `sfx.win.small` — `jingles_SAX02.ogg`, Kenney Music Jingles. Source: https://kenney.nl/assets/music-jingles. Author: Kenney. Licence: CC0 1.0. Rising saxophone phrase is padded to the existing 1.9-second sprite slot.
 - `sfx.win.big` — `jingles_PIZZI02.ogg` followed by `jingles_SAX02.ogg`, Kenney Music Jingles. Source: https://kenney.nl/assets/music-jingles. Author: Kenney. Licence: CC0 1.0. Rising pizzicato and saxophone phrases are crossfaded and padded to the existing 2.5-second sprite slot.
-- `sfx.payout` — `chips-collide-2.ogg` and `chip-lay-2.ogg`, Kenney Casino Audio. Source: https://kenney.nl/assets/casino-audio. Author: Kenney. Licence: CC0 1.0.
+- `sfx.payout` — `floraphonic-slot-machine-coin-payout-1-188227.mp3`, supplied by owner from Pixabay. Source: https://pixabay.com/. Author: floraphonic. Licence: Pixabay Content License. Leading silence removed, a 3-second coin section retained, and a 0.8-second fade-out applied at sprite offset 15200–18200 ms.
 - `sfx.chips` — `chips-handle-2.ogg`, Kenney Casino Audio. Source: https://kenney.nl/assets/casino-audio. Author: Kenney. Licence: CC0 1.0.
 - `sfx.whoosh` — `open_004.ogg`, Kenney Interface Sounds. Source: https://kenney.nl/assets/interface-sounds. Author: Kenney. Licence: CC0 1.0.
 - `sfx.coin.use` — `freesound_community-coin-upaif-14631.mp3`, supplied by the owner from Pixabay. Source: https://pixabay.com/. Author: Freesound Community. Licence: Pixabay Content License.

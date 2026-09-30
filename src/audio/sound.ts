@@ -11,7 +11,7 @@ export const SPRITES: Record<SoundName, [number, number] | [number, number, bool
   nearmiss: [5500, 700],
   "win.small": [6300, 1900],
   "win.big": [8300, 2500],
-  payout: [10900, 1600],
+  payout: [15200, 3000],
   chips: [12600, 650],
   whoosh: [13350, 550],
   "coin.use": [14000, 880],
