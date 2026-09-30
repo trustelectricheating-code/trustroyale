@@ -6,14 +6,15 @@ audio_dir="$project_dir/public/assets/audio"
 owner_reel="$project_dir/reference/freesound_community-slot-machine-reels-sound-30276.mp3"
 owner_coin="$project_dir/reference/freesound_community-coin-upaif-14631.mp3"
 owner_music="$project_dir/reference/casino-vip-music-game-casino-music-3-469380.mp3"
-old_sprite="$audio_dir/sfx-sprite.mp3"
+owner_win_small="/private/tmp/tr-audio-src/jingles/Audio/Sax jingles/jingles_SAX02.ogg"
+owner_win_big="/private/tmp/tr-audio-src/jingles/Audio/Pizzicato jingles/jingles_PIZZI02.ogg"
 work_dir="$(mktemp -d)"
 trap 'rm -rf "$work_dir"' EXIT
 
-cp "$old_sprite" "$work_dir/old-sprite.mp3"
+git show HEAD:public/assets/audio/sfx-sprite.mp3 > "$work_dir/old-sprite.mp3"
 
 ffmpeg -hide_banner -loglevel error -y \
-  -i "$work_dir/old-sprite.mp3" -i "$owner_reel" -i "$owner_coin" \
+  -i "$work_dir/old-sprite.mp3" -i "$owner_reel" -i "$owner_coin" -i "$owner_win_small" -i "$owner_win_big" \
   -filter_complex \
   "[0:a]atrim=0:0.3,asetpts=PTS-STARTPTS[b];
    [1:a]atrim=2.9:3.05,asetpts=PTS-STARTPTS[rh];
@@ -31,13 +32,21 @@ ffmpeg -hide_banner -loglevel error -y \
    [0:a]atrim=11.95:12.6,asetpts=PTS-STARTPTS[ch];
    [0:a]atrim=12.7:13.25,asetpts=PTS-STARTPTS[wh];
    [2:a]atrim=0:0.88,asetpts=PTS-STARTPTS,loudnorm=I=-20:TP=-2:LRA=5[coin];
+
+   [3:a]atrim=0:0.88,asetpts=PTS-STARTPTS,loudnorm=I=-18:TP=-2:LRA=5,apad=pad_dur=1.02,atrim=0:1.9[win_small];
+
+   [4:a]atrim=0:0.96,asetpts=PTS-STARTPTS[win_big_a];
+   [3:a]atrim=0:0.88,asetpts=PTS-STARTPTS[win_big_b];
+   [win_big_a][win_big_b]acrossfade=d=0.08:c1=tri:c2=tri,loudnorm=I=-18:TP=-2:LRA=5,apad=pad_dur=0.82,atrim=0:2.5[win_big];
+   [ws]anullsink;
+   [wb]anullsink;
    anullsrc=r=48000:cl=stereo:d=0.1[s1];anullsrc=r=48000:cl=stereo:d=0.1[s2];
    anullsrc=r=48000:cl=stereo:d=0.1[s3];anullsrc=r=48000:cl=stereo:d=0.1[s4];
    anullsrc=r=48000:cl=stereo:d=0.1[s5];anullsrc=r=48000:cl=stereo:d=0.1[s6];
    anullsrc=r=48000:cl=stereo:d=0.1[s7];anullsrc=r=48000:cl=stereo:d=0.1[s8];
    anullsrc=r=48000:cl=stereo:d=0.1[s9];anullsrc=r=48000:cl=stereo:d=0.1[s10];
    anullsrc=r=48000:cl=stereo:d=0.1[s11];
-   [b][s1][r][s2][st1][s3][st2][s4][st3][s5][n][s6][ws][s7][wb][s8][p][s9][ch][s10][wh][s11][coin]concat=n=23:v=0:a=1,aresample=48000,asplit=2[opus][mp3]" \
+   [b][s1][r][s2][st1][s3][st2][s4][st3][s5][n][s6][win_small][s7][win_big][s8][p][s9][ch][s10][wh][s11][coin]concat=n=23:v=0:a=1,apad=pad_dur=0.2,aresample=48000,asplit=2[opus][mp3]" \
   -map "[opus]" -c:a libopus -b:a 80k "$audio_dir/sfx-sprite.webm" \
   -map "[mp3]" -c:a libmp3lame -b:a 112k "$audio_dir/sfx-sprite.mp3"
 

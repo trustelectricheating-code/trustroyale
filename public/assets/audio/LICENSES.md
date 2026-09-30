@@ -12,8 +12,8 @@ All shipped audio permits commercial use without in-game attribution. These reco
 - `sfx.reel.loop` — `freesound_community-slot-machine-reels-sound-30276.mp3`, supplied by the owner from Pixabay. Source: https://pixabay.com/. Author: Freesound Community. Licence: Pixabay Content License. The continuous reel section was trimmed, loudness-normalised, and crossfaded into a 3.05-second loop.
 - `sfx.reel.stop.1`, `sfx.reel.stop.2`, and `sfx.reel.stop.3` — `impactMetal_heavy_000.ogg`, `_001.ogg`, and `_003.ogg`, Kenney Impact Sounds. Source: https://kenney.nl/assets/impact-sounds. Author: Kenney. Licence: CC0 1.0.
 - `sfx.nearmiss` — `question_004.ogg`, Kenney Interface Sounds. Source: https://kenney.nl/assets/interface-sounds. Author: Kenney. Licence: CC0 1.0.
-- `sfx.win.small` — `jingles_SAX07.ogg`, Kenney Music Jingles. Source: https://kenney.nl/assets/music-jingles. Author: Kenney. Licence: CC0 1.0.
-- `sfx.win.big` — `jingles_STEEL07.ogg` mixed with `impactBell_heavy_000.ogg` and `_001.ogg`, Kenney Music Jingles and Impact Sounds. Sources: https://kenney.nl/assets/music-jingles and https://kenney.nl/assets/impact-sounds. Author: Kenney. Licence: CC0 1.0.
+- `sfx.win.small` — `jingles_SAX02.ogg`, Kenney Music Jingles. Source: https://kenney.nl/assets/music-jingles. Author: Kenney. Licence: CC0 1.0. Rising saxophone phrase is padded to the existing 1.9-second sprite slot.
+- `sfx.win.big` — `jingles_PIZZI02.ogg` followed by `jingles_SAX02.ogg`, Kenney Music Jingles. Source: https://kenney.nl/assets/music-jingles. Author: Kenney. Licence: CC0 1.0. Rising pizzicato and saxophone phrases are crossfaded and padded to the existing 2.5-second sprite slot.
 - `sfx.payout` — `chips-collide-2.ogg` and `chip-lay-2.ogg`, Kenney Casino Audio. Source: https://kenney.nl/assets/casino-audio. Author: Kenney. Licence: CC0 1.0.
 - `sfx.chips` — `chips-handle-2.ogg`, Kenney Casino Audio. Source: https://kenney.nl/assets/casino-audio. Author: Kenney. Licence: CC0 1.0.
 - `sfx.whoosh` — `open_004.ogg`, Kenney Interface Sounds. Source: https://kenney.nl/assets/interface-sounds. Author: Kenney. Licence: CC0 1.0.
