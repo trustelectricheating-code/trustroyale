@@ -3,7 +3,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { query as databaseQuery, type Query } from "./_lib/db.js";
 import { error, json, methodNotAllowed } from "./_lib/http.js";
 import { spinReels as roll, type ReelSpin, type SpinOptions } from "./_lib/rng.js";
-import { getOrCreateSession } from "./_lib/session.js";
+import { clientIp, getOrCreateSession } from "./_lib/session.js";
 import { newWinRef as makeWinRef } from "./_lib/winRef.js";
 import { evaluate } from "../src/game/evaluator.js";
 import { couponFor } from "./_lib/coupons.js";
@@ -38,7 +38,9 @@ export function createSpinHandler(dependencies: SpinDependencies = {}) {
     if (request.method !== "POST") return methodNotAllowed(response, ["POST"]);
     try {
       const sessionId = await getOrCreateSession(request, response, query);
-      const cap = Number.parseInt(process.env.DAILY_SESSIONS_PER_IP ?? "20", 10);
+      // Local `vercel dev` sees every test run as loopback, so the daily cap only applies to deployed traffic.
+      const local = ["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(clientIp(request));
+      const cap = local ? 0 : Number.parseInt(process.env.DAILY_SESSIONS_PER_IP ?? "20", 10);
       if (cap > 0) {
         const counts = await query<{ count: number | string }>(`
           SELECT count(*) AS count
