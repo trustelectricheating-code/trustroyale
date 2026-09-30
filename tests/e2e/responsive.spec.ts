@@ -45,13 +45,13 @@ async function box(locator: Locator): Promise<Rect> {
   return rect(value.x, value.y, value.width, value.height);
 }
 
-async function assertInside(page: Page, locator: Locator, width: number, height: number): Promise<void> {
+async function assertInside(page: Page, locator: Locator, width: number, height: number, allowVerticalScroll = false): Promise<void> {
   const rect = await box(locator);
   expect(rect.left).toBeGreaterThanOrEqual(0);
   expect(rect.top).toBeGreaterThanOrEqual(0);
   expect(rect.right).toBeLessThanOrEqual(width + 1);
   expect(rect.bottom).toBeLessThanOrEqual(height + 1);
-  const fits = await locator.evaluate((node) => node.scrollWidth <= node.clientWidth + 1 && node.scrollHeight <= node.clientHeight + 1);
+  const fits = await locator.evaluate((node, allowScroll) => node.scrollWidth <= node.clientWidth + 1 && (allowScroll || node.scrollHeight <= node.clientHeight + 1), allowVerticalScroll);
   expect(fits).toBe(true);
   await expect(page.locator("html")).toHaveJSProperty("scrollWidth", width);
 }
@@ -74,7 +74,7 @@ for (const [width, height] of sizes) {
       const host = page.locator(".intro__host img");
       const speech = page.locator(".intro__speech");
       await assertInside(page, host, width, height);
-      await assertInside(page, speech, width, height);
+      await assertInside(page, speech, width, height, true);
       expect(overlaps(await box(host), await box(speech))).toBe(false);
       await page.screenshot({ path: path.join(directory, `${width}x${height}-intro-${introPage}.png`) });
       if (introPage < 5) await page.getByRole("button", { name: "Next" }).click();

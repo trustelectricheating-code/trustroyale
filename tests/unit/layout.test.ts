@@ -29,7 +29,7 @@ describe("computeLayout", () => {
     expect(layout.background.y + layout.background.height).toBeGreaterThanOrEqual(height);
     expectInside(layout.spinButton, layout.machine);
     expect(layout.spinButton.width / layout.machine.width).toBeLessThanOrEqual(0.5);
-    if (orientation === "landscape") expect(layout.machine.height / layout.safeBounds.height).toBeGreaterThanOrEqual(0.75);
+    if (orientation === "landscape") expect(layout.machine.height / layout.safeBounds.height).toBeGreaterThanOrEqual(Math.min(width, height) < 600 ? 0.7 : 0.75);
   });
 
   it("respects every safe-area edge", () => {
@@ -47,6 +47,13 @@ describe("computeLayout", () => {
     expect(layout.paytable.x - layout.safeBounds.x).toBeCloseTo(
       layout.safeBounds.x + layout.safeBounds.width - (layout.chipTray.x + layout.chipTray.width),
     );
+  });
+
+  it("stacks the tracker above the machine on a landscape phone", () => {
+    const layout = computeLayout(844, 390, NONE);
+    expect(layout.paytable.x + layout.paytable.width / 2).toBeCloseTo(layout.machine.x + layout.machine.width / 2);
+    expect(layout.paytable.y + layout.paytable.height).toBeLessThan(layout.machine.y);
+    expect(layout.paytable.width).toBeGreaterThan(layout.machine.width);
   });
 
   it("seats SPIN inside the measured cabinet opening", () => {
