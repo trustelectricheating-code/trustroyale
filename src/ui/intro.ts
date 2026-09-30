@@ -45,8 +45,8 @@ const PAGES = [
   },
   {
     eyebrow: "Your lucky chips",
-    title: "Here are your 3 lucky chips — one per spin!",
-    body: "White, red, then blue. Each press of SPIN uses one chip. Make them count — and good luck!",
+    title: "Here are your 3 lucky chips, one per spin!",
+    body: "White, red, then blue. Each press of SPIN uses one chip. Make them count. Good luck!",
     pose: "/assets/keith/chips.webp",
   },
 ] as const;

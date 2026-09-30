@@ -516,10 +516,11 @@ html[data-orientation="portrait"] .prize-carousel__all { font-size: clamp(.55rem
 .intro__panel { position: relative; display: grid; grid-template-columns: minmax(150px, 28vw) minmax(0, 760px); align-items: center; justify-content: center; gap: clamp(18px, 4vw, 62px); min-height: 100%; }
 .intro__host { display: grid; justify-items: center; gap: 8px; color: #ffe8a3; font: 700 clamp(1rem, 2vw, 1.4rem) "Trust Royale Display", serif; text-transform: uppercase; }
 .intro__host img { width: min(100%, 300px); aspect-ratio: 1; border: 4px solid #d4a437; border-radius: 50%; filter: drop-shadow(0 18px 28px #000b) drop-shadow(0 0 22px rgba(255, 190, 56, .35)); }
-.intro__speech { position: relative; max-height: calc(100vh - 36px); overflow: auto; padding: clamp(20px, 4vw, 48px); border: 2px solid #d4a437; border-radius: 34px; background: radial-gradient(circle at 50% 0, #78162d, #2a030b 72%); box-shadow: inset 0 0 40px #0008, 0 20px 70px #000b; }
+.intro__speech { position: relative; max-height: calc(100vh - 36px); overflow: auto; padding: clamp(20px, 4vw, 48px); border: 2px solid #d4a437; border-radius: 34px; background: radial-gradient(circle at 50% 0, #78162d, #2a030b 72%); box-shadow: inset 0 0 40px #0008, 0 20px 70px #000b; text-align: left; }
 .intro__eyebrow { margin: 0 0 .4rem; color: #ffbe4a; font: 700 .76rem "Trust Royale UI", sans-serif; letter-spacing: .16em; text-transform: uppercase; }
-.intro h1 { margin: 0 0 .7rem; color: #ffe8a3; font: 700 clamp(1.7rem, 4vw, 3.6rem)/1.05 "Trust Royale Display", serif; }
-.intro__speech > p:not(.intro__eyebrow, .intro__progress) { margin: 0; font: 700 clamp(.9rem, 1.7vw, 1.15rem)/1.5 "Trust Royale UI", sans-serif; }
+.intro h1 { margin: 0 0 .7rem; color: #ffe8a3; font: 700 clamp(1.7rem, 4vw, 3.6rem)/1.05 "Trust Royale Display", serif; text-align: center; text-wrap: balance; }
+.intro__speech > p:not(.intro__eyebrow, .intro__progress) { margin: 0; font: 700 clamp(.9rem, 1.7vw, 1.15rem)/1.5 "Trust Royale UI", sans-serif; text-wrap: pretty; }
+.intro__eyebrow, .intro__progress { text-align: center; }
 .intro__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 1rem; }
 .intro__actions button { min-width: 140px; min-height: 52px; padding: .8rem 1.2rem; border: 1px solid #ffe8a3; border-radius: 999px; color: #fff; background: #b20d29; font: 700 1.05rem "Trust Royale UI", sans-serif; }
 .intro__actions .intro__skip, .intro__actions .intro__back { min-width: 96px; }
@@ -624,8 +625,8 @@ html[data-ready="true"] .spin__label { visibility: hidden; }
 }
 
 .result-popup::backdrop { background: rgba(8, 0, 3, .76); backdrop-filter: blur(8px); }
-.result-popup h2 { margin: .25rem 0 1rem; font: 700 clamp(1.6rem, 6vw, 3rem)/1.08 "Trust Royale Display", serif; color: #ffe8a3; }
-.result-popup p { font: 700 1rem/1.45 "Trust Royale UI", sans-serif; }
+.result-popup h2 { margin: .25rem 0 1rem; font: 700 clamp(1.6rem, 6vw, 3rem)/1.08 "Trust Royale Display", serif; color: #ffe8a3; text-wrap: balance; }
+.result-popup p { margin: .75rem 0; font: 700 1rem/1.45 "Trust Royale UI", sans-serif; text-wrap: pretty; }
 .result-popup__eyebrow { margin: 0; color: #ffb746; letter-spacing: .15em; text-transform: uppercase; }
 .result-popup__reference strong { display: block; margin-top: .4rem; font-size: 1.45rem; letter-spacing: .12em; }
 .result-popup__symbols { display: flex; justify-content: center; gap: .4rem; }
@@ -664,9 +665,10 @@ html[data-ready="true"] .spin__label { visibility: hidden; }
 .result-popup__instruction { margin: .7rem 0; }
 
 @media (max-width: 360px) {
-  .coupon-ticket { gap: .25rem; padding: .7rem; }
-  .coupon-ticket__code { min-width: 0; font-size: 1.15rem; letter-spacing: .03em; }
-  .coupon-ticket button { min-width: 78px; padding: .55rem .6rem; font-size: .78rem; }
+  .coupon-ticket { grid-template-columns: 1fr; gap: .5rem; padding: 16px; text-align: center; }
+  .coupon-ticket__code,
+  .coupon-ticket button { grid-column: 1; grid-row: auto; min-width: 0; }
+  .coupon-ticket__code { letter-spacing: .03em; }
 }
 
 html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
@@ -757,6 +759,11 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
   .spin { min-height: 64px; }
   .intro__actions { gap: 12px; }
   .intro__speech { padding: 16px; }
+  .prize-overlay__panel { padding: 16px; }
+  .result-popup--retry,
+  .result-popup--last-chance,
+  .result-popup--game-over,
+  .result-popup--error { padding: 16px 18px; }
   .intro h1,
   .result-popup h2,
   .result-popup--retry h2,

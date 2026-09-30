@@ -53,4 +53,7 @@ test("phone controls and copy are senior friendly", async ({ page }) => {
   await fontSize(page.locator("#result-popup p").first(), 18);
   const resultButtons = page.locator("#result-popup button");
   for (let index = 0; index < await resultButtons.count(); index += 1) await minimumSize(resultButtons.nth(index));
+  expect(await page.locator("body").innerText()).not.toMatch(/[—–]/);
+  expect(await page.locator("#result-popup h2").evaluate((node) => getComputedStyle(node).textWrap)).toBe("balance");
+  expect(await page.locator("#result-popup p").first().evaluate((node) => getComputedStyle(node).textWrap)).toBe("pretty");
 });

@@ -62,7 +62,7 @@ export function createControls(button: HTMLButtonElement, initialMuted = false):
       tracker.setAttribute("aria-label", lastChance ? "1 Last Chance chip left" : `${spinsLeft} ${spinsLeft === 1 ? "chip" : "chips"} left`);
       tracker.innerHTML = `<p class="tries-tracker__title">Lucky chips</p>
         <div class="tries-tracker__chips" aria-hidden="true">${chips.map(({ name, src }, index) => `<span class="tries-tracker__chip ${index === 0 && document.documentElement.dataset.gameState === "spinning" ? "is-playing" : ""}" data-chip="${name}"><img src="${src}" alt=""><img class="tries-tracker__mark" src="/assets/emblem/neos.svg" alt=""></span>`).join("") || '<span class="tries-tracker__empty">No chips left</span>'}</div>
-        <output aria-live="polite">Best: ${bestDiscount ? `${bestDiscount}%` : "—"}</output>`;
+        <output aria-live="polite">Best: ${bestDiscount ? `${bestDiscount}%` : "None"}</output>`;
     },
     async consumeChip() {
       const chip = tracker.querySelector<HTMLElement>(".tries-tracker__chip.is-playing, .tries-tracker__chip");

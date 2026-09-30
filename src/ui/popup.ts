@@ -80,7 +80,7 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
           selection?.removeAllRanges();
           selection?.addRange(range);
           code.focus();
-          status.textContent = "Code selected — copy it.";
+        status.textContent = "Code selected. Copy it.";
         }
       });
       dialog.querySelector<HTMLButtonElement>("[data-view-prizes]")?.addEventListener("click", () => {
@@ -89,7 +89,7 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
       });
     },
     showRetry(nearMiss) {
-      show(`<section aria-labelledby="result-title"><h2 id="result-title">So close — spin again!</h2>${nearMiss ? "<p>One symbol away — your next spin could be the one.</p>" : ""}<button type="button" data-close-popup>Continue</button></section>`, "retry", false);
+      show(`<section aria-labelledby="result-title"><h2 id="result-title">So close. Spin again!</h2>${nearMiss ? "<p>One symbol away. Your next spin could be the one.</p>" : ""}<button type="button" data-close-popup>Continue</button></section>`, "retry", false);
       dialog.querySelector("[data-close-popup]")?.addEventListener("click", () => dialog.close(), { once: true });
     },
     showBanked(discount, spinsLeft) {
