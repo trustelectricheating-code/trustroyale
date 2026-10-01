@@ -1,0 +1,10 @@
+reference/
+graphify-out/
+test-results/
+screenshots/
+.agents/
+.codex/
+node_modules/
+dist/
+.git/
+*.log

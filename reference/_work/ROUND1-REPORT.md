@@ -2,7 +2,7 @@
 
 Branch: `phase-d-game`
 
-Scope: owner feedback items 1–18, including 12a and the 15A/15C/15D corrections
+Scope: owner feedback items 1–19, including 12a and the 15A/15C/15D corrections
 Date: 2026-09-30
 
 ## Delivery status
@@ -16,6 +16,7 @@ All requested Round 1 implementation, automated checks, responsive evidence, and
 - The 15C correction replaced the first Keith pose set with seven corrected, full-body croupier poses.
 - The 15D clarification established that the white-disc fault affected the four face symbols and required transparent, single-rim face medallions.
 - Item 18 added the senior-phone usability pass, corrected the misleading win cue, and expanded evidence to every distinct screen at all 11 release-gate sizes.
+- Item 19 replaced the falling win melodies, unified card composition, corrected Keith's presentation, anchored the chip tray, repaired landscape-phone scaling, reduced decorative clutter, and closed the remaining small-screen gaps found in visual QA.
 
 No deployment or push was performed. No `vercel`, `neonctl`, or Neon migration command was run, and `.env.local` was not accessed. Port 5173 was not changed or stopped.
 
@@ -178,7 +179,9 @@ SPIN now starts free reel motion and the reel loop in the same press tick, while
 
 ### 18A. Correct win audio cue
 
-The effects sprite ranges matched their intended source clips; extracting and checking the declared ranges ruled out a win/near-miss offset mix-up. The misleading cue came from `coin.use` playing after the chip animation, directly before every result. On a win, that short coin sound read as part of the result and masked the start of the celebratory cue. It now plays when chip consumption begins, where its meaning is unambiguous. Win result selection is also isolated in `resultSoundNames()`, and unit coverage proves that no win result can include `nearmiss`.
+The first diagnosis was incomplete. Moving `coin.use` to the chip-consumption moment removed one ambiguous result sound, but visual QA's audio review then showed that both shipped win jingles themselves descended in pitch: `win.small` fell from about 700 Hz to 588 Hz and `win.big` from about 352 Hz to 240 Hz. Falling contours can read as failure cues even when the source files are labelled as jingles.
+
+Item 19 replaced those clips with rising CC0 Kenney Music Jingles: `jingles_SAX02.ogg` for `win.small`, and a crossfade of `jingles_PIZZI02.ogg` into `jingles_SAX02.ogg` for `win.big`. An FFmpeg-backed unit check now decodes each built sprite range to mono 16 kHz PCM, estimates pitch in 0.125-second windows, and requires the last-third median pitch to exceed the first-third median. Win result selection remains isolated in `resultSoundNames()`, and unit coverage still proves that no win result can include `nearmiss`.
 
 `ffprobe`-backed unit coverage checks every declared MP3 and WebM sprite range against the real file duration. That check also found the final MP3 range ending 14.5 ms after the 14.8855-second file; the final coin declaration was shortened to 880 ms so every range is inside both encodings.
 
@@ -201,6 +204,30 @@ Every user-visible em dash and en dash was removed from `index.html` and `src/`,
 `tests/e2e/item18.capture.ts` deterministically drives 22 ordered states with intercepted session and spin responses: all five intro pages, idle with three chips, mid-spin, four chip-vanish states, retry, banked 10%, banked 15%, final 20% coupon, Last Chance, game over, 500 error, 429 rate limit, prize table, returning finished game, and muted state. Capture-only presses call the real DOM button action directly so animated evidence controls do not trigger Playwright's stability wait.
 
 The suite passed all 11 release-gate viewports in 14.9 minutes. Each size directory contains exactly 22 non-empty PNGs, for 242 captures total, under `reference/_work/round1/screens/<width>x<height>/`. The narrow portrait intro now reserves a dedicated 56 px Sound row, removing the overlap previously visible on the prize heading and rules.
+
+## Item 19
+
+### 19A. Rising celebratory win audio
+
+Both win sprite ranges now use rising, major-key CC0 Kenney phrases rather than the previous falling melodies. The rebuild recipe names the exact source files, `LICENSES.md` records their use and processing, and the built MP3/WebM ranges remain within their declared sprite bounds. The contour regression test uses the same mono 16 kHz analysis basis as the visual QA diagnosis and passes for both `win.small` and `win.big`.
+
+### 19B. Shared card composition
+
+Intro pages, result cards, the coupon win, Last Chance, and the prize table now use one centred visual axis for eyebrow, heading, body, actions, and progress. Body copy uses the available card width, action rows are balanced, page progress is centred, and headings are constrained to balanced wraps. Keith no longer consumes the left side of win headings or forces them into jagged multi-line stacks.
+
+### 19C. Keith consistency
+
+Phone intro composition attaches Keith to the speech card instead of leaving him in a detached dark box. The floating name label was removed from sighted presentation. Win and Last Chance use compact centred Keith badges above their headings. Celebrate, good-luck, and Last Chance art now matches the intro uniform: red visor, black bow tie, black waistcoat with gold trim, white shirt, and exactly two arms.
+
+### 19D–19F. Cabinet-anchored tray and uncluttered machine
+
+Lucky Chips is one compact block: centred heading, centred chips, then a centred `Best prize: X%` line only when a prize exists. The block is capped at 420 px, centred above the cabinet in portrait, and docked beside it in landscape and desktop layouts. The 844×390 cabinet uses the available height and its SPIN artwork now scales to its measured opening rather than rendering as a clipped disc. Decorative foreground objects are limited to six edge positions, outside the tray and cabinet lanes.
+
+### 19G. Small-screen completeness
+
+The 320×568 win presentation keeps the coupon, reference, and prize-table action in the viewport. The full prize table remains available at every release-gate size, uses a fixed icon column with a clear label gap, and shortens the longest rule to “2 matching faces + 1 other face”. Portrait tablet banners use the same stacked action layout as phones, with body copy at 18 px or larger.
+
+The item 18 capture suite was rerun after these fixes at all 11 sizes. `reference/_work/round1/screens/` again contains exactly 242 non-empty PNG files: 22 ordered states in each size directory.
 
 ## Evidence
 

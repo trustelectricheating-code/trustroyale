@@ -166,7 +166,7 @@ html[data-title-placement="topper"] .marquee__frame-bulbs { display: none; }
   color: #f5e9d7;
   background: linear-gradient(115deg, rgba(9, 7, 8, .82), rgba(77, 7, 20, .76)), url("/assets/ui/paytable-panel.svg") center / 100% 100% no-repeat;
   box-shadow: inset 0 0 1.5rem #000, 0 .6rem 1.4rem rgba(0, 0, 0, .48), 0 0 1.4rem rgba(255, 191, 63, .12);
-  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
   pointer-events: auto;
   font-size: clamp(.65rem, 1.2vmin, 1rem);
   font-weight: 700;
@@ -346,7 +346,7 @@ html[data-title-placement="topper"] .marquee__frame-bulbs { display: none; }
 
 .prize-overlay::backdrop {
   background: rgba(4, 0, 2, .82);
-  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
 }
 
 .prize-overlay__panel { position: relative; padding: clamp(16px, 3vmin, 34px); }
@@ -511,9 +511,9 @@ html[data-orientation="portrait"] .prize-carousel__all { font-size: clamp(.55rem
   border: 0;
   color: #fff8e8;
   background: rgba(15, 1, 5, .72);
-  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
 }
-.intro::backdrop { background: rgba(8, 0, 3, .62); backdrop-filter: blur(8px); }
+.intro::backdrop { background: rgba(8, 0, 3, .62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
 .intro__panel { position: relative; display: grid; grid-template-columns: minmax(150px, 28vw) minmax(0, 760px); align-items: center; justify-content: center; gap: clamp(18px, 4vw, 62px); min-height: 100%; }
 .intro__host { display: grid; justify-items: center; gap: 8px; color: #ffe8a3; font: 700 clamp(1rem, 2vw, 1.4rem) "Trust Royale Display", serif; text-transform: uppercase; }
 .intro__host img { width: min(100%, 300px); aspect-ratio: 1; border: 4px solid #d4a437; border-radius: 50%; filter: drop-shadow(0 18px 28px #000b) drop-shadow(0 0 22px rgba(255, 190, 56, .35)); }
@@ -631,7 +631,7 @@ html[data-ready="true"] .spin__label { visibility: hidden; }
   text-align: center;
 }
 
-.result-popup::backdrop { background: rgba(8, 0, 3, .76); backdrop-filter: blur(8px); }
+.result-popup::backdrop { background: rgba(8, 0, 3, .76); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
 .result-popup h2 { margin: .25rem 0 1rem; font: 700 clamp(1.6rem, 6vw, 3rem)/1.08 "Trust Royale Display", serif; color: #ffe8a3; text-wrap: balance; max-width: 100%; }
 .result-popup p { margin: .75rem 0; font: 700 1rem/1.45 "Trust Royale UI", sans-serif; text-wrap: pretty; }
 .result-popup__eyebrow { margin: 0; color: #ffb746; letter-spacing: .15em; text-transform: uppercase; }
@@ -961,3 +961,145 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 @media (min-width: 601px) {
   .tries-tracker { width: 100%; max-width: 420px; }
 }
+
+/* Welcome menu and grand win screen. */
+.intro { overflow: hidden; }
+.intro { padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); }
+.intro__panel { display: grid; grid-template-columns: 1fr; grid-template-rows: none; place-items: center; align-content: center; width: 100%; min-height: 100%; overflow: visible; }
+.intro__card { position: relative; width: min(560px, 100%); padding: 20px 20px 22px; border: 2px solid var(--gold); border-radius: 28px; background: radial-gradient(circle at 50% 0, #6d1026, #2a040c 75%); box-shadow: 0 20px 60px #000a; text-align: center; }
+.intro__host { display: block; }
+.intro__host { height: auto; min-height: 0; align-self: auto; grid-area: auto; }
+.intro__host img { width: clamp(72px, 13vh, 116px); height: clamp(72px, 13vh, 116px); margin: -4px auto 0; display: block; border: 0; border-radius: 0; object-fit: contain; filter: drop-shadow(0 8px 14px #000b); }
+.intro__host span { display: none; }
+.intro__speech { max-height: none; overflow: visible; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.intro__speech::after { display: none !important; }
+.intro__mute { top: 14px; right: 14px; min-width: 56px; min-height: 56px; padding: 0 16px; }
+.intro__eyebrow { margin: 4px 0 0; font-size: 16px; }
+.intro h1 { margin: 2px 0 16px; font-size: 28px; }
+.intro__rules { display: grid; gap: 8px; margin: 0 0 12px; padding: 0; list-style: none; text-align: left; }
+.intro__rules li { display: grid; grid-template-columns: 40px 1fr; align-items: center; gap: 12px; font: 700 18px/1.3 "Trust Royale UI", sans-serif; }
+.intro__rules img { width: 40px; height: 40px; }
+.intro__prizes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 16px; }
+.intro__prizes > div { padding: 8px 4px; border: 1px solid #d4a43799; border-radius: 16px; background: #1a0207aa; }
+.intro__prizes strong { display: block; color: var(--gold-light); font: 700 30px/1 "Trust Royale Display", serif; }
+.intro__prizes em { display: block; margin-bottom: 4px; color: var(--gold-light); font-style: normal; font-size: 16px; letter-spacing: .1em; }
+.intro__prizes span { display: block; font-size: 18px; line-height: 1.25; }
+.intro__actions { display: grid; grid-template-columns: 1fr; margin-top: 0; }
+.intro__actions button { min-height: 64px; width: 100%; font-size: 24px; }
+.intro__actions .intro__more { min-height: 56px; margin-top: 8px; border: 0; color: var(--gold-light); background: transparent; font-size: 18px; text-decoration: underline; }
+.intro__panel--prizes .intro__speech { width: min(760px, 100%); padding: clamp(18px, 4vw, 48px); border: 2px solid var(--gold); border-radius: 28px; background: radial-gradient(circle at 50% 0, #78162d, #2a030b 72%); box-shadow: inset 0 0 40px #0008, 0 20px 70px #000b; }
+.intro__panel--prizes .intro-prizes { font-size: 18px; }
+.intro__panel--prizes .intro__actions button { width: auto; min-width: 180px; font-size: 18px; }
+
+.result-popup--win { inset: 0; width: 100dvw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); overflow: hidden; border: 0; border-radius: 0; background: radial-gradient(circle at 50% 35%, #7a1428, #1a0207 72%); }
+.result-popup--win section { position: relative; z-index: 1; justify-content: center; width: min(520px, 100%); min-height: 100%; margin: auto; text-align: center; }
+.result-popup--win .result-popup__keith { width: clamp(84px, 17vh, 170px); height: clamp(84px, 17vh, 170px); margin: 0 auto 4px; object-fit: contain; filter: drop-shadow(0 10px 18px #000c); }
+.result-popup--win .result-popup__eyebrow { font-size: 18px; }
+.result-popup--win .result-popup__discount { margin: 0; color: #ffe8a3; font: 700 clamp(84px, 26vw, 150px)/.95 "Trust Royale Display", serif; text-shadow: 0 0 24px #ffbe38aa, 0 6px 0 #7a4a08, 0 12px 30px #000c; }
+.result-popup--win .result-popup__off { margin: 0 0 16px; color: #fff; font: 700 clamp(28px, 8vw, 44px)/1 "Trust Royale Display", serif; letter-spacing: .06em; }
+.result-popup--win .coupon-ticket { margin: 0 auto 12px; padding: 14px 16px 16px; border: 0; border-radius: 20px; color: #3a1a02; background: linear-gradient(135deg, #fff1bf, #e5b64c 55%, #fff1bf); box-shadow: 0 10px 30px #000a; text-align: center; }
+.result-popup--win .coupon-ticket span { font-size: 16px; }
+.result-popup--win .coupon-ticket__code { display: block; grid-column: 1 / -1; margin: 4px 0 12px; color: #3a1a02; font-size: clamp(28px, 7.5vw, 34px); letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.result-popup--win .coupon-ticket button { grid-column: 1 / -1; grid-row: auto; width: 100%; min-height: 60px; font-size: 22px; }
+.result-popup--win .coupon-ticket button { background: linear-gradient(#d0213d, #9c0f25); }
+.result-popup--win .coupon-ticket__status { grid-column: 1 / -1; color: #3a1a02; font-size: 16px; }
+.result-popup--win .result-popup__instruction { margin: 0 0 14px; font-size: 18px; text-shadow: 0 2px 6px #000, 0 0 2px #000; }
+.result-popup--win .result-popup__reference { margin: 0; color: #ffe8a3cc; font-size: 16px; text-shadow: 0 2px 6px #000; }
+.result-popup--win .result-popup__reference strong { display: inline; margin: 0; font-size: inherit; }
+.result-popup--win .result-popup__view-prizes { min-height: 60px; margin-top: 12px; color: var(--gold-light); background: #26030acc; border-color: var(--gold); font-size: 22px; }
+.result-popup__fx { position: fixed; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; }
+.result-popup__beam { position: absolute; inset: 0; background: url("/assets/fx/lightbeam.webp") center/cover no-repeat; opacity: .45; mix-blend-mode: screen; }
+.result-popup__confetti { position: absolute; inset: 0; background: url("/assets/fx/confetti.webp") top center/cover no-repeat; opacity: .8; }
+.result-popup__coin { position: absolute; bottom: -40px; width: 90px; opacity: .9; }
+.result-popup__coin--left { left: -40px; } .result-popup__coin--right { right: -40px; }
+.result-popup__firework { position: absolute; width: 0; height: 0; }
+.result-popup__firework i { position: absolute; left: -3px; top: -3px; width: 6px; height: 6px; border-radius: 50%; background: var(--c); box-shadow: 0 0 10px 2px var(--c); animation: result-burst 1.6s cubic-bezier(.1,.7,.3,1) var(--d) infinite; opacity: 0; }
+@keyframes result-burst { 0% { transform: rotate(var(--a)) translateX(0) scale(1.4); opacity: 1; } 70% { opacity: 1; } 100% { transform: rotate(var(--a)) translateX(var(--r)) translateY(24px) scale(.3); opacity: 0; } }
+@media (min-width: 900px) and (orientation: landscape) { .intro__card { width: 860px; display: grid; grid-template-columns: 240px 1fr; gap: 8px 28px; padding: 28px 32px; text-align: left; } .intro__host { grid-row: 1; align-self: center; } .intro__host img { width: 240px; height: 300px; } .intro__speech h1, .intro__eyebrow { text-align: left; } }
+@media (max-width: 899px) { .intro__card { width: min(560px, 100%); padding: 12px 16px 14px; } .intro__host img { margin: 0 auto; } }
+@media (max-width: 480px) { .intro__card { border-radius: 22px; } .intro__host img { width: clamp(72px, 18vw, 116px); height: clamp(72px, 18vw, 116px); } }
+@media (max-width: 375px) { .intro__host { display: none; } .intro__rules { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; } .intro__rules li { display: flex; flex-direction: column; justify-content: start; gap: 3px; font-size: 18px; line-height: 1.05; text-align: center; } .intro__rules img { width: 32px; height: 32px; } .intro__rules span { display: block; } }
+@media (max-height: 700px) and (orientation: portrait) { .intro__card { padding-top: 8px; padding-bottom: 10px; } .intro__host img { width: 72px; height: 72px; } .intro h1 { margin-bottom: 8px; font-size: 26px; } .intro__rules { gap: 4px; margin-bottom: 8px; } .intro__rules li { line-height: 1.18; } .intro__prizes { margin-bottom: 8px; } .intro__prizes > div { padding: 5px 3px; } .intro__prizes strong { font-size: 26px; } .intro__prizes span { font-size: 18px; } .intro__actions button { min-height: 56px; } }
+@media (max-height: 600px) { .result-popup--win .result-popup__keith, .result-popup--win .result-popup__view-prizes { display: none; } .result-popup--win .result-popup__instruction { margin-bottom: 6px; } .result-popup--win .result-popup__off { margin-bottom: 8px; } .result-popup--win .coupon-ticket { margin-bottom: 6px; padding: 8px 12px; } }
+@media (max-height: 800px) and (orientation: landscape) { .result-popup--win section { padding-top: 4px; padding-bottom: 4px; } .result-popup--win .result-popup__keith { width: 76px; height: 76px; margin-bottom: 0; } .result-popup--win .result-popup__discount { font-size: clamp(72px, 17vh, 120px); } .result-popup--win .result-popup__off { margin-bottom: 8px; font-size: 32px; } .result-popup--win .coupon-ticket { margin-bottom: 6px; padding: 8px 12px; } .result-popup--win .result-popup__instruction { margin-bottom: 6px; } .result-popup--win .result-popup__view-prizes { margin-top: 6px; } }
+@media (prefers-reduced-motion: reduce) { .result-popup__firework { display: none; } }
+.intro button, .result-popup button, .prizes-button { min-height: 56px; }
+.result-popup:not(.result-popup--win) { max-height: calc(100dvh - 16px); overflow: hidden; }
+@media (max-width: 600px) { .result-popup__firework { display: none; } }
+
+/* Fresh welcome layout. These rules intentionally do not use legacy intro descendants. */
+.intro { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 8px; overflow: hidden; border: 0; background: rgba(15, 1, 5, .88); }
+.welcome { display: grid; place-items: center; width: 100%; height: 100%; overflow: hidden; }
+.welcome__card { position: relative; display: grid; grid-template-columns: 32% 68%; align-items: center; width: clamp(760px, 62vw, 1180px); max-width: calc(100vw - 16px); max-height: calc(100vh - 16px); padding: clamp(20px, 2vw, 36px); border: 2px solid var(--gold); border-radius: 28px; color: #fff; background: radial-gradient(circle at 50% 0, #6d1026, #2a040c 75%); box-shadow: 0 20px 60px #000a; }
+.welcome__keith { grid-column: 1; grid-row: 1; align-self: center; justify-self: center; width: clamp(180px, 18vw, 320px); height: clamp(250px, 42vh, 460px); object-fit: contain; filter: drop-shadow(0 8px 14px #000b); }
+.welcome__content { position: relative; grid-column: 2; grid-row: 1; min-width: 0; padding-top: 64px; text-align: left; }
+.welcome__sound { position: absolute; top: 0; right: 0; min-width: 56px; min-height: 56px; padding: 0 16px; border: 1px solid var(--gold); border-radius: 999px; color: var(--gold-light); background: #26030a; font: 700 18px "Trust Royale UI", sans-serif; }
+.welcome h1 { margin: 0 0 18px; padding-right: 72px; color: var(--gold-light); font: 700 clamp(32px, 2.3vw, 52px)/1.1 "Trust Royale Display", serif; text-align: left; text-wrap: balance; }
+.welcome__rules { display: grid; gap: 10px; margin: 0 0 18px; padding: 0; list-style: none; font-size: 18px; }
+.welcome__rules li { display: grid; grid-template-columns: 48px 1fr; align-items: center; gap: 12px; font: 700 clamp(18px, 1.15vw, 24px)/1.3 "Trust Royale UI", sans-serif; }
+.welcome__rules img { width: 48px; height: 48px; }
+.welcome__prizes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.welcome__prizes > div { padding: 10px 6px; border: 1px solid #d4a43799; border-radius: 16px; background: #1a0207aa; text-align: center; }
+.welcome__prizes strong { display: block; color: var(--gold-light); font: 700 clamp(30px, 2.2vw, 46px)/1 "Trust Royale Display", serif; }
+.welcome__prizes em { display: block; margin-bottom: 5px; color: var(--gold-light); font: 700 clamp(16px, 1vw, 20px)/1 "Trust Royale UI", sans-serif; font-style: normal; letter-spacing: .1em; }
+.welcome__prizes span { display: block; font: 700 clamp(16px, 1vw, 22px)/1.2 "Trust Royale UI", sans-serif; }
+.welcome__actions { display: grid; gap: 8px; }
+.welcome button { min-height: 56px; }
+.welcome__actions > button:first-child { min-height: clamp(64px, 5vw, 76px); border: 0; border-radius: 999px; color: #fff; background: linear-gradient(#d0213d, #9c0f25); box-shadow: 0 6px 0 #5c0714, 0 10px 24px #000a; font: 700 clamp(24px, 1.5vw, 32px) "Trust Royale UI", sans-serif; }
+.welcome__more { border: 0; color: var(--gold-light); background: transparent; font: 700 clamp(18px, 1.1vw, 22px) "Trust Royale UI", sans-serif; text-decoration: underline; }
+.welcome__handover-chip { position: fixed; z-index: 4; width: clamp(42px, 6vw, 78px); height: clamp(42px, 6vw, 78px); object-fit: contain; pointer-events: none; }
+.welcome--prizes .welcome__card { display: block; width: min(760px, calc(100vw - 16px)); }
+.welcome--prizes .welcome__content { text-align: center; }
+.welcome--prizes h1 { padding-right: 0; text-align: center; }
+.welcome-prizes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 18px 0; padding: 0; list-style: none; }
+.welcome-prize { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; min-width: 0; min-height: 56px; padding: 8px; border: 1px solid rgba(212,164,55,.38); border-radius: 12px; font: 700 18px/1.2 "Trust Royale UI", sans-serif; text-align: left; }
+.welcome-prize:last-child { grid-column: 1 / -1; }
+.welcome-prize__icons { display: flex; }
+.welcome-prize__icons img { width: 36px; height: 36px; margin-right: -5px; object-fit: contain; }
+.welcome-prize strong { color: var(--gold-light); white-space: nowrap; }
+.welcome--prizes .welcome__actions { justify-items: center; }
+.welcome--prizes .welcome__actions button { width: min(240px, 100%); border: 1px solid var(--gold); border-radius: 999px; color: #fff; background: #b20d29; font: 700 18px "Trust Royale UI", sans-serif; }
+/* Single-column welcome card for phones and portrait tablets. Sound sits in the card's top-right corner. */
+@media (max-width: 899px) {
+  .welcome__card { display: block; width: min(620px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); padding: 16px; }
+  .welcome__content { position: static; padding-top: 0; text-align: center; }
+  .welcome__sound { top: 12px; right: 12px; }
+  .welcome__keith { display: block; width: auto; height: clamp(72px, 14vh, 200px); margin: 0 auto 6px; }
+  .welcome h1 { padding: 0 64px; text-align: center; }
+  .welcome__rules { text-align: left; }
+  .welcome--prizes .welcome__content { max-height: calc(100dvh - 48px); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; }
+  .welcome--prizes .welcome__content > p { margin: 0; }
+  .welcome--prizes .welcome-prizes { grid-template-columns: 1fr; grid-auto-rows: max-content; align-content: start; min-height: 0; overflow-y: auto; padding-bottom: 12px; -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 18px), transparent 100%); mask-image: linear-gradient(to bottom, #000 calc(100% - 18px), transparent 100%); }
+  .welcome--prizes .welcome-prize:last-child { grid-column: auto; }
+}
+@media (max-width: 480px) {
+  .welcome__card { padding: 12px; border-radius: 22px; }
+  .welcome__sound { top: 8px; right: 8px; }
+  .welcome h1 { margin-bottom: 10px; padding: 0 60px; font-size: clamp(24px, 7.5vw, 32px); }
+  .welcome__rules { gap: 6px; margin-bottom: 10px; }
+  .welcome__rules li { grid-template-columns: 40px 1fr; gap: 8px; font-size: 18px; line-height: 1.25; }
+  .welcome__rules img { width: 40px; height: 40px; }
+  .welcome__prizes { gap: 6px; margin-bottom: 12px; }
+  .welcome__prizes > div { padding: 6px 4px; }
+  .welcome__prizes strong { font-size: 28px; }
+  .welcome__prizes span { font-size: 16px; }
+  .welcome__actions { gap: 4px; }
+  .welcome__actions > button:first-child { min-height: 60px; font-size: 24px; }
+}
+/* Short phones (375x667 and smaller): Keith shrinks, then hides at 568px tall. */
+@media (max-width: 480px) and (max-height: 700px) {
+  .welcome__keith { height: 64px; margin-bottom: 2px; }
+  .welcome h1 { font-size: 24px; }
+  .welcome__rules li { line-height: 1.15; }
+  .welcome__prizes strong { font-size: 26px; }
+}
+@media (max-width: 480px) and (max-height: 600px) {
+  .welcome__keith { display: none; }
+  .welcome h1 { min-height: 56px; margin-top: 2px; padding: 0 100px 0 4px; text-align: left; }
+}
+/* The full 15-character coupon code must stay at 28px on 320px phones, so the ticket gives up some side padding there. */
+@media (max-width: 359px) { .result-popup--win .coupon-ticket { padding-inline: 8px; } .result-popup--win .coupon-ticket__code { letter-spacing: 0; } }
+/* Chips shrink with the tracker column (1024x768 gives it under 130px) instead of spilling past its edge. */
+.tries-tracker__chips { justify-self: stretch; }
+.tries-tracker__chip { flex: 0 1 auto; min-width: 0; height: auto; aspect-ratio: 1; }
+@media (max-height: 700px) { .result-popup--win .coupon-ticket { padding-bottom: 10px; } .result-popup--win .coupon-ticket__code { margin-bottom: 6px; } }

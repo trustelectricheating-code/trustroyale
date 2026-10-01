@@ -20,6 +20,14 @@ export interface AssetEntry {
 export interface AssetManifest { version: 1; groups: AssetGroup[]; assets: AssetEntry[] }
 type AssetApi = Pick<typeof Assets, "addBundle" | "loadBundle">;
 
+function isCritical(entry: AssetEntry): boolean {
+  if (!INITIAL_ASSET_GROUPS.includes(entry.group as (typeof INITIAL_ASSET_GROUPS)[number])) return false;
+  if (entry.group === "symbols") return ["sym.cherry", "sym.seven", "sym.sweets", "sym.neos.chip"].includes(entry.key);
+  if (entry.group === "faces") return entry.key.endsWith(".idle");
+  if (entry.group === "emblem") return entry.key === "emblem.neos.svg";
+  return entry.key === "fx.chip.navy.face" || entry.key === "fx.chip.gold.tilt";
+}
+
 export function parseAssetManifest(value: unknown): AssetManifest {
   if (!value || typeof value !== "object") throw new Error("Invalid asset manifest");
   const manifest = value as Partial<AssetManifest>;
@@ -54,8 +62,14 @@ export async function loadInitialAssets(fetcher: typeof fetch = fetch, assets: A
   if (!response.ok) throw new Error(`Manifest request failed: ${response.status}`);
   const manifest = parseAssetManifest(await response.json());
   registerAssetBundles(manifest, assets);
-  await Promise.all(INITIAL_ASSET_GROUPS.map((group) => assets.loadBundle(group)));
+  const initial = manifest.assets.filter(isCritical);
+  const deferred = manifest.assets.filter((entry) => INITIAL_ASSET_GROUPS.includes(entry.group as (typeof INITIAL_ASSET_GROUPS)[number]) && !isCritical(entry));
+  assets.addBundle("initial", Object.fromEntries(initial.map((entry) => [entry.key, assetUrl(entry)])));
+  assets.addBundle("deferred", Object.fromEntries(deferred.map((entry) => [entry.key, assetUrl(entry)])));
+  await assets.loadBundle("initial");
   return manifest;
 }
+
+export async function loadDeferredAssets(assets: AssetApi = Assets): Promise<void> { await assets.loadBundle("deferred"); }
 
 export async function loadAudioAssets(assets: AssetApi = Assets): Promise<void> { await assets.loadBundle("audio"); }

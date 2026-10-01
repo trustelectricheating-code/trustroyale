@@ -44,7 +44,7 @@ test("capture Phase 5–8 review states", async ({ page }) => {
 
     await page.getByRole("button", { name: "Play" }).click();
     await page.getByRole("button", { name: "Spin the reels" }).click();
-    await expect(page.getByRole("heading", { name: "You've won 15% off your order" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "15%" })).toBeVisible();
     await page.getByRole("button", { name: "Copy code" }).click();
     await expect(page.getByText("Copied!")).toBeVisible();
     await page.screenshot({ path: path.join(output, `coupon-copied-${viewport.width}x${viewport.height}.png`) });

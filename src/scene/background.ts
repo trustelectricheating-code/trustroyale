@@ -125,9 +125,20 @@ function card(): Container {
 }
 
 export async function createBackground(): Promise<EnvironmentScene> {
-  const entries = Object.entries(ASSETS) as [keyof typeof ASSETS, string][];
+  const portrait = innerWidth < innerHeight;
+  const firstScreenKeys = new Set<keyof typeof ASSETS>([
+    portrait ? "hallPortrait" : "hallLandscape",
+    "chipNavy",
+    "chipGoldFar",
+    "coinFar",
+  ]);
+  const entries = (Object.entries(ASSETS) as [keyof typeof ASSETS, string][])
+    .filter(([key]) => firstScreenKeys.has(key));
   const loaded = await Assets.load<Texture>(entries.map(([, url]) => url));
-  const textures = Object.fromEntries(entries.map(([key, url]) => [key, loaded[url]])) as Record<keyof typeof ASSETS, Texture>;
+  const textures = Object.fromEntries(
+    (Object.entries(ASSETS) as [keyof typeof ASSETS, string][])
+      .map(([key, url]) => [key, loaded[url] ?? Texture.EMPTY]),
+  ) as Record<keyof typeof ASSETS, Texture>;
   const back = new Container();
   const front = new Container();
   const hallLandscape = new Sprite(textures.hallLandscape);

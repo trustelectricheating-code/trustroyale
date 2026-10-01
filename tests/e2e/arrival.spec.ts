@@ -38,7 +38,7 @@ test("arrival animates in place, unlocks audio, and persists mute", async ({ pag
   expect(before).toBeDefined();
   expect(after).not.toEqual(before);
 
-  await page.getByRole("button", { name: "Skip" }).click();
+  await page.getByRole("button", { name: "Let's play!" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-game-state", "idle");
   await page.waitForTimeout(900);
   const chipsStayInside = await page.evaluate(() => ((window as Window & { __trustRoyaleDebug?: { chipPositions?: () => number[][] } }).__trustRoyaleDebug?.chipPositions?.() ?? [])
@@ -57,7 +57,7 @@ test("reduced motion can play and resolve a spin", async ({ page }) => {
   await mockApis(page);
   await page.goto("/");
   await ready(page);
-  await page.getByRole("button", { name: "Skip" }).click();
+  await page.getByRole("button", { name: "Let's play!" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-game-state", "idle");
   await page.getByRole("button", { name: "Spin the reels" }).click();
   await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();

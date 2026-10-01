@@ -31,15 +31,11 @@ test("phone controls and copy are senior friendly", async ({ page }) => {
   await page.goto("/");
   await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
 
-  for (let introPage = 0; introPage < 5; introPage += 1) {
-    await fontSize(page.locator("#intro h1"), 24);
-    await fontSize(page.locator(".intro__speech > p:not(.intro__eyebrow, .intro__progress)"), 18);
-    const actions = page.locator(".intro__actions button");
-    for (let index = 0; index < await actions.count(); index += 1) await minimumSize(actions.nth(index));
-    expect(await page.locator(".intro__actions").evaluate((node) => Number.parseFloat(getComputedStyle(node).gap))).toBeGreaterThanOrEqual(12);
-    await minimumSize(page.locator(".intro__mute"));
-    if (introPage < 4) await press(page.getByRole("button", { name: "Next" }));
-  }
+  await fontSize(page.locator("#intro h1"), 24);
+  await fontSize(page.locator(".welcome__rules"), 18);
+ const actions = page.locator(".welcome__actions button");
+  for (let index = 0; index < await actions.count(); index += 1) await minimumSize(actions.nth(index));
+ await minimumSize(page.locator(".welcome__sound"));
 
   await press(page.getByRole("button", { name: "Let's play!" }));
   await expect(page.locator("#intro")).not.toBeVisible();
@@ -47,11 +43,12 @@ test("phone controls and copy are senior friendly", async ({ page }) => {
   await minimumSize(page.locator("#prizes"));
   await minimumSize(page.locator("#spin"));
   await press(page.locator("#spin"));
-  await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible({ timeout: 15_000 });
+ await expect(page.getByRole("heading", { name: "20%" })).toBeVisible({ timeout: 15_000 });
   await fontSize(page.locator("#result-popup h2"), 24);
   await fontSize(page.locator(".coupon-ticket__code"), 28);
   await fontSize(page.locator("#result-popup p").first(), 18);
-  const resultButtons = page.locator("#result-popup button");
+  // "View prize table" is hidden by design on screens shorter than 600px, so only visible buttons are measured.
+  const resultButtons = page.locator("#result-popup button:visible");
   for (let index = 0; index < await resultButtons.count(); index += 1) await minimumSize(resultButtons.nth(index));
   expect(await page.locator("body").innerText()).not.toMatch(/[—–]/);
   expect(await page.locator("#result-popup h2").evaluate((node) => getComputedStyle(node).textWrap)).toBe("balance");

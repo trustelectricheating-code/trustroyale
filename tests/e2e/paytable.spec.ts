@@ -34,20 +34,19 @@ test("portrait prize menu fits and exposes every rule", async ({ page }) => {
   await mockSession(page);
   await page.goto("/");
   await ready(page);
-  await page.getByRole("button", { name: "Skip" }).click();
-  await page.getByRole("button", { name: "Prizes" }).click();
+  await page.getByRole("button", { name: "See every winning line" }).click();
 
   const dialog = page.locator("#intro");
   await expect(dialog).toBeVisible();
-  await expect(dialog.locator(".intro-prize")).toHaveCount(7);
-  expect(await dialog.locator(".intro-prize").evaluateAll((nodes) => nodes.map((node) => node.getAttribute("aria-label")))).toEqual(PAYTABLE.map((rule) => rule.ariaLabel));
-  const fit = await dialog.locator(".intro__panel").evaluate((node) => {
+  await expect(dialog.locator(".welcome-prize")).toHaveCount(7);
+  expect(await dialog.locator(".welcome-prize").evaluateAll((nodes) => nodes.map((node) => node.getAttribute("aria-label")))).toEqual(PAYTABLE.map((rule) => rule.ariaLabel));
+  const fit = await dialog.locator(".welcome__card").evaluate((node) => {
     const box = node.getBoundingClientRect();
     return box.left >= 0 && box.top >= 0 && box.right <= innerWidth && box.bottom <= innerHeight
       && node.scrollWidth <= node.clientWidth + 1 && node.scrollHeight <= node.clientHeight + 1;
   });
   expect(fit).toBe(true);
-  await page.getByRole("button", { name: "Close" }).click();
+  await page.getByRole("button", { name: "Back to menu" }).click();
 });
 
 test("final popup reopens prizes on the winning rule", async ({ page }) => {
@@ -56,11 +55,11 @@ test("final popup reopens prizes on the winning rule", async ({ page }) => {
   await page.route("**/api/spin", (route: Route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(finalWin) }));
   await page.goto("/");
   await ready(page);
-  await page.getByRole("button", { name: "Skip" }).click();
+  await page.getByRole("button", { name: "Let's play!" }).click();
   await page.getByRole("button", { name: "Spin the reels" }).click({ force: true });
-  await expect(page.getByRole("heading", { name: "You've won 15% off your order" })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("heading", { name: "15%" })).toBeVisible({ timeout: 15_000 });
   await page.getByRole("button", { name: "View prize table" }).click();
-  await expect(page.locator(".intro-prize")).toHaveCount(7);
+  await expect(page.locator(".welcome-prize")).toHaveCount(7);
   await expect(page.locator('[data-rule-id="keith-2-any"]')).toBeVisible();
   await expect(page.locator('[data-rule-id="keith-2-any"]')).toHaveClass(/is-winning/);
 });

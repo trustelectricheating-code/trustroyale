@@ -45,24 +45,18 @@ async function ready(page: Page): Promise<void> {
 
 async function enterGame(page: Page): Promise<void> {
   await expect(page.getByRole("heading", { name: "Welcome to Trust Royale" })).toBeVisible();
-  await page.getByRole("button", { name: "Skip" }).click();
+  await page.getByRole("button", { name: "Let's play!" }).click();
   await expect(page.locator("#intro")).not.toBeVisible();
 }
 
-test("production CSP is present and fresh players see all four intro pages", async ({ page }) => {
+test("production CSP is present and fresh players see the single welcome menu", async ({ page }) => {
   await mockSession(page);
   const response = await page.goto("/");
   expect(response?.headers()["content-security-policy"]).toContain("script-src 'self'");
   await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
   await expect(page.getByRole("heading", { name: "Welcome to Trust Royale" })).toBeVisible();
-  await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.getByText("Win on any try and keep spinning. Your best prize counts, up to 20%.")) .toBeVisible();
-  await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.locator(".intro-prize")).toHaveCount(7);
-  await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.getByRole("heading", { name: "Your code appears at the end" })).toBeVisible();
-  await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.getByRole("heading", { name: "Here are your 3 lucky chips, one per spin!" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Let's play!" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "See every winning line" })).toBeVisible();
   await page.getByRole("button", { name: "Let's play!" }).click();
   await expect(page.locator("#spin")).toBeEnabled();
   await expect(page.locator("#spin")).toHaveText("SPIN");
@@ -98,8 +92,8 @@ test("only deliberate spin actions issue requests, including retry and Last Chan
 
   await page.locator("#prizes").focus();
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("heading", { name: "Line up the middle row" })).toBeVisible();
-  await page.getByRole("button", { name: "Close" }).click();
+  await expect(page.getByRole("heading", { name: "Every winning line" })).toBeVisible();
+  await page.getByRole("button", { name: "Back to game" }).click();
   await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
   await page.keyboard.press("Space");
   await page.waitForTimeout(10_000);
@@ -189,19 +183,14 @@ test("intro and popup menu buttons play the soft click, including the first gest
   await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(loss(1, 2)) }));
   await ready(page);
   expect(await page.locator("html").getAttribute("data-sound-play-count")).toBeNull();
-  await expectLarge(page.getByRole("button", { name: "Next" }));
-  await page.getByRole("button", { name: "Next" }).click();
+  await expectLarge(page.getByRole("button", { name: "Let's play!" }));
+  await page.getByRole("button", { name: "Let's play!" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-last-sound", "button");
-  const afterNext = Number(await page.locator("html").getAttribute("data-sound-play-count"));
-  await expectLarge(page.getByRole("button", { name: "Back" }));
-  await page.getByRole("button", { name: "Back" }).click();
-  await expect.poll(async () => Number(await page.locator("html").getAttribute("data-sound-play-count"))).toBeGreaterThan(afterNext);
-  await page.getByRole("button", { name: "Skip" }).click();
-  const afterSkip = Number(await page.locator("html").getAttribute("data-sound-play-count"));
+  const afterMenu = Number(await page.locator("html").getAttribute("data-sound-play-count"));
   await expectLarge(page.getByRole("button", { name: "Prizes" }));
   await page.getByRole("button", { name: "Prizes" }).click();
-  await page.getByRole("button", { name: "Close" }).click();
-  await expect.poll(async () => Number(await page.locator("html").getAttribute("data-sound-play-count"))).toBeGreaterThan(afterSkip + 1);
+  await page.getByRole("button", { name: "Back to game" }).click();
+  await expect.poll(async () => Number(await page.locator("html").getAttribute("data-sound-play-count"))).toBeGreaterThan(afterMenu);
   await page.locator("#spin").click();
   await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
   await expectLarge(page.getByRole("button", { name: "Continue" }));
@@ -222,14 +211,14 @@ test("best-of-three waits for presses and reveals only final coupon", async ({ p
   const button = page.locator("#spin");
   await button.click();
   await expect(page.getByRole("heading", { name: "15% banked!" })).toBeVisible();
-  await expect(page.locator("#tries-tracker")).toContainText("Best: 15%");
+  await expect(page.locator("#tries-tracker")).toContainText("Best prize: 15%");
   await expect(page.getByText("ROYALE20")).toHaveCount(0);
   await page.waitForTimeout(1_000);
   expect(requests).toBe(1);
   await button.click();
   await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
   await button.click();
-  await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "20%" })).toBeVisible();
   await expect(page.getByText("ROYALE20")).toBeVisible();
   expect(requests).toBe(3);
   await page.getByRole("button", { name: "View prize table" }).click();
@@ -241,7 +230,7 @@ test("returning mid-game player skips intro and resumes tracker", async ({ page 
   await ready(page);
   await expect(page.locator("#intro")).not.toBeVisible();
   await expect(page.locator("#tries-tracker")).toHaveAttribute("aria-label", "1 chip left");
-  await expect(page.locator("#tries-tracker")).toContainText("Best: 15%");
+  await expect(page.locator("#tries-tracker")).toContainText("Best prize: 15%");
 });
 
 test("non-face payline symbols contain artwork, never blank white discs", async ({ page }) => {

@@ -57,7 +57,7 @@ async function press(locator: Locator): Promise<void> {
 }
 
 async function enter(page: Page): Promise<void> {
-  await press(page.getByRole("button", { name: "Skip" }));
+  await press(page.getByRole("button", { name: "Let's play!" }));
 }
 
 for (const viewport of [{ width: 1920, height: 1080 }, { width: 390, height: 844 }, { width: 320, height: 568 }]) {
@@ -74,10 +74,7 @@ for (const viewport of [{ width: 1920, height: 1080 }, { width: 390, height: 844
     await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(results[request++]) }));
 
     await waitReady(page);
-    for (let pageIndex = 1; pageIndex <= 5; pageIndex += 1) {
-      await page.screenshot({ path: path.join(output, `keith-intro-${pageIndex}-${viewport.width}x${viewport.height}.png`) });
-      if (pageIndex < 5) await press(page.getByRole("button", { name: "Next" }));
-    }
+    await page.screenshot({ path: path.join(output, `keith-menu-${viewport.width}x${viewport.height}.png`) });
     await press(page.getByRole("button", { name: "Let's play!" }));
     await page.waitForTimeout(220);
     await page.screenshot({ path: path.join(output, `chip-handover-${viewport.width}x${viewport.height}.png`) });
@@ -132,7 +129,7 @@ for (const viewport of [{ width: 1920, height: 1080 }, { width: 390, height: 844
     await page.waitForFunction(() => document.documentElement.dataset.spinning === "true");
     await page.waitForFunction(() => document.documentElement.dataset.spinning !== "true");
     await page.screenshot({ path: path.join(output, `win-line-${viewport.width}x${viewport.height}.png`) });
-    await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible();
+ await expect(page.getByRole("heading", { name: "20%" })).toBeVisible();
     await page.screenshot({ path: path.join(output, `win-popup-${viewport.width}x${viewport.height}.png`) });
     await press(page.getByRole("button", { name: "View prize table" }));
     await page.screenshot({ path: path.join(output, `prizes-highlighted-${viewport.width}x${viewport.height}.png`) });
@@ -163,7 +160,7 @@ for (const viewport of [{ width: 1920, height: 1080 }, { width: 390, height: 844
     await page.screenshot({ path: path.join(output, "best-of-three", `02-loss-keeps-15-${viewport.width}x${viewport.height}.png`) });
     await press(page.getByRole("button", { name: "Continue" }));
     await press(page.locator("#spin"));
-    await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible({ timeout: 15_000 });
+ await expect(page.getByRole("heading", { name: "20%" })).toBeVisible({ timeout: 15_000 });
     await page.screenshot({ path: path.join(output, "best-of-three", `03-final-20-${viewport.width}x${viewport.height}.png`) });
   });
 }

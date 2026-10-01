@@ -14,9 +14,10 @@ async function filesBelow(directory) {
   }))).flat();
 }
 
+const distFiles = await filesBelow("dist");
 const assetFiles = await filesBelow("dist/assets");
-const jsFiles = assetFiles.filter((file) => file.endsWith(".js"));
-const cssFiles = assetFiles.filter((file) => file.endsWith(".css"));
+const jsFiles = distFiles.filter((file) => file.endsWith(".js"));
+const cssFiles = distFiles.filter((file) => file.endsWith(".css"));
 const preplayAssets = assetFiles.filter((file) => PREPLAY_DIRECTORIES.includes(path.relative("dist/assets", file).split(path.sep)[0]));
 const jsGzip = (await Promise.all(jsFiles.map(async (file) => gzipSync(await readFile(file)).byteLength))).reduce((sum, bytes) => sum + bytes, 0);
 const preplay = (await Promise.all([...jsFiles, ...cssFiles, ...preplayAssets].map(async (file) => (await stat(file)).size))).reduce((sum, bytes) => sum + bytes, 0);

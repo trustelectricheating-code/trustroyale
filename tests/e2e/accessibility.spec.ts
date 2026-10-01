@@ -19,7 +19,7 @@ test("result dialog announces, traps focus, and shows keyboard focus", async ({ 
   await mockApis(page);
   await page.goto("/");
   await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
-  await page.getByRole("button", { name: "Skip" }).click();
+  await page.getByRole("button", { name: "Let's play!" }).click();
   await page.getByRole("button", { name: "Spin the reels" }).click({ force: true });
 
   const dialog = page.getByRole("dialog");

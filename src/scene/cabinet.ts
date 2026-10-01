@@ -9,9 +9,9 @@ const ASSETS = {
   gia: "/assets/mock/gia-medallion.webp",
   keith: "/assets/mock/keith-medallion.webp",
   neos: "/assets/symbols/neos-chip-red.webp",
-  cherry: "/assets/mock/cherry-reel.webp",
-  seven: "/assets/mock/seven-reel.webp",
-  sweets: "/assets/mock/sweets-reel.webp",
+  cherry: "/assets/symbols/cherry.webp",
+  seven: "/assets/symbols/seven.webp",
+  sweets: "/assets/symbols/sweets.webp",
 } as const;
 
 export interface ReelSymbolMetric {

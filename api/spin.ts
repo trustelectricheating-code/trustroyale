@@ -41,17 +41,18 @@ export function createSpinHandler(dependencies: SpinDependencies = {}) {
       // Local `vercel dev` sees every test run as loopback, so the daily cap only applies to deployed traffic.
       const local = ["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(clientIp(request));
       const cap = local ? 0 : Number.parseInt(process.env.DAILY_SESSIONS_PER_IP ?? "20", 10);
-      if (cap > 0) {
-        const counts = await query<{ count: number | string }>(`
-          SELECT count(*) AS count
-            FROM sessions
-           WHERE ip_hash = (SELECT ip_hash FROM sessions WHERE id = $1)
-             AND created_at >= date_trunc('day', now())
-        `, [sessionId]);
-        if (Number(counts[0]?.count ?? 0) > cap) return error(response, 429, "rate_limited");
-      }
-
-      const sessionRows = await query<{ spins_used: number }>("SELECT spins_used FROM sessions WHERE id = $1", [sessionId]);
+      const sessionRows: Array<{ spins_used: number; count?: number | string }> = cap > 0
+        ? await query<{ spins_used: number; count: number | string }>(`
+            SELECT s.spins_used,
+                   (SELECT count(*)
+                      FROM sessions counted
+                     WHERE counted.ip_hash = s.ip_hash
+                       AND counted.created_at >= date_trunc('day', now())) AS count
+              FROM sessions s
+             WHERE s.id = $1
+          `, [sessionId])
+        : await query<{ spins_used: number }>("SELECT spins_used FROM sessions WHERE id = $1", [sessionId]);
+      if (cap > 0 && Number(sessionRows[0]?.count ?? 0) > cap) return error(response, 429, "rate_limited");
       const rolled = spinReels({ bonus: Number(sessionRows[0]?.spins_used ?? 0) >= 3 });
       const { reels, strip } = rolled;
       if (strip[1].some((symbol, index) => symbol !== reels[index])) throw new Error("strip[1] must equal reels");

@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
-import { getAssetEntry, INITIAL_ASSET_GROUPS, loadAudioAssets, loadInitialAssets, parseAssetManifest } from "../../src/assets";
+import { getAssetEntry, loadAudioAssets, loadInitialAssets, parseAssetManifest } from "../../src/assets";
 import { SYMBOLS } from "../../src/config/symbols";
 
 async function realManifest() {
@@ -25,8 +25,9 @@ describe("asset loader", () => {
     const fetcher = vi.fn(async () => new Response(JSON.stringify(manifest), { status: 200 }));
     const assets = { addBundle: vi.fn(), loadBundle: vi.fn(async (_group: string) => ({})) };
     await loadInitialAssets(fetcher, assets as never);
-    expect(assets.addBundle).toHaveBeenCalledTimes(manifest.groups.length);
-    expect(assets.loadBundle.mock.calls.map(([group]) => group)).toEqual(INITIAL_ASSET_GROUPS);
+    expect(assets.addBundle).toHaveBeenCalledTimes(manifest.groups.length + 2);
+    expect(assets.loadBundle).toHaveBeenCalledWith("initial");
+    expect(assets.addBundle).toHaveBeenCalledWith("deferred", expect.any(Object));
     await loadAudioAssets(assets as never);
     expect(assets.loadBundle).toHaveBeenLastCalledWith("audio");
   });

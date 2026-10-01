@@ -10,6 +10,7 @@ export default defineConfig({
   server: { headers: productionHeaders },
   preview: { headers: productionHeaders },
   build: {
+    assetsDir: "build",
     rollupOptions: {
       input: {
         game: new URL("index.html", import.meta.url).pathname,

@@ -65,7 +65,7 @@ for (const [width, height] of sizes) {
       await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
     };
     const enter = async () => {
-      if (await page.locator("#intro").isVisible()) await press(page.getByRole("button", { name: "Skip" }));
+      if (await page.locator("#intro").isVisible()) await press(page.getByRole("button", { name: "Let's play!" }));
       await expect(page.locator("#intro")).not.toBeVisible();
     };
     const spinAndCaptureVanish = async (nextSession: object, reply: object, name: string, lastChance = false) => {
@@ -81,10 +81,7 @@ for (const [width, height] of sizes) {
     };
 
     await load(fresh);
-    for (let index = 1; index <= 5; index += 1) {
-      await shot(`0${index}-intro-${index}.png`);
-      if (index < 5) await press(page.getByRole("button", { name: "Next" }));
-    }
+    await shot("01-menu.png");
     await press(page.getByRole("button", { name: "Let's play!" }));
     await expect(page.locator("#intro")).not.toBeVisible();
     await shot("06-idle-3-chips.png");
@@ -114,7 +111,7 @@ for (const [width, height] of sizes) {
 
     spinBody = final20;
     await load(idle(1, best15)); await press(page.locator("#spin"));
-    await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible({ timeout: 15_000 });
+ await expect(page.getByRole("heading", { name: "20%" })).toBeVisible({ timeout: 15_000 });
     await shot("15-win-20-coupon.png");
 
     await load({ spinsLeft: 0, bonusAvailable: true, state: "last_chance", best: null, win: null });
@@ -134,10 +131,10 @@ for (const [width, height] of sizes) {
     await shot("19-rate-limited-429.png");
 
     await load(idle(2)); await press(page.getByRole("button", { name: "Prizes" }));
-    await expect(page.locator(".intro-prize")).toHaveCount(7);
+    await expect(page.locator(".welcome-prize")).toHaveCount(7);
     await shot("20-prize-table.png");
     await load(finished);
-    await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible();
+ await expect(page.getByRole("heading", { name: "20%" })).toBeVisible();
     await shot("21-returning-finished.png");
     await load(idle(2)); await press(page.locator("#mute"));
     await expect(page.locator("#mute")).toHaveAttribute("aria-label", "Unmute sound");

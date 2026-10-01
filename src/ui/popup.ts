@@ -47,25 +47,8 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
   };
   return {
     showWin(win) {
-      const neosSymbols = win.ruleId === "neos-3"
-        ? '<div class="result-popup__symbols" aria-label="Three Neos chips"><img src="/assets/symbols/neos-chip-red.webp" alt=""><img src="/assets/symbols/neos-chip-red.webp" alt=""><img src="/assets/symbols/neos-chip-red.webp" alt=""></div>'
-        : "";
-      show(`<section aria-labelledby="result-title">
-        <img class="result-popup__keith" src="/assets/keith/celebrate.webp" alt="Keith celebrating">
-        <p class="result-popup__eyebrow">Trust Royale winner</p>
-        <h2 id="result-title">You've won ${win.discount}% off your order</h2>
-        ${neosSymbols}
-        <p>One voucher per order</p>
-        <div class="coupon-ticket">
-          <span>Your code:</span>
-          <code class="coupon-ticket__code" tabindex="0"></code>
-          <button type="button" data-copy-code>Copy code</button>
-          <output class="coupon-ticket__status" aria-live="polite"></output>
-        </div>
-        <p class="result-popup__instruction">Use this code on our offer page to claim your discount.</p>
-        <p class="result-popup__reference">Win reference <strong>${win.winRef}</strong></p>
-        <button type="button" data-view-prizes>View prize table</button>
-      </section>`, "win");
+      const fireworks = Array.from({ length: 7 }, (_, burst) => `<div class="result-popup__firework" style="left:${[18, 82, 50, 12, 88, 30, 70][burst]}%;top:${[16, 12, 8, 48, 44, 26, 30][burst]}%">${Array.from({ length: 18 }, (_, particle) => `<i style="--a:${particle * 20}deg;--r:${60 + (burst % 3) * 25}px;--d:${[0, .5, 1, .9, .25, 1.3, .7][burst]}s;--c:${["#ffd54a", "#ff3b5c", "#ffffff", "#ffb13b", "#ff6ad5"][burst % 5]}"></i>`).join("")}</div>`).join("");
+      show(`<div class="result-popup__fx" aria-hidden="true"><div class="result-popup__beam"></div><div class="result-popup__confetti"></div><img class="result-popup__coin result-popup__coin--left" src="/assets/fx/coin.webp" alt=""><img class="result-popup__coin result-popup__coin--right" src="/assets/fx/coin.webp" alt="">${fireworks}</div><section aria-labelledby="result-title"><img class="result-popup__keith" src="/assets/keith/celebrate.webp" alt="Keith celebrating"><p class="result-popup__eyebrow">Congratulations, you won</p><h2 id="result-title" class="result-popup__discount">${win.discount}%</h2><p class="result-popup__off">OFF YOUR ORDER</p><div class="coupon-ticket"><span>Your code</span><code class="coupon-ticket__code" tabindex="0"></code><button type="button" data-copy-code>Copy code</button><output class="coupon-ticket__status" aria-live="polite"></output></div><p class="result-popup__instruction">Keep this code safe. When our Chief Chatterer calls you, read them this code to claim your discount. One voucher per order.</p><p class="result-popup__reference">Win reference <strong>${win.winRef}</strong></p><button type="button" class="result-popup__view-prizes" data-view-prizes>View prize table</button></section>`, "win");
       const code = dialog.querySelector<HTMLElement>(".coupon-ticket__code")!;
       code.textContent = win.couponCode;
       const status = dialog.querySelector<HTMLOutputElement>(".coupon-ticket__status")!;

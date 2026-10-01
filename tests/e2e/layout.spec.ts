@@ -23,7 +23,7 @@ test("full-screen game and prize overlay fit supported layouts", async ({ page }
   for (const viewport of VIEWPORTS) {
     await page.setViewportSize(viewport);
     await ready(page);
-    await page.getByRole("button", { name: "Skip" }).click();
+    await page.getByRole("button", { name: "Let's play!" }).click();
 
     const result = await page.evaluate(() => {
       const canvas = document.querySelector("canvas")!.getBoundingClientRect();
@@ -63,10 +63,10 @@ test("full-screen game and prize overlay fit supported layouts", async ({ page }
     await expect(page.locator("#tries-tracker")).toHaveAttribute("aria-label", "3 chips left");
     await expect(page.locator("#spin")).toBeVisible();
     await page.getByRole("button", { name: "Prizes" }).click();
-    await expect(page.locator(".intro-prize")).toHaveCount(7);
-    const images = page.locator(".intro-prize img");
+    await expect(page.locator(".welcome-prize")).toHaveCount(7);
+    const images = page.locator(".welcome-prize img");
     await expect(images).toHaveCount(21);
     expect(await images.evaluateAll((nodes) => nodes.every((node) => (node as HTMLImageElement).complete && (node as HTMLImageElement).naturalWidth > 0))).toBe(true);
-    await page.getByRole("button", { name: "Close" }).click();
+    await page.getByRole("button", { name: "Back to game" }).click();
   }
 });

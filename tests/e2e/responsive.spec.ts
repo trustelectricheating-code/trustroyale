@@ -70,15 +70,10 @@ for (const [width, height] of sizes) {
     await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
     const directory = path.join(process.cwd(), "reference/_work/round1/responsive");
 
-    for (let introPage = 1; introPage <= 5; introPage += 1) {
-      const host = page.locator(".intro__host img");
-      const speech = page.locator(".intro__speech");
-      await assertInside(page, host, width, height);
-      await assertInside(page, speech, width, height, true);
-      expect(overlaps(await box(host), await box(speech))).toBe(false);
-      await page.screenshot({ path: path.join(directory, `${width}x${height}-intro-${introPage}.png`) });
-      if (introPage < 5) await page.getByRole("button", { name: "Next" }).click();
-    }
+    await expect(page.getByRole("heading", { name: "Welcome to Trust Royale" })).toBeVisible();
+    await expect(page.locator("#intro")).toHaveJSProperty("scrollWidth", width);
+    await expect(page.locator("#intro")).toHaveJSProperty("scrollHeight", height);
+    await page.screenshot({ path: path.join(directory, `${width}x${height}-menu.png`) });
     await page.getByRole("button", { name: "Let's play!" }).click();
     await expect(page.locator("#intro")).not.toBeVisible();
 
@@ -113,7 +108,7 @@ for (const [width, height] of sizes) {
     await page.screenshot({ path: path.join(directory, `${width}x${height}-chips-1.png`) });
     await page.getByRole("button", { name: "Continue" }).click();
     await spin.click();
-    await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "20%" })).toBeVisible();
     await expect(tracker).toHaveAttribute("aria-label", "0 chips left");
     await expect(tracker.locator(".tries-tracker__chip")).toHaveCount(0);
     await page.screenshot({ path: path.join(directory, `${width}x${height}-chips-0-final.png`) });
@@ -122,7 +117,7 @@ for (const [width, height] of sizes) {
     await page.reload();
     await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
     await expect(page.locator("#intro")).not.toBeVisible();
-    await expect(page.getByRole("heading", { name: "You've won 20% off your order" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "20%" })).toBeVisible();
     await page.screenshot({ path: path.join(directory, `${width}x${height}-reload-final.png`) });
   });
 }

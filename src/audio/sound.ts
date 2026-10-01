@@ -25,6 +25,7 @@ export function resultSoundNames(outcome: "win" | "retry", _discount: number | n
 
 export interface SoundSystem {
   ambient: { start(): void };
+  preload(): void;
   unlock(): Promise<void>;
   play(name: SoundName): void;
   stop(name: SoundName): void;
@@ -57,6 +58,7 @@ export function createSound(): SoundSystem {
   };
 
   return {
+    preload() { load(); },
     ambient: { start() { try { if (ambient && (ambientId === undefined || !ambient.playing(ambientId))) ambientId = ambient.play(); } catch { document.documentElement.dataset.audioStatus = "blocked"; } } },
     unlock,
     play(name) {

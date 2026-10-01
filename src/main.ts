@@ -2,7 +2,7 @@ import { Application, Assets, Texture } from "pixi.js";
 import "pixi.js/unsafe-eval";
 import { gsap } from "gsap";
 import "./styles/main.css";
-import { loadInitialAssets } from "./assets";
+import { loadDeferredAssets, loadInitialAssets } from "./assets";
 import { GameApiError, getSession, spin, type BestSummary, type SpinResponse, type WinSummary } from "./game/api";
 import { GameStateMachine, type GameState } from "./game/state";
 import { PAYTABLE } from "./config/paytable";
@@ -49,6 +49,34 @@ function placeElement(element: HTMLElement, frame: LayoutRect): void {
   element.style.height = `${frame.height}px`;
 }
 
+function preloadImage(url: string): Promise<void> {
+  return new Promise((resolve) => {
+    const image = new Image();
+    image.onload = () => resolve();
+    image.onerror = () => resolve();
+    image.src = url;
+  });
+}
+
+function warmDeferredAssets(): Promise<void> {
+  sound.preload();
+  return Promise.all([
+    loadDeferredAssets(),
+    ...[
+      "/assets/keith/wave.webp",
+      "/assets/keith/point.webp",
+      "/assets/keith/prizes.webp",
+      "/assets/keith/chips.webp",
+      "/assets/keith/good-luck.webp",
+      "/assets/keith/celebrate.webp",
+      "/assets/keith/last-chance.webp",
+      "/assets/fx/coin.webp",
+      "/assets/fx/lightbeam.webp",
+      "/assets/fx/confetti.webp",
+    ].map(preloadImage),
+  ]).then(() => undefined);
+}
+
 async function boot(): Promise<void> {
   const host = document.querySelector<HTMLDivElement>("#canvas-host");
   const marquee = document.querySelector<HTMLElement>("#marquee");
@@ -60,11 +88,25 @@ async function boot(): Promise<void> {
   if (!host || !marquee || !tracker || !introDialog || !prizesButton || !spinButton || !loading) throw new Error("Game shell is incomplete");
 
   await loadInitialAssets();
+  const initialSession = await getSession().catch(() => null);
+  const controls = createControls(spinButton, sound.isMuted());
+  controls.onMute((muted) => sound.setMuted(muted));
+  const playMenuClick = async (): Promise<void> => {
+    await sound.unlock();
+    sound.ambient.start();
+    sound.play("button");
+  };
+  let introDismissed = false;
+  const intro = createIntro(introDialog, playMenuClick);
+  introDialog.addEventListener("close", () => { introDismissed = true; });
+  if (!initialSession || (initialSession.state === "idle" && initialSession.spinsLeft === 3 && !initialSession.best) || loadingGesture) {
+    intro.show(() => { introDismissed = true; });
+  }
+  document.documentElement.dataset.menuReady = "true";
   const app = new Application();
   await app.init({ resizeTo: window, antialias: true, backgroundAlpha: 0, resolution: Math.min(devicePixelRatio, 2), autoDensity: true, preference: "webgl" });
   app.canvas.setAttribute("aria-label", "Trust Royale casino cabinet");
   host.appendChild(app.canvas);
-
   const [environment, cabinet] = await Promise.all([createBackground(), createCabinet()]);
   const reels = createReels();
   cabinet.reelMount.addChild(reels.container);
@@ -78,7 +120,7 @@ async function boot(): Promise<void> {
   const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
   const marqueeScene = createMarquee(marquee, motionQuery.matches);
   const chipsScene = createChips(environment, motionQuery.matches);
-  const missingReelTextures = Object.values(SYMBOLS).flatMap(({ frames }) => Object.values(frames))
+  const missingReelTextures = Object.values(SYMBOLS).map(({ frames }) => frames.idle)
     .filter((key) => { const loaded = Assets.get<Texture>(key); return !loaded || loaded === Texture.EMPTY || loaded === Texture.WHITE; });
   (window as Window & { __trustRoyaleDebug?: { reelSymbols: typeof cabinet.reelSymbols; chipPositions: () => number[][]; missingReelTextures: string[] } }).__trustRoyaleDebug = {
     reelSymbols: cabinet.reelSymbols,
@@ -94,19 +136,15 @@ async function boot(): Promise<void> {
   };
   motionQuery.addEventListener("change", updateMotion);
   updateMotion();
-  const controls = createControls(spinButton, sound.isMuted());
-  controls.onMute((muted) => sound.setMuted(muted));
-  const playMenuClick = async (): Promise<void> => {
-    await sound.unlock();
-    sound.ambient.start();
-    sound.play("button");
-  };
-  const intro = createIntro(introDialog, playMenuClick);
+  if (introDismissed) chipsScene.settle();
   const popups = createPopups((ruleId) => intro.showPrizes(ruleId), () => sound.play("button"));
   prizesButton.addEventListener("click", () => { sound.play("button"); intro.showPrizes(); });
   const machine = new GameStateMachine("IDLE");
   let spinsLeft = 3;
   let best: BestSummary | undefined;
+  let deferredAssetsReady = Promise.resolve();
+  let pendingSessionWin: WinSummary | null = null;
+  let pendingSessionLastChance = false;
   controls.setState(machine.state);
   controls.setProgress(spinsLeft, false);
   machine.subscribe(({ current }) => {
@@ -140,6 +178,7 @@ async function boot(): Promise<void> {
       if (result.best) best = result.best;
       controls.setProgress(spinsLeft, result.isBonus, best?.discount);
       if (result.outcome === "win" && result.ruleId && result.discount && result.winRef) {
+        await deferredAssetsReady;
         const rule = PAYTABLE.find(({ id }) => id === result.ruleId);
         if (!rule) throw new Error(`Unknown paytable rule: ${result.ruleId}`);
         await celebrate(reels, rule, motionQuery.matches);
@@ -157,13 +196,14 @@ async function boot(): Promise<void> {
       const finalBest = result.gameOver && result.best && result.couponCode;
       machine.send({ type: "RESOLVE", outcome: finalBest ? "win" : "retry", spinsLeft: result.spinsLeft, bonusAvailable: result.bonusAvailable, isBonus: result.isBonus, gameOver: result.gameOver });
       if (finalBest) {
+        await deferredAssetsReady;
         displayWin({ spinId: result.best!.spinId, winRef: result.best!.winRef, ruleId: result.best!.ruleId, discount: result.best!.discount, couponCode: result.couponCode!, reels: result.reels });
         return;
       }
       marqueeScene.setPattern("idle");
         for (const name of resultSoundNames("retry", result.discount, result.nearMiss)) sound.play(name);
       const resolvedState = machine.state as GameState;
-      if (resolvedState === "LAST_CHANCE") popups.showLastChance(playSpin);
+      if (resolvedState === "LAST_CHANCE") { await deferredAssetsReady; popups.showLastChance(playSpin); }
       else if (resolvedState === "GAME_OVER") popups.showGameOver();
       else popups.showRetry(result.nearMiss);
     } catch (caught) {
@@ -184,23 +224,24 @@ async function boot(): Promise<void> {
   });
 
   try {
-    const session = await getSession();
+    const session = initialSession ?? await getSession();
     spinsLeft = session.spinsLeft;
     if (session.best) best = session.best;
     controls.setProgress(spinsLeft, session.state === "last_chance", best?.discount);
     if (session.state !== "idle") {
+      if (introDialog.open) { introDialog.close(); document.documentElement.dataset.intro = "closed"; }
       chipsScene.settle();
       machine.send({ type: "SERVER_STATE", state: session.state });
-      if ((session.state === "won" || session.state === "claimed") && session.win) displayWin(session.win);
-      else if (session.state === "last_chance") popups.showLastChance(playSpin);
+      if ((session.state === "won" || session.state === "claimed") && session.win) pendingSessionWin = session.win;
+      else if (session.state === "last_chance") pendingSessionLastChance = true;
       else if (session.state === "game_over") popups.showGameOver();
     }
     if (session.state === "idle" && session.spinsLeft === 3 && !session.best) {
-      intro.show(() => chipsScene.settle());
+      if (!introDialog.open && !introDismissed) intro.show(() => chipsScene.settle());
     } else chipsScene.settle();
   } catch {
     document.documentElement.dataset.sessionUnavailable = "true";
-    intro.show(() => chipsScene.settle());
+    if (!introDialog.open && !introDismissed) intro.show(() => chipsScene.settle());
   }
 
   const updatePointer = (x: number, y: number) => gsap.to(environment.pointer, { x, y, duration: 0.55, ease: "power2.out", overwrite: true });
@@ -232,8 +273,18 @@ async function boot(): Promise<void> {
   loadingTarget?.removeEventListener("click", rememberLoadingGesture);
   spinTarget?.removeEventListener("click", rememberLoadingGesture);
   loading.remove();
+  performance.mark("trust-royale-ready");
   document.documentElement.dataset.ready = "true";
-  if (loadingGesture && !introDialog.open) intro.show(() => chipsScene.settle());
+  deferredAssetsReady = new Promise<void>((resolve) => {
+    window.setTimeout(() => { void warmDeferredAssets().then(resolve); }, 0);
+  });
+  void deferredAssetsReady.then(() => {
+    const debug = (window as Window & { __trustRoyaleDebug?: { reelSymbols: typeof cabinet.reelSymbols; chipPositions: () => number[][]; missingReelTextures: string[] } }).__trustRoyaleDebug;
+    if (debug) debug.missingReelTextures = Object.values(SYMBOLS).map(({ frames }) => frames.idle)
+      .filter((key) => { const loaded = Assets.get<Texture>(key); return !loaded || loaded === Texture.EMPTY || loaded === Texture.WHITE; });
+    if (pendingSessionWin) displayWin(pendingSessionWin);
+    else if (pendingSessionLastChance) popups.showLastChance(playSpin);
+  });
 }
 
 boot().catch((caught: unknown) => {
