@@ -1106,3 +1106,15 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
   .welcome__actions { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; }
   .welcome__actions > button:first-child { min-height: 52px; font-size: 22px; }
 }
+
+.welcome__agreement { margin: 0 0 6px; font: 400 18px/1.25 "Trust Royale UI", sans-serif; }
+.terms-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; color: var(--gold-light); font: 700 18px/1.25 "Trust Royale UI", sans-serif; text-decoration: underline; text-underline-offset: 3px; }
+.result-popup__terms { flex: none; align-self: center; margin-top: 4px; }
+.terms-dialog { width: min(720px, calc(100dvw - 24px)); max-height: calc(100dvh - 24px); margin: auto; padding: 0 20px 20px; overflow-y: auto; border: 2px solid var(--gold); border-radius: 22px; color: #fff; background: #2a040c; box-shadow: 0 20px 60px #000a; font: 400 18px/1.45 "Trust Royale UI", sans-serif; }
+.terms-dialog::backdrop { background: #0f0105d9; }
+.terms-dialog__header { position: sticky; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; background: #2a040c; }
+.terms-dialog h2 { margin: 0; color: var(--gold-light); font: 700 clamp(24px, 4vw, 32px)/1.15 "Trust Royale Display", serif; }
+.terms-dialog button { flex: none; min-width: 80px; min-height: 56px; padding: 8px 12px; border: 1px solid var(--gold); border-radius: 999px; color: var(--gold-light); background: #26030a; font: 700 18px "Trust Royale UI", sans-serif; }
+.terms-dialog__list { margin: 0; padding-left: 26px; }
+.terms-dialog__list > li + li { margin-top: 14px; }
+.terms-dialog__list ul { margin-top: 8px; padding-left: 22px; }

@@ -27,9 +27,11 @@ test("result dialog announces, traps focus, and shows keyboard focus", async ({ 
   await expect(dialog).toHaveAttribute("aria-live", "assertive");
   await expect(dialog).toHaveAttribute("aria-modal", "true");
   await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "View prize table" })).toBeFocused();
   expect(await page.getByRole("button", { name: "View prize table" }).evaluate((node) => getComputedStyle(node).outlineStyle)).not.toBe("none");
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Terms and conditions" })).toBeFocused();
+  expect(await page.getByRole("link", { name: "Terms and conditions" }).evaluate((node) => getComputedStyle(node).outlineStyle)).not.toBe("none");
   const contrast = await page.getByRole("button", { name: "View prize table" }).evaluate((node) => {
     const parse = (value: string) => value.match(/[\d.]+/g)!.slice(0, 3).map(Number);
     const luminance = (rgb: number[]) => rgb.map((channel) => channel / 255).map((channel) => channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4)
