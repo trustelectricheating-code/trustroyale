@@ -1081,3 +1081,28 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 .tries-tracker__chips { justify-self: stretch; }
 .tries-tracker__chip { flex: 0 1 auto; min-width: 0; height: auto; aspect-ratio: 1; }
 @media (max-height: 700px) { }
+
+/* Win screen: Keith holds a sign with the prize. The board in prizes.webp spans 9.6-89.7% of the width and 44.5-63.1% of the height. */
+.result-popup--win .result-popup__board { position: relative; flex: none; height: clamp(200px, 52dvh, 520px); aspect-ratio: 2 / 3; margin: 0 auto 6px; container-type: size; filter: drop-shadow(0 12px 22px #000c); }
+.result-popup--win .result-popup__board img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.result-popup--win .result-popup__board .result-popup__discount { position: absolute; left: 9.6%; width: 80.1%; top: 44.5%; height: 18.6%; display: flex; align-items: center; justify-content: center; gap: .18em; margin: 0; color: #ffe8a3; font: 700 11cqh/1 "Trust Royale Display", serif; text-shadow: 0 0 2.4cqh #ffbe38aa, 0 .5cqh 0 #7a4a08, 0 1cqh 2cqh #000c; }
+.result-popup--win .result-popup__board .result-popup__discount span { font-size: .5em; letter-spacing: .06em; color: #fff; }
+
+/* Phone landscape: the stacked welcome card is taller than the screen, which pushed "Let's play!" off the bottom. Put Keith beside the content and tighten the spacing so everything fits. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .welcome__card { display: grid; grid-template-columns: 20% 80%; align-items: center; width: calc(100vw - 16px); max-height: calc(100dvh - 12px); padding: 8px 14px; overflow-y: auto; }
+  .welcome__keith { display: block; width: 100%; height: min(72dvh, 260px); margin: 0; }
+  .welcome__content { position: relative; padding-top: 0; text-align: left; }
+  .welcome h1 { min-height: 0; margin: 0 0 4px; padding: 0 96px 0 0; font-size: 24px; text-align: left; }
+  .welcome__sound { top: 0; right: 0; min-height: 44px; }
+  .welcome__rules { gap: 2px; margin: 0 0 6px; }
+  .welcome__rules li { grid-template-columns: 30px 1fr; gap: 8px; font-size: 18px; line-height: 1.15; }
+  .welcome__rules li:first-child { padding-right: 96px; }
+  .welcome__rules img { width: 30px; height: 30px; }
+  .welcome__prizes { gap: 6px; margin-bottom: 6px; }
+  .welcome__prizes > div { padding: 3px 4px; }
+  .welcome__prizes strong { font-size: 24px; }
+  .welcome__prizes span { font-size: 15px; }
+  .welcome__actions { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; }
+  .welcome__actions > button:first-child { min-height: 52px; font-size: 22px; }
+}
