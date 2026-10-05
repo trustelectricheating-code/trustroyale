@@ -213,40 +213,45 @@ test("best-of-three waits for presses and reveals only the final win message", a
   await button.click();
   await expect(page.getByRole("heading", { name: "15% banked!" })).toBeVisible();
   await expect(page.locator("#tries-tracker")).toContainText("Best prize: 15%");
-  await expect(page.getByText(/Claim it with your free quote/)).toHaveCount(0);
+  await expect(page.getByText(/Claim it now/)).toHaveCount(0);
   await page.waitForTimeout(1_000);
   expect(requests).toBe(1);
   await button.click();
   await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
   await button.click();
   await expect(page.getByRole("heading", { name: "20%" })).toBeVisible();
-  await expect(page.getByText("You have won 20% off your order. Claim it with your free quote, and our chief chatters will contact you with the next steps.")).toBeVisible();
+  await expect(page.getByText("You have won 20% off your order. Claim it now, and our chief chatters will contact you with the next steps.")).toBeVisible();
   expect(requests).toBe(3);
   await page.getByRole("button", { name: "View prize table" }).click();
   await expect(page.locator('[data-rule-id="scott-3"]')).toHaveClass(/is-winning/);
 });
 
-for (const state of ["won", "claimed"] as const) {
-  test(`returning ${state} player sees the claim message without coupon UI`, async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.route("**/api/session**", (route) => route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        spinsLeft: 0,
-        bonusAvailable: false,
-        state,
-        best: final20.best,
-        win: { ...final20.best, reels: final20.reels },
-      }),
-    }));
-    await page.goto("/");
-    await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
-    await expect(page.getByText("You have won 20% off your order. Claim it with your free quote, and our chief chatters will contact you with the next steps.")).toBeVisible();
-    await expect(page.locator(".coupon-ticket, [data-copy-code]")).toHaveCount(0);
-    await expect(page.getByRole("link", { name: "Claim my 20% offer" })).toHaveAttribute("href", /^https:\/\/ty\.trustelectricheating\.co\.uk\/trust-royale\/\?prize=[^&]+&discount=20#quote$/);
-  });
-}
+const returningSession = (state: "won" | "claimed") => ({
+  spinsLeft: 0, bonusAvailable: false, state, best: final20.best, win: { ...final20.best, reels: final20.reels },
+});
+
+test("returning won player sees the win popup with a claim button", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await mockSession(page, returningSession("won"));
+  await page.goto("/");
+  await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
+  await expect(page.getByText("You have won 20% off your order. Claim it now, and our chief chatters will contact you with the next steps.")).toBeVisible();
+  await expect(page.locator(".coupon-ticket, [data-copy-code]")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Claim my 20% offer" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Claim my 20% offer" })).toHaveCount(0);
+});
+
+test("returning claimed player sees the success step and no form", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await mockSession(page, returningSession("claimed"));
+  await page.goto("/");
+  await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
+  await expect(page.getByRole("heading", { name: "Your 20% offer is claimed" })).toBeVisible();
+  await expect(page.getByText("Keep your win reference: TR-FINAL20.")).toBeVisible();
+  await expect(page.locator("[data-claim-form]")).toHaveCount(0);
+  const more = page.getByRole("link", { name: "Find out more about NEOS radiators" });
+  await expect(more).toHaveAttribute("href", /^https:\/\/ty\.trustelectricheating\.co\.uk\/trust-royale\/#quote$/);
+});
 
 test("returning mid-game player skips intro and resumes tracker", async ({ page }) => {
   await mockSession(page, { spinsLeft: 1, bonusAvailable: false, state: "idle", best: banked15.best, win: null });
