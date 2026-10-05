@@ -1,7 +1,9 @@
+/// <reference types="vite/client" />
 // Hand-off from the game to the Trust Royale quote form on the landing page.
 // The landing page reads `prize` (win reference) and `discount` to prefill its
 // quote form, and its own tracking reads the attribution keys we pass back.
-export const QUOTE_URL = "https://ty.trustelectricheating.co.uk/trust-royale/";
+// VITE_QUOTE_URL points a local game at a local landing page; production builds leave it unset.
+export const QUOTE_URL: string = import.meta.env.VITE_QUOTE_URL || "https://ty.trustelectricheating.co.uk/trust-royale/";
 
 export const ATTRIBUTION_KEYS = [
   "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
