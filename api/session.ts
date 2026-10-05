@@ -1,6 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { query as databaseQuery, type Query } from "./_lib/db.js";
 import { error, json, methodNotAllowed } from "./_lib/http.js";
+import { background } from "./_lib/background.js";
+import { piggyback } from "./_lib/crmRetry.js";
 import { getOrCreateSession } from "./_lib/session.js";
 
 interface SessionRow {
@@ -50,6 +52,7 @@ export function createSessionHandler({ query = databaseQuery }: { query?: Query 
           reels: row.reels,
         } : null,
       });
+      background(piggyback(query));
     } catch (caught) {
     error(response, 500, "server_error");
     }

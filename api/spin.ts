@@ -1,6 +1,8 @@
 import { randomUUID } from "node:crypto";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { query as databaseQuery, type Query } from "./_lib/db.js";
+import { background } from "./_lib/background.js";
+import { piggyback } from "./_lib/crmRetry.js";
 import { error, json, methodNotAllowed } from "./_lib/http.js";
 import { spinReels as roll, type ReelSpin, type SpinOptions } from "./_lib/rng.js";
 import { clientIp, getOrCreateSession } from "./_lib/session.js";
@@ -130,6 +132,7 @@ export function createSpinHandler(dependencies: SpinDependencies = {}) {
         isBonus: spinNo === 4,
         gameOver,
       });
+      background(piggyback(query));
     } catch (caught) {
     error(response, 500, "server_error");
     }

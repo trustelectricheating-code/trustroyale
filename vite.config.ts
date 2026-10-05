@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { defineConfig, type Plugin } from "vite";
 
-// `pnpm dev` only: serve /api/session and /api/spin from the real handlers against a throwaway
+// `pnpm dev` only: serve /api/session, /api/spin and /api/lead from the real handlers against a throwaway
 // in-memory PGlite database, so the game can be played locally without Vercel or Neon.
 function localApi(): Plugin {
   return {
@@ -19,16 +19,22 @@ function localApi(): Plugin {
         const query = async (text: string, params: unknown[] = []) => (await database.query(text, params)).rows;
         const { createSessionHandler } = await server.ssrLoadModule("/api/session.ts");
         const { createSpinHandler } = await server.ssrLoadModule("/api/spin.ts");
-        return { "/api/session": createSessionHandler({ query }), "/api/spin": createSpinHandler({ query }) };
+        const { createLeadHandler } = await server.ssrLoadModule("/api/lead.ts");
+        return { "/api/session": createSessionHandler({ query }), "/api/spin": createSpinHandler({ query }), "/api/lead": createLeadHandler({ query }) };
       })();
       server.middlewares.use(async (request: IncomingMessage, response: ServerResponse, next: () => void) => {
         const url = new URL(request.url ?? "/", "http://localhost");
-        const handler = (await ready)[url.pathname as "/api/session" | "/api/spin"];
+        const handler = (await ready)[url.pathname as "/api/session" | "/api/spin" | "/api/lead"];
         if (!handler) return next();
         // Phones on the LAN use plain http, where browsers drop Secure cookies.
         const setHeader = response.setHeader.bind(response);
         response.setHeader = (name, value) => setHeader(name, name.toLowerCase() === "set-cookie" ? String(value).replace("; Secure", "") : value);
-        await handler(Object.assign(request, { query: Object.fromEntries(url.searchParams) }), response);
+        const chunks: Uint8Array[] = [];
+        for await (const chunk of request) chunks.push(Uint8Array.from(chunk));
+        const text = Buffer.concat(chunks).toString("utf8");
+        let parsed: unknown;
+        try { parsed = text ? JSON.parse(text) : undefined; } catch { parsed = undefined; }
+        await handler(Object.assign(request, { query: Object.fromEntries(url.searchParams), body: parsed }), response);
       });
     },
   };

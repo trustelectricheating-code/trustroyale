@@ -1,6 +1,9 @@
 {
   "framework": "vite",
   "outputDirectory": "dist",
+  "crons": [
+    { "path": "/api/cron/crm-sync", "schedule": "0 6 * * *" }
+  ],
   "headers": [
     {
       "source": "/build/:path*",
