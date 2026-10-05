@@ -21,7 +21,7 @@ async function fill(page: Page): Promise<void> {
   await page.getByLabel("First name").fill("Jane");
   await page.getByLabel("Last name").fill("Smith");
   await page.getByLabel("Phone number").fill("+44 (0)7911 123456");
-  await page.getByLabel("Postcode").fill("ls1 4ap");
+  await page.getByLabel("Region").selectOption("Yorkshire and the Humber");
   await page.getByLabel("Email").fill("jane@example.com");
 }
 
@@ -46,7 +46,7 @@ test("a winner claims the offer and sees the success step", async ({ page }) => 
 test("the claim step offers labels, autocomplete, large inputs and a privacy link", async ({ page }) => {
   await openWin(page, created);
   await page.getByRole("button", { name: "Claim my 20% offer" }).click();
-  for (const [label, autocomplete] of [["First name", "given-name"], ["Last name", "family-name"], ["Phone number", "tel"], ["Postcode", "postal-code"], ["Email", "email"]]) {
+  for (const [label, autocomplete] of [["First name", "given-name"], ["Last name", "family-name"], ["Phone number", "tel"], ["Region", "address-level1"], ["Email", "email"]]) {
     const input = page.getByLabel(label);
     await expect(input).toHaveAttribute("autocomplete", autocomplete);
     const box = await input.evaluate((node) => ({ height: node.getBoundingClientRect().height, font: parseFloat(getComputedStyle(node).fontSize) }));
@@ -69,6 +69,21 @@ test("empty and invalid fields show inline errors and focus the first one", asyn
   await expect(page.getByText("Please enter your first name.")).toBeVisible();
   await expect(page.getByText("Please enter a valid email address.")).toBeVisible();
   await expect(page.getByLabel("First name")).toBeFocused();
+  expect(posts).toBe(0);
+});
+
+test("the region is a required select with the 11 regions and an inline error when missing", async ({ page }) => {
+  let posts = 0;
+  await openWin(page, (route) => { posts += 1; return created(route); });
+  await fill(page);
+  const region = page.getByLabel("Region");
+  expect(await region.evaluate((node) => (node as HTMLSelectElement).options.length)).toBe(12);
+  await expect(region.locator("option").first()).toHaveText("Choose your region");
+  await expect(region.locator("option").first()).toHaveAttribute("value", "");
+  await region.selectOption("");
+  await page.getByRole("button", { name: "Claim my 20% offer" }).click();
+  await expect(page.getByText("Please choose your region.")).toBeVisible();
+  await expect(region).toBeFocused();
   expect(posts).toBe(0);
 });
 
@@ -139,7 +154,7 @@ for (const [width, height] of viewports) {
   });
 }
 
-const VECTOR = "eyJmaXJzdE5hbWUiOiJTacOibiIsImxhc3ROYW1lIjoiTydOZWlsbCIsInBob25lIjoiMDc5MTEgMTIzNDU2IiwiZW1haWwiOiJzaWFuQGV4YW1wbGUuY29tIiwicG9zdGNvZGUiOiJMUzEgNEFQIn0";
+const VECTOR = "eyJmaXJzdE5hbWUiOiJTacOibiIsImxhc3ROYW1lIjoiTydOZWlsbCIsInBob25lIjoiMDc5MTEgMTIzNDU2IiwiZW1haWwiOiJzaWFuQGV4YW1wbGUuY29tIiwicmVnaW9uIjoiWW9ya3NoaXJlIGFuZCB0aGUgSHVtYmVyIn0";
 
 test("details from the entry fragment prefill the claim form and are cleared after the claim", async ({ page }) => {
   let posted: Record<string, unknown> = {};
@@ -156,10 +171,12 @@ test("details from the entry fragment prefill the claim form and are cleared aft
   await expect(page.getByLabel("First name")).toHaveValue("Siân");
   await expect(page.getByLabel("Last name")).toHaveValue("O'Neill");
   await expect(page.getByLabel("Phone number")).toHaveValue("07911 123456");
-  await expect(page.getByLabel("Postcode")).toHaveValue("LS1 4AP");
+  await expect(page.getByLabel("Region")).toHaveValue("Yorkshire and the Humber");
+  await expect(page.getByLabel("Region").locator("option:checked")).toHaveText("Yorkshire and the Humber");
   await expect(page.getByLabel("Email")).toHaveValue("sian@example.com");
   await page.getByRole("button", { name: "Claim my 20% offer" }).click();
   await expect(page.getByRole("heading", { name: "Your 20% offer is claimed" })).toBeVisible();
-  expect(posted).toMatchObject({ firstName: "Siân", lastName: "O'Neill", phone: "07911 123456", email: "sian@example.com", postcode: "LS1 4AP" });
+  expect(posted).toMatchObject({ firstName: "Siân", lastName: "O'Neill", phone: "07911 123456", email: "sian@example.com", region: "Yorkshire and the Humber" });
+  expect(posted).not.toHaveProperty("postcode");
   expect(await page.evaluate(() => sessionStorage.getItem("royale-entry"))).toBeNull();
 });

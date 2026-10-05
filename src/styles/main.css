@@ -715,9 +715,12 @@ html[data-ready="true"] .spin__label { visibility: hidden; }
 .result-popup--claimed p { font-size: 18px; }
 .claim-form { display: flex; flex-direction: column; gap: .7rem; width: min(100%, 420px); text-align: left; }
 .claim-field label { display: block; margin-bottom: .25rem; font: 700 18px/1.3 "Trust Royale UI", sans-serif; color: #ffe8a3; }
-.claim-field input { box-sizing: border-box; width: 100%; min-height: 48px; padding: .55rem .8rem; border: 2px solid #ffe8a3; border-radius: 12px; color: #26030a; background: #fff8e8; font: 600 18px/1.3 "Trust Royale UI", sans-serif; }
-.claim-field input:focus-visible { outline: 3px solid #59d7ff; outline-offset: 2px; }
-.claim-field input[aria-invalid] { border-color: #ff6b7d; }
+.claim-field input,
+.claim-field select { box-sizing: border-box; width: 100%; min-height: 48px; padding: .55rem .8rem; border: 2px solid #ffe8a3; border-radius: 12px; color: #26030a; background: #fff8e8; font: 600 18px/1.3 "Trust Royale UI", sans-serif; }
+.claim-field input:focus-visible,
+.claim-field select:focus-visible { outline: 3px solid #59d7ff; outline-offset: 2px; }
+.claim-field input[aria-invalid],
+.claim-field select[aria-invalid] { border-color: #ff6b7d; }
 .claim-field__error { min-height: 0; margin: .25rem 0 0; color: #ffb3bd; font-size: 18px; }
 .claim-field__error:empty { display: none; }
 .claim-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
@@ -1009,7 +1012,7 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 .intro__panel--prizes .intro-prizes { font-size: 18px; }
 .intro__panel--prizes .intro__actions button { width: auto; min-width: 180px; font-size: 18px; }
 
-.result-popup--win { inset: 0; width: 100dvw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); overflow: hidden; border: 0; border-radius: 0; background: radial-gradient(ellipse at 50% 45%, #1a020766, #0d0104e6 78%), url("/assets/background/casino-hall-landscape.webp") center/cover no-repeat #1a0207; }
+.result-popup--win { inset: 0; width: 100dvw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; border: 0; border-radius: 0; background: radial-gradient(ellipse at 50% 45%, #1a020766, #0d0104e6 78%), url("/assets/background/casino-hall-landscape.webp") center/cover no-repeat #1a0207; }
 @media (orientation: portrait) { .result-popup--win { background: radial-gradient(ellipse at 50% 45%, #1a020766, #0d0104e6 78%), url("/assets/background/casino-hall-portrait.webp") center/cover no-repeat #1a0207; } }
 .result-popup--win section { position: relative; z-index: 1; justify-content: center; width: min(520px, 100%); min-height: 100%; margin: auto; text-align: center; }
 .result-popup--win .result-popup__keith { width: clamp(84px, 17vh, 170px); height: clamp(84px, 17vh, 170px); margin: 0 auto 4px; object-fit: contain; filter: drop-shadow(0 10px 18px #000c); }
@@ -1038,13 +1041,13 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 @media (max-height: 800px) and (orientation: landscape) { .result-popup--win section { padding-top: 4px; padding-bottom: 4px; } .result-popup--win .result-popup__keith { width: 76px; height: 76px; margin-bottom: 0; } .result-popup--win .result-popup__discount { font-size: clamp(72px, 17vh, 120px); } .result-popup--win .result-popup__off { margin-bottom: 8px; font-size: 32px; } .result-popup--win .result-popup__instruction { margin-bottom: 6px; } .result-popup--win .result-popup__view-prizes { margin-top: 6px; } }
 @media (prefers-reduced-motion: reduce) { .result-popup__firework { display: none; } }
 .intro button, .result-popup button, .prizes-button { min-height: 56px; }
-.result-popup:not(.result-popup--win) { max-height: calc(100dvh - 16px); overflow: hidden; }
+.result-popup:not(.result-popup--win) { max-height: calc(100dvh - 16px); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
 @media (max-width: 600px) { .result-popup__firework { display: none; } }
 
 /* Fresh welcome layout. These rules intentionally do not use legacy intro descendants. */
-.intro { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 8px; overflow: hidden; border: 0; background: rgba(15, 1, 5, .88); }
-.welcome { display: grid; place-items: center; width: 100%; height: 100%; overflow: hidden; }
-.welcome__card { position: relative; display: grid; grid-template-columns: 32% 68%; align-items: center; width: clamp(760px, 62vw, 1180px); max-width: calc(100vw - 16px); max-height: calc(100vh - 16px); padding: clamp(20px, 2vw, 36px); border: 2px solid var(--gold); border-radius: 28px; color: #fff; background: radial-gradient(circle at 50% 0, #6d1026, #2a040c 75%); box-shadow: 0 20px 60px #000a; }
+.intro { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 8px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; border: 0; background: rgba(15, 1, 5, .88); }
+.welcome { display: grid; place-items: center; width: 100%; min-height: 100%; }
+.welcome__card { position: relative; display: grid; grid-template-columns: 32% 68%; align-items: center; width: clamp(760px, 62vw, 1180px); max-width: calc(100vw - 16px); padding: clamp(20px, 2vw, 36px); border: 2px solid var(--gold); border-radius: 28px; color: #fff; background: radial-gradient(circle at 50% 0, #6d1026, #2a040c 75%); box-shadow: 0 20px 60px #000a; }
 .welcome__keith { grid-column: 1; grid-row: 1; align-self: center; justify-self: center; width: clamp(180px, 18vw, 320px); height: clamp(250px, 42vh, 460px); object-fit: contain; filter: drop-shadow(0 8px 14px #000b); }
 .welcome__content { position: relative; grid-column: 2; grid-row: 1; min-width: 0; padding-top: 64px; text-align: left; }
 .welcome__sound { position: absolute; top: 0; right: 0; min-width: 56px; min-height: 56px; padding: 0 16px; border: 1px solid var(--gold); border-radius: 999px; color: var(--gold-light); background: #26030a; font: 700 18px "Trust Royale UI", sans-serif; }
@@ -1075,7 +1078,8 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 .welcome--prizes .welcome__actions button { width: min(240px, 100%); border: 1px solid var(--gold); border-radius: 999px; color: #fff; background: #b20d29; font: 700 18px "Trust Royale UI", sans-serif; }
 /* Single-column welcome card for phones and portrait tablets. Sound sits in the card's top-right corner. */
 @media (max-width: 899px) {
-  .welcome__card { display: block; width: min(620px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); padding: 16px; }
+  .welcome__card { display: block; width: min(620px, calc(100vw - 16px)); padding: 16px; }
+  .welcome--prizes .welcome__card { max-height: calc(100dvh - 16px); }
   .welcome__content { position: static; padding-top: 0; text-align: center; }
   .welcome__sound { top: 12px; right: 12px; }
   .welcome__keith { display: block; width: auto; height: clamp(72px, 14vh, 200px); margin: 0 auto 6px; }
