@@ -1,5 +1,6 @@
 import { showTerms } from "./terms";
 import type { WinSummary } from "../game/api";
+import { quoteUrl } from "../game/handoff";
 
 export interface Popups {
   showWin(win: WinSummary): void;
@@ -56,7 +57,9 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
       const fireworks = Array.from({ length: 7 }, (_, burst) =>
         `<div class="result-popup__firework" style="left:${[18, 82, 50, 12, 88, 30, 70][burst]}%;top:${[16, 12, 8, 48, 44, 26, 30][burst]}%">${Array.from({ length: 18 }, (_, particle) =>
           `<i style="--a:${particle * 20}deg;--r:${60 + (particle % 3) * 25}px;--d:${[0, 1, 1.3, .7][burst % 4]}s;--c:${["#ffd54a", "#ff445c", "#fff4ba", "#59d7ff", "#ff9f2f"][particle % 5]}"></i>`).join("")}</div>`).join("");
-      show(`<div class="result-popup__fx" aria-hidden="true"><div class="result-popup__beam"></div><div class="result-popup__confetti"></div><img class="result-popup__coin result-popup__coin--left" src="/assets/fx/coin.webp" alt=""><img class="result-popup__coin result-popup__coin--right" src="/assets/fx/coin.webp" alt="">${fireworks}</div><section aria-labelledby="result-title"><p class="result-popup__eyebrow">Congratulations, you won</p><div class="result-popup__board"><img src="/assets/keith/prizes.webp" alt=""><h2 id="result-title" class="result-popup__discount" aria-label="${win.discount}% off your order">${win.discount}%<span>OFF</span></h2></div><p class="result-popup__instruction">You have won ${win.discount}% off your order, our chief chatters will be contacting you shortly with the next steps</p><button type="button" class="result-popup__view-prizes" data-view-prizes>View prize table</button><a class="terms-link result-popup__terms" href="#terms-dialog" data-show-terms>Terms and conditions</a></section>`, "win");
+      show(`<div class="result-popup__fx" aria-hidden="true"><div class="result-popup__beam"></div><div class="result-popup__confetti"></div><img class="result-popup__coin result-popup__coin--left" src="/assets/fx/coin.webp" alt=""><img class="result-popup__coin result-popup__coin--right" src="/assets/fx/coin.webp" alt="">${fireworks}</div><section aria-labelledby="result-title"><p class="result-popup__eyebrow">Congratulations, you won</p><div class="result-popup__board"><img src="/assets/keith/prizes.webp" alt=""><h2 id="result-title" class="result-popup__discount" aria-label="${win.discount}% off your order">${win.discount}%<span>OFF</span></h2></div><p class="result-popup__instruction">You have won ${win.discount}% off your order. Claim it with your free quote, and our chief chatters will contact you with the next steps.</p><a class="result-popup__claim" href="#" data-claim>Claim my ${win.discount}% offer</a><p class="result-popup__reference">Win reference <strong data-win-ref></strong></p><button type="button" class="result-popup__view-prizes" data-view-prizes>View prize table</button><a class="terms-link result-popup__terms" href="#terms-dialog" data-show-terms>Terms and conditions</a></section>`, "win");
+      dialog.querySelector<HTMLAnchorElement>("[data-claim]")!.href = quoteUrl(location.search, win);
+      dialog.querySelector<HTMLElement>("[data-win-ref]")!.textContent = win.winRef;
       dialog.querySelector<HTMLElement>("[data-show-terms]")?.addEventListener("click", (event) => { event.preventDefault(); showTerms(event.currentTarget as HTMLElement); });
       dialog.querySelector<HTMLButtonElement>("[data-view-prizes]")?.addEventListener("click", () => {
         dialog.close();
@@ -79,7 +82,8 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
       }, { once: true });
     },
     showGameOver() {
-      show('<section aria-labelledby="result-title"><h2 id="result-title">Thanks for playing</h2><p>Your game is complete for today.</p></section>', "game-over");
+      show('<section aria-labelledby="result-title"><h2 id="result-title">Thanks for playing</h2><p>Your game is complete for today. You can still get a free, no-obligation heating quote.</p><a class="result-popup__claim" href="#" data-claim>Get my free quote</a></section>', "game-over");
+      dialog.querySelector<HTMLAnchorElement>("[data-claim]")!.href = quoteUrl(location.search);
     },
     showError(kind) {
       const text = kind === "rate" ? "Daily play limit reached" : "Machine hiccup, try again";

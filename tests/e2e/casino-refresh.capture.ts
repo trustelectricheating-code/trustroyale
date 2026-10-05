@@ -51,7 +51,7 @@ for (const [width, height] of [[390, 844], [844, 390], [932, 430], [1440, 900]] 
     await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
     await page.getByRole("button", { name: "Continue" }).click();
     await page.locator("#spin").click();
-    await expect(page.getByText("You have won 20% off your order, our chief chatters will be contacting you shortly with the next steps")).toBeVisible();
+    await expect(page.getByText("You have won 20% off your order. Claim it with your free quote, and our chief chatters will contact you with the next steps.")).toBeVisible();
     await page.screenshot({ path: path.join(output, `${width}x${height}-win-message.png`) });
   });
 }

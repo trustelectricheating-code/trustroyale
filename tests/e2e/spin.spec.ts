@@ -113,6 +113,7 @@ test("only deliberate spin actions issue requests, including retry and Last Chan
   expect(requests).toBe(3);
   await page.getByRole("button", { name: "Spin now" }).click();
   await expect(page.getByRole("heading", { name: "Thanks for playing" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Get my free quote" })).toHaveAttribute("href", "https://ty.trustelectricheating.co.uk/trust-royale/#quote");
   expect(requests).toBe(4);
 });
 
@@ -212,21 +213,21 @@ test("best-of-three waits for presses and reveals only the final win message", a
   await button.click();
   await expect(page.getByRole("heading", { name: "15% banked!" })).toBeVisible();
   await expect(page.locator("#tries-tracker")).toContainText("Best prize: 15%");
-  await expect(page.getByText(/our chief chatters will be contacting you shortly/)).toHaveCount(0);
+  await expect(page.getByText(/Claim it with your free quote/)).toHaveCount(0);
   await page.waitForTimeout(1_000);
   expect(requests).toBe(1);
   await button.click();
   await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
   await button.click();
   await expect(page.getByRole("heading", { name: "20%" })).toBeVisible();
-  await expect(page.getByText("You have won 20% off your order, our chief chatters will be contacting you shortly with the next steps")).toBeVisible();
+  await expect(page.getByText("You have won 20% off your order. Claim it with your free quote, and our chief chatters will contact you with the next steps.")).toBeVisible();
   expect(requests).toBe(3);
   await page.getByRole("button", { name: "View prize table" }).click();
   await expect(page.locator('[data-rule-id="scott-3"]')).toHaveClass(/is-winning/);
 });
 
 for (const state of ["won", "claimed"] as const) {
-  test(`returning ${state} player sees the chief chatters message without coupon UI`, async ({ page }) => {
+  test(`returning ${state} player sees the claim message without coupon UI`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.route("**/api/session**", (route) => route.fulfill({
       status: 200,
@@ -241,8 +242,9 @@ for (const state of ["won", "claimed"] as const) {
     }));
     await page.goto("/");
     await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
-    await expect(page.getByText("You have won 20% off your order, our chief chatters will be contacting you shortly with the next steps")).toBeVisible();
+    await expect(page.getByText("You have won 20% off your order. Claim it with your free quote, and our chief chatters will contact you with the next steps.")).toBeVisible();
     await expect(page.locator(".coupon-ticket, [data-copy-code]")).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "Claim my 20% offer" })).toHaveAttribute("href", /^https:\/\/ty\.trustelectricheating\.co\.uk\/trust-royale\/\?prize=[^&]+&discount=20#quote$/);
   });
 }
 

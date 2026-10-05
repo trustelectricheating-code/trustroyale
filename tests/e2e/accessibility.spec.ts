@@ -27,6 +27,9 @@ test("result dialog announces, traps focus, and shows keyboard focus", async ({ 
   await expect(dialog).toHaveAttribute("aria-live", "assertive");
   await expect(dialog).toHaveAttribute("aria-modal", "true");
   await page.keyboard.press("Tab");
+  await expect(page.locator("[data-claim]")).toBeFocused();
+  expect(await page.locator("[data-claim]").evaluate((node) => getComputedStyle(node).outlineStyle)).not.toBe("none");
+  await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "View prize table" })).toBeFocused();
   expect(await page.getByRole("button", { name: "View prize table" }).evaluate((node) => getComputedStyle(node).outlineStyle)).not.toBe("none");
   await page.keyboard.press("Tab");

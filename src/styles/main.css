@@ -650,6 +650,8 @@ html[data-ready="true"] .spin__label { visibility: hidden; }
 .result-popup__symbols { display: flex; justify-content: center; gap: .4rem; }
 .result-popup__symbols img { width: 58px; height: 58px; }
 .result-popup button { min-width: 150px; min-height: 52px; padding: .8rem 1.2rem; border: 1px solid #ffe8a3; border-radius: 999px; color: #fff; background: #b20d29; font: 700 1.05rem "Trust Royale UI", sans-serif; }
+.result-popup__claim { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-width: 150px; min-height: 52px; padding: .8rem 1.2rem; border: 1px solid #ffe8a3; border-radius: 999px; color: #fff; background: #b20d29; font: 700 1.05rem "Trust Royale UI", sans-serif; text-align: center; text-decoration: none; }
+.result-popup__claim:focus-visible { outline: 3px solid #ffe8a3; outline-offset: 3px; }
 .result-popup--retry,
 .result-popup--last-chance,
 .result-popup--game-over,
@@ -692,6 +694,7 @@ html[data-ready="true"] .spin__label { visibility: hidden; }
 .result-popup--retry button,
 .result-popup--game-over button,
 .result-popup--error button { width: min(100%, 360px); }
+.result-popup--game-over .result-popup__claim { width: min(100%, 360px); }
 
 @media (max-width: 360px) {
   .result-popup { padding: 14px 12px; }
@@ -985,6 +988,7 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 .result-popup--win .result-popup__instruction { margin: 0 0 14px; font-size: 18px; text-shadow: 0 2px 6px #000, 0 0 2px #000; }
 .result-popup--win .result-popup__reference { margin: 0; color: #ffe8a3cc; font-size: 16px; text-shadow: 0 2px 6px #000; }
 .result-popup--win .result-popup__reference strong { display: inline; margin: 0; font-size: inherit; }
+.result-popup--win .result-popup__claim { position: relative; z-index: 1; width: min(100%, 420px); min-height: 64px; margin: 0 0 10px; border-color: var(--gold); box-shadow: 0 0 22px #ffd54a66; font-size: 24px; }
 .result-popup--win .result-popup__view-prizes { min-height: 60px; margin-top: 12px; color: var(--gold-light); background: #26030acc; border-color: var(--gold); font-size: 22px; }
 .result-popup__fx { position: fixed; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; }
 .result-popup__beam { position: absolute; inset: 0; background: url("/assets/fx/lightbeam.webp") center/cover no-repeat; opacity: .25; mix-blend-mode: screen; }
@@ -1118,3 +1122,15 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 .terms-dialog__list { margin: 0; padding-left: 26px; }
 .terms-dialog__list > li + li { margin-top: 14px; }
 .terms-dialog__list ul { margin-top: 8px; padding-left: 22px; }
+
+/* Landscape phones: the claim button and terms must stay on screen, so the prize board sits beside the message. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .result-popup--win section { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "board eyebrow" "board instruction" "board claim" "board reference" "board terms"; align-content: center; justify-items: start; column-gap: 24px; width: min(780px, 100%); text-align: left; }
+  .result-popup--win .result-popup__eyebrow { grid-area: eyebrow; margin: 0 0 4px; }
+  .result-popup--win .result-popup__board { grid-area: board; align-self: center; height: min(300px, calc(100dvh - 32px)); margin: 0; }
+  .result-popup--win .result-popup__instruction { grid-area: instruction; margin: 0 0 10px; font-size: 17px; }
+  .result-popup--win .result-popup__claim { grid-area: claim; width: 100%; min-height: 56px; margin: 0 0 8px; font-size: 21px; }
+  .result-popup--win .result-popup__reference { grid-area: reference; margin: 0 0 2px; }
+  .result-popup--win .result-popup__terms { grid-area: terms; align-self: start; margin-top: 0; }
+  .result-popup--win .result-popup__view-prizes { display: none; }
+}
