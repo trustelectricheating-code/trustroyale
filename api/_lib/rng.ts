@@ -1,4 +1,5 @@
-import { randomInt } from "node:crypto";
+import { createHmac, randomInt } from "node:crypto";
+import type { Discount } from "../../src/config/paytable.js";
 import { SYMBOL_IDS, type SymbolId } from "../../src/config/symbols.js";
 import { evaluate } from "../../src/game/evaluator.js";
 
@@ -6,10 +7,11 @@ export interface ReelSpin {
   reels: [SymbolId, SymbolId, SymbolId];
   strip: [[SymbolId, SymbolId, SymbolId], [SymbolId, SymbolId, SymbolId], [SymbolId, SymbolId, SymbolId]];
 }
-export interface SpinOptions { bonus?: boolean }
+
+export interface SpinOptions { bonus?: boolean; sessionId?: string; spinNo?: number; secret?: string }
 
 function randomRow(): [SymbolId, SymbolId, SymbolId] {
-  return [SYMBOL_IDS[randomInt(8)], SYMBOL_IDS[randomInt(8)], SYMBOL_IDS[randomInt(8)]];
+  return [SYMBOL_IDS[randomInt(SYMBOL_IDS.length)], SYMBOL_IDS[randomInt(SYMBOL_IDS.length)], SYMBOL_IDS[randomInt(SYMBOL_IDS.length)]];
 }
 
 export function forcedReels(): [SymbolId, SymbolId, SymbolId] | null {
@@ -20,15 +22,31 @@ export function forcedReels(): [SymbolId, SymbolId, SymbolId] | null {
     : null;
 }
 
-// Per spin: 20% no prize, 40% a 15% prize, 40% a 10% prize. The 20% prize is never dealt.
-// The Last Chance bonus spin always pays, split evenly between 15% and 10%.
-function pickDiscount(bonus: boolean): 10 | 15 | null {
-  const roll = bonus ? 20 + randomInt(80) : randomInt(100);
-  return roll < 20 ? null : roll < 60 ? 15 : 10;
+function sessionSecret(): string {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) throw new Error("SESSION_SECRET is required");
+  return secret;
 }
 
-function rowFor(discount: 10 | 15 | null): [SymbolId, SymbolId, SymbolId] {
-  // Three Neos is the only 10% rule, so there is nothing to sample.
+function percentile(value: string, secret: string): number {
+  return createHmac("sha256", secret).update(value).digest().readUInt32BE(0) % 100;
+}
+
+// One immutable target per game: 10% get 20% off, 50% get 15% off, 40% get 10% off.
+export function targetDiscount(sessionId: string, secret = sessionSecret()): Discount {
+  const roll = percentile(sessionId, secret);
+  return roll < 10 ? 20 : roll < 60 ? 15 : 10;
+}
+
+export function discountForSpin(sessionId: string, spinNo: number, secret = sessionSecret()): Discount | null {
+  const target = targetDiscount(sessionId, secret);
+  if (spinNo >= 3) return target;
+  const roll = percentile(`${sessionId}:spin:${spinNo}`, secret);
+  const candidate: Discount | null = roll < 55 ? null : roll < 75 ? 10 : roll < 95 ? 15 : 20;
+  return candidate !== null && candidate <= target ? candidate : null;
+}
+
+function rowFor(discount: Discount | null): [SymbolId, SymbolId, SymbolId] {
   if (discount === 10) return ["neos", "neos", "neos"];
   for (;;) {
     const row = randomRow();
@@ -37,6 +55,11 @@ function rowFor(discount: 10 | 15 | null): [SymbolId, SymbolId, SymbolId] {
 }
 
 export function spinReels(options: SpinOptions = {}): ReelSpin {
-  const reels = forcedReels() ?? rowFor(pickDiscount(Boolean(options.bonus)));
+  const forced = forcedReels();
+  if (forced) return { reels: forced, strip: [randomRow(), forced, randomRow()] };
+  const discount = options.sessionId && options.spinNo
+    ? discountForSpin(options.sessionId, options.spinNo, options.secret)
+    : targetDiscount(String(randomInt(2 ** 31)), "preview-only-random-target");
+  const reels = rowFor(discount);
   return { reels, strip: [randomRow(), reels, randomRow()] };
 }

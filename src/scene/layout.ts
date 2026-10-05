@@ -86,12 +86,18 @@ export function computeLayout(width: number, height: number, safeAreaInsets: Saf
 
   if (phone) {
     const gap = 10;
-    const trackerWidth = Math.min(170, Math.max(140, content.width * 0.2));
-    const machineHeight = Math.min(content.height, Math.max(1, content.width - trackerWidth - gap) / MACHINE_ASPECT);
-    const machineWidth = machineHeight * MACHINE_ASPECT;
+    const trackerWidth = Math.min(172, Math.max(150, content.width * 0.19));
+    const visibleTop = 60;
+    const visibleBottom = 900;
+    const machineScale = Math.min(
+      content.height / (visibleBottom - visibleTop),
+      Math.max(1, content.width - trackerWidth - gap) / CABINET_DESIGN.width,
+    );
+    const machineWidth = CABINET_DESIGN.width * machineScale;
+    const machineHeight = CABINET_DESIGN.height * machineScale;
     const groupWidth = trackerWidth + gap + machineWidth;
     const groupX = content.x + (content.width - groupWidth) / 2;
-    const machine = scaled(rect(groupX + trackerWidth + gap, content.y + (content.height - machineHeight) / 2, machineWidth, machineHeight), CABINET_DESIGN.width, CABINET_DESIGN.height);
+    const machine = { ...rect(groupX + trackerWidth + gap, content.y - visibleTop * machineScale, machineWidth, machineHeight), scale: machineScale };
     const paytableFrame = scaled(rect(groupX, content.y + (content.height - 112) / 2, trackerWidth, 112), trackerWidth, 112);
     const paytable = { ...paytableFrame, iconSize: 44, prizeSize: 32 };
     const chipTray = paytableFrame;

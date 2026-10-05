@@ -5,7 +5,7 @@ const best = { spinId: "00000000-0000-4000-8000-000000000020", ruleId: "scott-3"
 const finalWin = {
   spinId: best.spinId, spinNo: 3, reels: ["scott", "scott", "scott"],
   strip: [["seven", "cherry", "sweets"], ["scott", "scott", "scott"], ["neos", "keith", "gia"]],
-  outcome: "win", ruleId: best.ruleId, discount: 20, couponCode: "ROYALE20", winRef: best.winRef, best,
+  outcome: "win", ruleId: best.ruleId, discount: 20, winRef: best.winRef, best,
   nearMiss: false, spinsLeft: 0, bonusAvailable: false, isBonus: false, gameOver: true,
 };
 
@@ -22,7 +22,7 @@ async function fontSize(locator: Locator, pixels: number): Promise<void> {
   expect(await locator.evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize))).toBeGreaterThanOrEqual(pixels);
 }
 
-test("phone controls and copy are senior friendly", async ({ page }) => {
+test("phone controls and win message are senior friendly", async ({ page }) => {
   test.setTimeout(90_000);
   await page.setViewportSize({ width: 320, height: 568 });
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -45,7 +45,7 @@ test("phone controls and copy are senior friendly", async ({ page }) => {
   await press(page.locator("#spin"));
  await expect(page.getByRole("heading", { name: "20%" })).toBeVisible({ timeout: 15_000 });
   await fontSize(page.locator("#result-popup h2"), 24);
-  await fontSize(page.locator(".coupon-ticket__code"), 28);
+  await fontSize(page.locator(".result-popup__instruction"), 18);
   await fontSize(page.locator("#result-popup p").first(), 18);
   // "View prize table" is hidden by design on screens shorter than 600px, so only visible buttons are measured.
   const resultButtons = page.locator("#result-popup button:visible");

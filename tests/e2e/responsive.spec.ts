@@ -12,19 +12,19 @@ const best15 = { spinId: "00000000-0000-4000-8000-000000000015", ruleId: "keith-
 const banked15 = {
   spinId: best15.spinId, spinNo: 1, reels: ["keith", "keith", "keith"],
   strip: [["seven", "cherry", "sweets"], ["keith", "keith", "keith"], ["neos", "scott", "gia"]],
-  outcome: "win", ruleId: "keith-3", discount: 15, couponCode: null, winRef: best15.winRef, best: best15,
+  outcome: "win", ruleId: "keith-3", discount: 15, winRef: best15.winRef, best: best15,
   nearMiss: false, spinsLeft: 2, bonusAvailable: false, isBonus: false, gameOver: false,
 };
 const lossWithBest = {
   spinId: "00000000-0000-4000-8000-000000000002", spinNo: 2, reels: ["seven", "cherry", "sweets"],
   strip: [["scott", "fiona", "gia"], ["seven", "cherry", "sweets"], ["neos", "keith", "seven"]],
-  outcome: "retry", ruleId: null, discount: null, couponCode: null, winRef: null, best: best15,
+  outcome: "retry", ruleId: null, discount: null, winRef: null, best: best15,
   nearMiss: false, spinsLeft: 1, bonusAvailable: false, isBonus: false, gameOver: false,
 };
 const final20 = {
   spinId: "00000000-0000-4000-8000-000000000020", spinNo: 3, reels: ["scott", "scott", "scott"],
   strip: [["seven", "cherry", "sweets"], ["scott", "scott", "scott"], ["neos", "keith", "gia"]],
-  outcome: "win", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", winRef: "TR-FINAL20",
+  outcome: "win", ruleId: "scott-3", discount: 20, winRef: "TR-FINAL20",
   best: { spinId: "00000000-0000-4000-8000-000000000020", ruleId: "scott-3", discount: 20, winRef: "TR-FINAL20" },
   nearMiss: false, spinsLeft: 0, bonusAvailable: false, isBonus: false, gameOver: true,
 };
@@ -113,7 +113,7 @@ for (const [width, height] of sizes) {
     await expect(tracker.locator(".tries-tracker__chip")).toHaveCount(0);
     await page.screenshot({ path: path.join(directory, `${width}x${height}-chips-0-final.png`) });
 
-    session = { spinsLeft: 0, bonusAvailable: false, state: "won", best: final20.best, win: { ...final20.best, couponCode: final20.couponCode, reels: final20.reels } };
+    session = { spinsLeft: 0, bonusAvailable: false, state: "won", best: final20.best, win: { ...final20.best, reels: final20.reels } };
     await page.reload();
     await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
     await expect(page.locator("#intro")).not.toBeVisible();

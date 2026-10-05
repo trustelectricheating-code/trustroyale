@@ -22,8 +22,13 @@ function dialogShell(): HTMLDialogElement {
     if (focusable.length === 0) return;
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
-    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   });
   document.body.appendChild(dialog);
   return dialog;
@@ -39,33 +44,18 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
     dialog.className = `result-popup result-popup--${kind}`;
     dialog.setAttribute("aria-modal", String(modal));
     dialog.innerHTML = content;
-    if (modal) dialog.showModal();
-    else dialog.show();
+    if (modal) dialog.showModal(); else dialog.show();
     const title = dialog.querySelector<HTMLElement>("#result-title");
     title?.setAttribute("tabindex", "-1");
     title?.focus();
   };
+
   return {
     showWin(win) {
-      const fireworks = Array.from({ length: 7 }, (_, burst) => `<div class="result-popup__firework" style="left:${[18, 82, 50, 12, 88, 30, 70][burst]}%;top:${[16, 12, 8, 48, 44, 26, 30][burst]}%">${Array.from({ length: 18 }, (_, particle) => `<i style="--a:${particle * 20}deg;--r:${60 + (burst % 3) * 25}px;--d:${[0, .5, 1, .9, .25, 1.3, .7][burst]}s;--c:${["#ffd54a", "#ff3b5c", "#ffffff", "#ffb13b", "#ff6ad5"][burst % 5]}"></i>`).join("")}</div>`).join("");
-      show(`<div class="result-popup__fx" aria-hidden="true"><div class="result-popup__beam"></div><div class="result-popup__confetti"></div><img class="result-popup__coin result-popup__coin--left" src="/assets/fx/coin.webp" alt=""><img class="result-popup__coin result-popup__coin--right" src="/assets/fx/coin.webp" alt="">${fireworks}</div><section aria-labelledby="result-title"><img class="result-popup__keith" src="/assets/keith/celebrate.webp" alt="Keith celebrating"><p class="result-popup__eyebrow">Congratulations, you won</p><h2 id="result-title" class="result-popup__discount">${win.discount}%</h2><p class="result-popup__off">OFF YOUR ORDER</p><div class="coupon-ticket"><span>Your code</span><code class="coupon-ticket__code" tabindex="0"></code><button type="button" data-copy-code>Copy code</button><output class="coupon-ticket__status" aria-live="polite"></output></div><p class="result-popup__instruction">Keep this code safe. When our Chief Chatterer calls you, read them this code to claim your discount. One voucher per order.</p><p class="result-popup__reference">Win reference <strong>${win.winRef}</strong></p><button type="button" class="result-popup__view-prizes" data-view-prizes>View prize table</button></section>`, "win");
-      const code = dialog.querySelector<HTMLElement>(".coupon-ticket__code")!;
-      code.textContent = win.couponCode;
-      const status = dialog.querySelector<HTMLOutputElement>(".coupon-ticket__status")!;
-      dialog.querySelector<HTMLButtonElement>("[data-copy-code]")?.addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(win.couponCode);
-          status.textContent = "Copied!";
-        } catch {
-          const range = document.createRange();
-          range.selectNodeContents(code);
-          const selection = getSelection();
-          selection?.removeAllRanges();
-          selection?.addRange(range);
-          code.focus();
-        status.textContent = "Code selected. Copy it.";
-        }
-      });
+      const fireworks = Array.from({ length: 7 }, (_, burst) =>
+        `<div class="result-popup__firework" style="left:${[18, 82, 50, 12, 88, 30, 70][burst]}%;top:${[16, 12, 8, 48, 44, 26, 30][burst]}%">${Array.from({ length: 18 }, (_, particle) =>
+          `<i style="--a:${particle * 20}deg;--r:${60 + (particle % 3) * 25}px;--d:${[0, 1, 1.3, .7][burst % 4]}s;--c:${["#ffd54a", "#ff445c", "#fff4ba", "#59d7ff", "#ff9f2f"][particle % 5]}"></i>`).join("")}</div>`).join("");
+      show(`<div class="result-popup__fx" aria-hidden="true"><div class="result-popup__beam"></div><div class="result-popup__confetti"></div><img class="result-popup__coin result-popup__coin--left" src="/assets/fx/coin.webp" alt=""><img class="result-popup__coin result-popup__coin--right" src="/assets/fx/coin.webp" alt="">${fireworks}</div><section aria-labelledby="result-title"><img class="result-popup__keith" src="/assets/keith/celebrate.webp" alt="Keith celebrating"><p class="result-popup__eyebrow">Congratulations, you won</p><h2 id="result-title" class="result-popup__discount">${win.discount}%</h2><p class="result-popup__off">OFF YOUR ORDER</p><p class="result-popup__instruction">You have won ${win.discount}% off your order, our chief chatters will be contacting you shortly with the next steps</p><button type="button" class="result-popup__view-prizes" data-view-prizes>View prize table</button></section>`, "win");
       dialog.querySelector<HTMLButtonElement>("[data-view-prizes]")?.addEventListener("click", () => {
         dialog.close();
         onViewPrizes(win.ruleId);
@@ -80,17 +70,22 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
       dialog.querySelector("[data-close-popup]")?.addEventListener("click", () => dialog.close(), { once: true });
     },
     showLastChance(onSpin) {
-      show(`<section aria-labelledby="result-title"><div class="result-popup__bonus-badge"><img class="result-popup__keith result-popup__keith--small" src="/assets/keith/last-chance.webp" alt="Keith presents a gold Last Chance chip"><img class="result-popup__gold-chip" src="/assets/fx/chip-gold-face.webp" alt="Gold Last Chance chip"></div><p class="result-popup__eyebrow">Bonus unlocked</p><h2 id="result-title">Last Chance!</h2><p>Take one bonus spin.</p><button type="button" data-last-chance>Spin now</button></section>`, "last-chance", false);
-      dialog.querySelector("[data-last-chance]")?.addEventListener("click", () => { dialog.close(); onSpin(); }, { once: true });
+      show(`<section aria-labelledby="result-title"><div class="result-popup__bonus-badge"><img class="result-popup__keith result-popup__keith--small" src="/assets/keith/last-chance.webp" alt="Keith"><img class="result-popup__gold-chip" src="/assets/fx/chip-gold-face.webp" alt="Gold chip"></div><p class="result-popup__eyebrow">Bonus round</p><h2 id="result-title">Last Chance!</h2><p>Take one final spin.</p><button type="button" data-last-chance>Spin now</button></section>`, "last-chance");
+      dialog.querySelector("[data-last-chance]")?.addEventListener("click", () => {
+        dialog.close();
+        onSpin();
+      }, { once: true });
     },
     showGameOver() {
-      show(`<section aria-labelledby="result-title"><h2 id="result-title">Thanks for playing</h2><p>Your Trust Royale game is over for today.</p></section>`, "game-over", false);
+      show('<section aria-labelledby="result-title"><h2 id="result-title">Thanks for playing</h2><p>Your game is complete for today.</p></section>', "game-over");
     },
     showError(kind) {
-      const text = kind === "rate" ? "Come back tomorrow" : "Machine hiccup, try again";
+      const text = kind === "rate" ? "Daily play limit reached" : "Machine hiccup, try again";
       show(`<section aria-labelledby="result-title"><h2 id="result-title">${text}</h2><button type="button" data-close-popup>Close</button></section>`, "error", false);
       dialog.querySelector("[data-close-popup]")?.addEventListener("click", () => dialog.close(), { once: true });
     },
-    close() { if (dialog.open) dialog.close(); },
+    close() {
+      if (dialog.open) dialog.close();
+    },
   };
 }

@@ -4,6 +4,8 @@ const VIEWPORTS = [
   { name: "phone-small", width: 320, height: 568 },
   { name: "phone-portrait", width: 390, height: 844 },
   { name: "phone-landscape", width: 844, height: 390 },
+  { name: "phone-landscape-wide", width: 932, height: 430 },
+  { name: "phone-landscape-short", width: 667, height: 375 },
   { name: "ipad-portrait", width: 1024, height: 1366 },
   { name: "desktop", width: 1920, height: 1080 },
   { name: "desktop-wide", width: 2560, height: 1440 },
@@ -62,11 +64,35 @@ test("full-screen game and prize overlay fit supported layouts", async ({ page }
 
     await expect(page.locator("#tries-tracker")).toHaveAttribute("aria-label", "3 chips left");
     await expect(page.locator("#spin")).toBeVisible();
+    await expect(page.locator("html")).toHaveAttribute("data-background-ready", "true");
+    if (viewport.height < viewport.width && viewport.height < 600) {
+      const spin = await page.locator("#spin").boundingBox();
+      expect(spin?.width).toBeGreaterThan(70);
+      expect(spin?.height).toBeGreaterThanOrEqual(56);
+    }
     await page.getByRole("button", { name: "Prizes" }).click();
     await expect(page.locator(".welcome-prize")).toHaveCount(7);
     const images = page.locator(".welcome-prize img");
     await expect(images).toHaveCount(21);
     expect(await images.evaluateAll((nodes) => nodes.every((node) => (node as HTMLImageElement).complete && (node as HTMLImageElement).naturalWidth > 0))).toBe(true);
     await page.getByRole("button", { name: "Back to game" }).click();
+  }
+});
+
+test("casino background remains rendered through portrait and landscape resizes", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await ready(page);
+  await page.getByRole("button", { name: "Let's play!" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-background-orientation", "portrait");
+  await expect(page.locator("html")).toHaveAttribute("data-background-ready", "true");
+
+  for (const viewport of [{ width: 844, height: 390 }, { width: 932, height: 430 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(viewport);
+    const orientation = viewport.width > viewport.height ? "landscape" : "portrait";
+    await expect(page.locator("html")).toHaveAttribute("data-background-orientation", orientation);
+    await expect(page.locator("html")).toHaveAttribute("data-background-ready", "true");
+    const canvas = await page.locator("canvas").boundingBox();
+    expect(canvas?.width).toBeGreaterThanOrEqual(viewport.width);
+    expect(canvas?.height).toBeGreaterThanOrEqual(viewport.height);
   }
 });

@@ -19,7 +19,7 @@ const loss = (spinNo: number, spinsLeft: number, bonusAvailable = false, gameOve
   spinId: `00000000-0000-4000-8000-00000000000${spinNo}`, spinNo,
   reels: ["seven", "cherry", "sweets"],
   strip: [["scott", "fiona", "gia"], ["seven", "cherry", "sweets"], ["neos", "keith", "seven"]],
-  outcome: "retry", ruleId: null, discount: null, couponCode: null, winRef: null, best: null,
+  outcome: "retry", ruleId: null, discount: null, winRef: null, best: null,
   nearMiss: true, spinsLeft, bonusAvailable, isBonus: spinNo === 4, gameOver,
 });
 const win = (discount: 10 | 15 | 20, best: typeof best10 | typeof best15 | typeof best20, spinsLeft: number, gameOver: boolean) => {
@@ -27,12 +27,12 @@ const win = (discount: 10 | 15 | 20, best: typeof best10 | typeof best15 | typeo
   return {
     spinId: best.spinId, spinNo: 3 - spinsLeft, reels: symbols,
     strip: [["seven", "cherry", "sweets"], symbols, ["neos", "keith", "gia"]],
-    outcome: "win", ruleId: best.ruleId, discount, couponCode: gameOver ? `ROYALE${discount}` : null,
+    outcome: "win", ruleId: best.ruleId, discount,
     winRef: best.winRef, best, nearMiss: false, spinsLeft, bonusAvailable: false, isBonus: false, gameOver,
   };
 };
 const final20 = win(20, best20, 0, true);
-const finished = { spinsLeft: 0, bonusAvailable: false, state: "won", best: best20, win: { ...best20, couponCode: "ROYALE20", reels: final20.reels } };
+const finished = { spinsLeft: 0, bonusAvailable: false, state: "won", best: best20, win: { ...best20, reels: final20.reels } };
 
 async function press(locator: Locator): Promise<void> {
   await locator.evaluate((node: HTMLButtonElement) => node.click());
@@ -112,7 +112,7 @@ for (const [width, height] of sizes) {
     spinBody = final20;
     await load(idle(1, best15)); await press(page.locator("#spin"));
  await expect(page.getByRole("heading", { name: "20%" })).toBeVisible({ timeout: 15_000 });
-    await shot("15-win-20-coupon.png");
+    await shot("15-win-20-message.png");
 
     await load({ spinsLeft: 0, bonusAvailable: true, state: "last_chance", best: null, win: null });
     await expect(page.getByRole("heading", { name: "Last Chance!" })).toBeVisible();

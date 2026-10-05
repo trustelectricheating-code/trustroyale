@@ -2,8 +2,8 @@ import { Assets, BlurFilter, Container, Graphics, Sprite, Texture } from "pixi.j
 import type { SceneLayout } from "./layout";
 
 const ASSETS = {
-  hallLandscape: "/assets/mock/casino-hall-landscape.webp",
-  hallPortrait: "/assets/mock/casino-hall-portrait.webp",
+  hallLandscape: "/assets/background/casino-hall-landscape.webp",
+  hallPortrait: "/assets/background/casino-hall-portrait.webp",
   chipRed: "/assets/fx/chip-red-face.webp",
   chipGold: "/assets/fx/chip-gold-face.webp",
   chipNavy: "/assets/fx/chip-navy-face.webp",
@@ -125,9 +125,9 @@ function card(): Container {
 }
 
 export async function createBackground(): Promise<EnvironmentScene> {
-  const portrait = innerWidth < innerHeight;
   const firstScreenKeys = new Set<keyof typeof ASSETS>([
-    portrait ? "hallPortrait" : "hallLandscape",
+    "hallPortrait",
+    "hallLandscape",
     "chipNavy",
     "chipGoldFar",
     "coinFar",
@@ -187,6 +187,10 @@ export function drawBackground(scene: EnvironmentScene, layout: SceneLayout): vo
   scene.hallPortrait.visible = portrait;
   cover(scene.hallLandscape, 1672, 941, width, height);
   cover(scene.hallPortrait, 941, 1672, width, height);
+  document.documentElement.dataset.backgroundOrientation = layout.orientation;
+  document.documentElement.dataset.backgroundReady = String(
+    (portrait ? scene.hallPortrait.texture : scene.hallLandscape.texture) !== Texture.EMPTY,
+  );
 
   const count = floatingItemCount(width, height);
   const marginPositions = [

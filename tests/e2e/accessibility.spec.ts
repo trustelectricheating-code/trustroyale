@@ -5,7 +5,7 @@ const win = {
   spinId: "00000000-0000-4000-8000-000000000020", spinNo: 1,
   reels: ["scott", "scott", "scott"],
   strip: [["seven", "cherry", "sweets"], ["scott", "scott", "scott"], ["neos", "keith", "gia"]],
-  outcome: "win", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", winRef: "TR-ABC234", nearMiss: false,
+  outcome: "win", ruleId: "scott-3", discount: 20, winRef: "TR-ABC234", nearMiss: false,
   spinsLeft: 0, bonusAvailable: false, isBonus: false, gameOver: true,
   best: { spinId: "00000000-0000-4000-8000-000000000020", ruleId: "scott-3", discount: 20, winRef: "TR-ABC234" },
 };
@@ -28,9 +28,9 @@ test("result dialog announces, traps focus, and shows keyboard focus", async ({ 
   await expect(dialog).toHaveAttribute("aria-modal", "true");
   await page.keyboard.press("Tab");
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("button", { name: "Copy code" })).toBeFocused();
-  expect(await page.getByRole("button", { name: "Copy code" }).evaluate((node) => getComputedStyle(node).outlineStyle)).not.toBe("none");
-  const contrast = await page.getByRole("button", { name: "Copy code" }).evaluate((node) => {
+  await expect(page.getByRole("button", { name: "View prize table" })).toBeFocused();
+  expect(await page.getByRole("button", { name: "View prize table" }).evaluate((node) => getComputedStyle(node).outlineStyle)).not.toBe("none");
+  const contrast = await page.getByRole("button", { name: "View prize table" }).evaluate((node) => {
     const parse = (value: string) => value.match(/[\d.]+/g)!.slice(0, 3).map(Number);
     const luminance = (rgb: number[]) => rgb.map((channel) => channel / 255).map((channel) => channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4)
       .reduce((sum, channel, index) => sum + channel * [0.2126, 0.7152, 0.0722][index], 0);

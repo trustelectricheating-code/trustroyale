@@ -11,7 +11,6 @@ const finalWin = {
   outcome: "win",
   ruleId: best.ruleId,
   discount: best.discount,
-  couponCode: "ROYALE15",
   winRef: best.winRef,
   best,
   nearMiss: false,

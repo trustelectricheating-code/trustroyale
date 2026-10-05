@@ -2,7 +2,6 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { query as databaseQuery, type Query } from "./_lib/db.js";
 import { error, json, methodNotAllowed } from "./_lib/http.js";
 import { getOrCreateSession } from "./_lib/session.js";
-import { couponFor } from "./_lib/coupons.js";
 
 interface SessionRow {
   spins_used: number;
@@ -48,7 +47,6 @@ export function createSessionHandler({ query = databaseQuery }: { query?: Query 
           winRef: row.win_ref,
           ruleId: row.rule_id,
           discount: row.discount,
-          couponCode: couponFor(row.discount as 10 | 15 | 20),
           reels: row.reels,
         } : null,
       });

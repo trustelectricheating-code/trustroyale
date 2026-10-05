@@ -12,14 +12,14 @@ const loss = (spinNo: number, spinsLeft: number, bonusAvailable = false, gameOve
   spinNo,
   reels: ["seven", "cherry", "sweets"],
   strip: [["scott", "fiona", "gia"], ["seven", "cherry", "sweets"], ["neos", "keith", "seven"]],
-  outcome: "retry", ruleId: null, discount: null, couponCode: null, winRef: null, best: null,
+  outcome: "retry", ruleId: null, discount: null, winRef: null, best: null,
   nearMiss: spinNo === 2, spinsLeft, bonusAvailable, isBonus: spinNo === 4, gameOver,
 });
 const banked15 = {
   spinId: "00000000-0000-4000-8000-000000000015", spinNo: 1,
   reels: ["keith", "keith", "keith"],
   strip: [["seven", "cherry", "sweets"], ["keith", "keith", "keith"], ["neos", "scott", "gia"]],
-  outcome: "win", ruleId: "keith-3", discount: 15, couponCode: null, winRef: "TR-BANK15",
+  outcome: "win", ruleId: "keith-3", discount: 15, winRef: "TR-BANK15",
   best: { spinId: "00000000-0000-4000-8000-000000000015", ruleId: "keith-3", discount: 15, winRef: "TR-BANK15" },
   nearMiss: false, spinsLeft: 2, bonusAvailable: false, isBonus: false, gameOver: false,
 };
@@ -27,7 +27,7 @@ const final20 = {
   spinId: "00000000-0000-4000-8000-000000000020", spinNo: 3,
   reels: ["scott", "scott", "scott"],
   strip: [["seven", "cherry", "sweets"], ["scott", "scott", "scott"], ["neos", "keith", "gia"]],
-  outcome: "win", ruleId: "scott-3", discount: 20, couponCode: "ROYALE20", winRef: "TR-FINAL20",
+  outcome: "win", ruleId: "scott-3", discount: 20, winRef: "TR-FINAL20",
   best: { spinId: "00000000-0000-4000-8000-000000000020", ruleId: "scott-3", discount: 20, winRef: "TR-FINAL20" },
   nearMiss: false, spinsLeft: 0, bonusAvailable: false, isBonus: false, gameOver: true,
 };
@@ -199,7 +199,7 @@ test("intro and popup menu buttons play the soft click, including the first gest
   await expect.poll(async () => Number(await page.locator("html").getAttribute("data-sound-play-count"))).toBeGreaterThan(beforeContinue);
 });
 
-test("best-of-three waits for presses and reveals only final coupon", async ({ page }) => {
+test("best-of-three waits for presses and reveals only the final win message", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await mockSession(page);
   const second = { ...loss(2, 1), best: banked15.best };
@@ -212,18 +212,39 @@ test("best-of-three waits for presses and reveals only final coupon", async ({ p
   await button.click();
   await expect(page.getByRole("heading", { name: "15% banked!" })).toBeVisible();
   await expect(page.locator("#tries-tracker")).toContainText("Best prize: 15%");
-  await expect(page.getByText("ROYALE20")).toHaveCount(0);
+  await expect(page.getByText(/our chief chatters will be contacting you shortly/)).toHaveCount(0);
   await page.waitForTimeout(1_000);
   expect(requests).toBe(1);
   await button.click();
   await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
   await button.click();
   await expect(page.getByRole("heading", { name: "20%" })).toBeVisible();
-  await expect(page.getByText("ROYALE20")).toBeVisible();
+  await expect(page.getByText("You have won 20% off your order, our chief chatters will be contacting you shortly with the next steps")).toBeVisible();
   expect(requests).toBe(3);
   await page.getByRole("button", { name: "View prize table" }).click();
   await expect(page.locator('[data-rule-id="scott-3"]')).toHaveClass(/is-winning/);
 });
+
+for (const state of ["won", "claimed"] as const) {
+  test(`returning ${state} player sees the chief chatters message without coupon UI`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.route("**/api/session**", (route) => route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        spinsLeft: 0,
+        bonusAvailable: false,
+        state,
+        best: final20.best,
+        win: { ...final20.best, reels: final20.reels },
+      }),
+    }));
+    await page.goto("/");
+    await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
+    await expect(page.getByText("You have won 20% off your order, our chief chatters will be contacting you shortly with the next steps")).toBeVisible();
+    await expect(page.locator(".coupon-ticket, [data-copy-code]")).toHaveCount(0);
+  });
+}
 
 test("returning mid-game player skips intro and resumes tracker", async ({ page }) => {
   await mockSession(page, { spinsLeft: 1, bonusAvailable: false, state: "idle", best: banked15.best, win: null });

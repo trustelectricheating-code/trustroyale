@@ -187,17 +187,17 @@ async function boot(): Promise<void> {
         marqueeScene.setPattern("win");
         burstWin(environment.front, motionQuery.matches);
         machine.send({ type: "RESOLVE", outcome: "win", spinsLeft: result.spinsLeft, bonusAvailable: result.bonusAvailable, isBonus: result.isBonus, gameOver: result.gameOver });
-        if (result.gameOver && result.best && result.couponCode) {
-          const win: WinSummary = { spinId: result.best.spinId, winRef: result.best.winRef, ruleId: result.best.ruleId, discount: result.best.discount, couponCode: result.couponCode, reels: result.reels };
+        if (result.gameOver && result.best) {
+          const win: WinSummary = { spinId: result.best.spinId, winRef: result.best.winRef, ruleId: result.best.ruleId, discount: result.best.discount, reels: result.reels };
           displayWin(win);
         } else popups.showBanked(result.best?.discount ?? result.discount, result.spinsLeft);
         return;
       }
-      const finalBest = result.gameOver && result.best && result.couponCode;
+      const finalBest = result.gameOver && result.best;
       machine.send({ type: "RESOLVE", outcome: finalBest ? "win" : "retry", spinsLeft: result.spinsLeft, bonusAvailable: result.bonusAvailable, isBonus: result.isBonus, gameOver: result.gameOver });
       if (finalBest) {
         await deferredAssetsReady;
-        displayWin({ spinId: result.best!.spinId, winRef: result.best!.winRef, ruleId: result.best!.ruleId, discount: result.best!.discount, couponCode: result.couponCode!, reels: result.reels });
+        displayWin({ spinId: result.best!.spinId, winRef: result.best!.winRef, ruleId: result.best!.ruleId, discount: result.best!.discount, reels: result.reels });
         return;
       }
       marqueeScene.setPattern("idle");

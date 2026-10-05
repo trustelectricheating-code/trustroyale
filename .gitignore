@@ -25,3 +25,6 @@ tests/e2e/__screenshots__/
 .playwright-mcp/
 test-results/
 .vercel
+
+# Local marketing asset workspace, not part of the game
+public/marketing-assets/

@@ -24,7 +24,6 @@ Copy `.env.example` for the complete local list:
 - `IP_HASH_SALT`: secret salt used before visitor IP addresses are hashed.
 - `DAILY_SESSIONS_PER_IP`: daily new-session limit per IP hash; `0` disables it.
 - `FORCE_REELS`: optional preview-only comma-separated reel result; production ignores it.
-- `COUPON_CODE_10`, `COUPON_CODE_15`, `COUPON_CODE_20`: server-side coupon codes for winning tiers. The checked-in `ROYALE10`, `ROYALE15`, and `ROYALE20` values are placeholders only.
 
 `TEST_DATABASE_URL` is optional and test-only. When set, the API integration suite also runs against that disposable database. Tests never read `DATABASE_URL`.
 

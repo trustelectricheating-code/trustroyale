@@ -575,6 +575,17 @@ html[data-orientation="portrait"] .prize-carousel__all { font-size: clamp(.55rem
   .prize-carousel__all { font-size: .55rem; }
 }
 
+@media (orientation: landscape) and (max-height: 500px) {
+  .tries-tracker {
+    grid-template: auto minmax(0, 1fr) auto / 1fr;
+    gap: 2px;
+    padding: 6px 8px;
+  }
+  .tries-tracker__chips { gap: 2px; }
+  .tries-tracker__chip { width: clamp(34px, 9vh, 42px); height: clamp(34px, 9vh, 42px); }
+  .tries-tracker__title, .tries-tracker output { font-size: 13px; line-height: 1; white-space: normal; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee__bulb-lit { animation: none; opacity: .94; }
 
@@ -661,14 +672,6 @@ html[data-ready="true"] .spin__label { visibility: hidden; }
 .result-popup--retry button,
 .result-popup--last-chance button,
 .result-popup--error button { min-width: 132px; min-height: 52px; padding: .65rem 1rem; }
-.coupon-ticket { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .35rem .8rem; margin: 1.1rem auto; padding: 1rem 1.15rem; border: 2px dashed #ffe8a3; border-radius: 14px; color: #3b070e; background: linear-gradient(135deg, #fff1ad, #d5a136); text-align: left; }
-.coupon-ticket::before, .coupon-ticket::after { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; background: #3d0610; content: ""; transform: translateY(-50%); }
-.coupon-ticket::before { left: -11px; }
-.coupon-ticket::after { right: -11px; }
-.coupon-ticket span { font: 700 .8rem "Trust Royale UI", sans-serif; letter-spacing: .08em; text-transform: uppercase; }
-.coupon-ticket__code { grid-column: 1; user-select: all; color: #510713; background: transparent; font: 700 clamp(1.35rem, 5vw, 2rem) "Trust Royale Display", serif; letter-spacing: .08em; }
-.coupon-ticket button { grid-column: 2; grid-row: 1 / span 2; min-width: 112px; color: #fff; background: #720918; }
-.coupon-ticket__status { grid-column: 1 / -1; min-height: 1.1em; color: #510713; font: 700 .8rem "Trust Royale UI", sans-serif; text-align: center; }
 .result-popup__instruction { margin: .7rem 0; }
 
 .result-popup--win section { display: flex; flex-direction: column; align-items: center; }
@@ -691,15 +694,10 @@ html[data-ready="true"] .spin__label { visibility: hidden; }
 .result-popup--error button { width: min(100%, 360px); }
 
 @media (max-width: 360px) {
-  .coupon-ticket { grid-template-columns: 1fr; gap: .5rem; padding: 16px; text-align: center; }
-  .coupon-ticket__code,
-  .coupon-ticket button { grid-column: 1; grid-row: auto; min-width: 0; }
-  .coupon-ticket__code { letter-spacing: .03em; }
   .result-popup { padding: 14px 12px; }
   .result-popup--win .result-popup__keith { width: 68px; height: 68px; }
   .result-popup--win h2 { margin-bottom: .45rem; font-size: 22px; }
   .result-popup--win p { margin: .35rem 0; }
-  .result-popup--win .coupon-ticket { margin: .55rem auto; padding: .65rem .75rem; }
 }
 
 html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
@@ -809,7 +807,6 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
   .result-popup--last-chance p,
   .result-popup--game-over p,
   .result-popup--error p { font-size: 18px; line-height: 1.45; }
-  .coupon-ticket__code { font-size: 28px; }
   .tries-tracker {
     grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-rows: 1fr;
@@ -857,13 +854,6 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
   }
 }
 
-@media (max-width: 480px) {
-  .coupon-ticket { grid-template-columns: 1fr; gap: .5rem; padding: 16px; text-align: center; }
-  .coupon-ticket__code,
-  .coupon-ticket button { grid-column: 1; grid-row: auto; min-width: 0; width: 100%; }
-  .coupon-ticket__code { white-space: nowrap; letter-spacing: .03em; }
-}
-
 @media (max-height: 430px) and (orientation: landscape) {
   .intro__mute { left: 8px; right: auto; }
   .intro__host { box-sizing: border-box; padding-top: 64px; }
@@ -902,17 +892,11 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 .tries-tracker__title { font-size: clamp(.82rem, 1.6vmin, 1rem); }
 .tries-tracker output { font-size: clamp(.78rem, 1.5vmin, .95rem); }
 
-/* Card round 3 phone fit fixes. */
-.coupon-ticket { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; }
-.coupon-ticket__code { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
-.coupon-ticket button { min-width: 0; max-width: 100%; }
-
 @media (max-height: 700px) {
   .result-popup { max-height: calc(100dvh - 16px); overflow-y: auto; margin: 8px auto; }
   .result-popup--win .result-popup__keith { display: none; }
   .result-popup--win h2 { margin: .15rem 0 .45rem; }
   .result-popup--win p { margin: .35rem 0; }
-  .result-popup--win .coupon-ticket { margin: .55rem auto; padding: .65rem .75rem; }
   .result-popup--win .result-popup__instruction { margin: .35rem 0; }
   .result-popup--win .result-popup__reference { margin: .35rem 0; }
 }
@@ -997,12 +981,6 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 .result-popup--win .result-popup__eyebrow { font-size: 18px; }
 .result-popup--win .result-popup__discount { margin: 0; color: #ffe8a3; font: 700 clamp(84px, 26vw, 150px)/.95 "Trust Royale Display", serif; text-shadow: 0 0 24px #ffbe38aa, 0 6px 0 #7a4a08, 0 12px 30px #000c; }
 .result-popup--win .result-popup__off { margin: 0 0 16px; color: #fff; font: 700 clamp(28px, 8vw, 44px)/1 "Trust Royale Display", serif; letter-spacing: .06em; }
-.result-popup--win .coupon-ticket { margin: 0 auto 12px; padding: 14px 16px 16px; border: 0; border-radius: 20px; color: #3a1a02; background: linear-gradient(135deg, #fff1bf, #e5b64c 55%, #fff1bf); box-shadow: 0 10px 30px #000a; text-align: center; }
-.result-popup--win .coupon-ticket span { font-size: 16px; }
-.result-popup--win .coupon-ticket__code { display: block; grid-column: 1 / -1; margin: 4px 0 12px; color: #3a1a02; font-size: clamp(28px, 7.5vw, 34px); letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.result-popup--win .coupon-ticket button { grid-column: 1 / -1; grid-row: auto; width: 100%; min-height: 60px; font-size: 22px; }
-.result-popup--win .coupon-ticket button { background: linear-gradient(#d0213d, #9c0f25); }
-.result-popup--win .coupon-ticket__status { grid-column: 1 / -1; color: #3a1a02; font-size: 16px; }
 .result-popup--win .result-popup__instruction { margin: 0 0 14px; font-size: 18px; text-shadow: 0 2px 6px #000, 0 0 2px #000; }
 .result-popup--win .result-popup__reference { margin: 0; color: #ffe8a3cc; font-size: 16px; text-shadow: 0 2px 6px #000; }
 .result-popup--win .result-popup__reference strong { display: inline; margin: 0; font-size: inherit; }
@@ -1020,8 +998,8 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 @media (max-width: 480px) { .intro__card { border-radius: 22px; } .intro__host img { width: clamp(72px, 18vw, 116px); height: clamp(72px, 18vw, 116px); } }
 @media (max-width: 375px) { .intro__host { display: none; } .intro__rules { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; } .intro__rules li { display: flex; flex-direction: column; justify-content: start; gap: 3px; font-size: 18px; line-height: 1.05; text-align: center; } .intro__rules img { width: 32px; height: 32px; } .intro__rules span { display: block; } }
 @media (max-height: 700px) and (orientation: portrait) { .intro__card { padding-top: 8px; padding-bottom: 10px; } .intro__host img { width: 72px; height: 72px; } .intro h1 { margin-bottom: 8px; font-size: 26px; } .intro__rules { gap: 4px; margin-bottom: 8px; } .intro__rules li { line-height: 1.18; } .intro__prizes { margin-bottom: 8px; } .intro__prizes > div { padding: 5px 3px; } .intro__prizes strong { font-size: 26px; } .intro__prizes span { font-size: 18px; } .intro__actions button { min-height: 56px; } }
-@media (max-height: 600px) { .result-popup--win .result-popup__keith, .result-popup--win .result-popup__view-prizes { display: none; } .result-popup--win .result-popup__instruction { margin-bottom: 6px; } .result-popup--win .result-popup__off { margin-bottom: 8px; } .result-popup--win .coupon-ticket { margin-bottom: 6px; padding: 8px 12px; } }
-@media (max-height: 800px) and (orientation: landscape) { .result-popup--win section { padding-top: 4px; padding-bottom: 4px; } .result-popup--win .result-popup__keith { width: 76px; height: 76px; margin-bottom: 0; } .result-popup--win .result-popup__discount { font-size: clamp(72px, 17vh, 120px); } .result-popup--win .result-popup__off { margin-bottom: 8px; font-size: 32px; } .result-popup--win .coupon-ticket { margin-bottom: 6px; padding: 8px 12px; } .result-popup--win .result-popup__instruction { margin-bottom: 6px; } .result-popup--win .result-popup__view-prizes { margin-top: 6px; } }
+@media (max-height: 600px) { .result-popup--win .result-popup__keith, .result-popup--win .result-popup__view-prizes { display: none; } .result-popup--win .result-popup__instruction { margin-bottom: 6px; } .result-popup--win .result-popup__off { margin-bottom: 8px; } }
+@media (max-height: 800px) and (orientation: landscape) { .result-popup--win section { padding-top: 4px; padding-bottom: 4px; } .result-popup--win .result-popup__keith { width: 76px; height: 76px; margin-bottom: 0; } .result-popup--win .result-popup__discount { font-size: clamp(72px, 17vh, 120px); } .result-popup--win .result-popup__off { margin-bottom: 8px; font-size: 32px; } .result-popup--win .result-popup__instruction { margin-bottom: 6px; } .result-popup--win .result-popup__view-prizes { margin-top: 6px; } }
 @media (prefers-reduced-motion: reduce) { .result-popup__firework { display: none; } }
 .intro button, .result-popup button, .prizes-button { min-height: 56px; }
 .result-popup:not(.result-popup--win) { max-height: calc(100dvh - 16px); overflow: hidden; }
@@ -1097,9 +1075,8 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
   .welcome__keith { display: none; }
   .welcome h1 { min-height: 56px; margin-top: 2px; padding: 0 100px 0 4px; text-align: left; }
 }
-/* The full 15-character coupon code must stay at 28px on 320px phones, so the ticket gives up some side padding there. */
-@media (max-width: 359px) { .result-popup--win .coupon-ticket { padding-inline: 8px; } .result-popup--win .coupon-ticket__code { letter-spacing: 0; } }
+@media (max-width: 359px) { }
 /* Chips shrink with the tracker column (1024x768 gives it under 130px) instead of spilling past its edge. */
 .tries-tracker__chips { justify-self: stretch; }
 .tries-tracker__chip { flex: 0 1 auto; min-width: 0; height: auto; aspect-ratio: 1; }
-@media (max-height: 700px) { .result-popup--win .coupon-ticket { padding-bottom: 10px; } .result-popup--win .coupon-ticket__code { margin-bottom: 6px; } }
+@media (max-height: 700px) { }

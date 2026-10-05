@@ -32,14 +32,14 @@ describe("POST /api/spin with PGlite", () => {
   afterAll(async () => { await setup.database.close(); });
   beforeEach(async () => { await setup.query("TRUNCATE leads, spins, sessions CASCADE"); });
 
-  it("offers three regular spins, one bonus, then game over", async () => {
+  it("keeps stale four-spin sessions harmless", async () => {
     const session = await testSession(setup.query);
     const handler = createSpinHandler({ query: setup.query, spinReels: () => loss, newWinRef: () => "TR-ABC234" });
     for (let expected = 2; expected >= 0; expected -= 1) {
       const reply = response();
       await handler(request("POST", session.cookie), reply);
       expect(reply.statusCode).toBe(200);
-      expect(reply.body).toMatchObject({ spinsLeft: expected, bonusAvailable: expected === 0, isBonus: false, couponCode: null, gameOver: false, best: null });
+      expect(reply.body).toMatchObject({ spinsLeft: expected, bonusAvailable: expected === 0, isBonus: false, gameOver: false, best: null });
       expect((reply.body as { strip: string[][]; reels: string[] }).strip[1]).toEqual((reply.body as { reels: string[] }).reels);
     }
     const bonus = response();
@@ -59,7 +59,22 @@ describe("POST /api/spin with PGlite", () => {
     expect(bonusFlags).toEqual([false, false, false, true]);
   });
 
-  it("keeps the highest prize through three tries and hides coupon until the end", async () => {
+  it("ends a normal session with a prize no later than spin three", async () => {
+    const session = await testSession(setup.query);
+    let ref = 0;
+    const handler = createSpinHandler({ query: setup.query, newWinRef: () => `TR-TGT${ref++}` });
+    let final: { gameOver?: boolean; best?: { discount: number } | null } = {};
+    for (let spin = 0; spin < 3 && !final.gameOver; spin += 1) {
+      const reply = response();
+      await handler(request("POST", session.cookie), reply);
+      expect(reply.statusCode).toBe(200);
+      final = reply.body as typeof final;
+    }
+    expect(final.gameOver).toBe(true);
+    expect([10, 15, 20]).toContain(final.best?.discount);
+  });
+
+  it("keeps the highest prize through three tries without returning coupon data", async () => {
     const session = await testSession(setup.query);
     const rolls = [win10, win15, win10];
     let index = 0;
@@ -67,11 +82,12 @@ describe("POST /api/spin with PGlite", () => {
     let ref = 0;
     const handler = createSpinHandler({ query: setup.query, spinReels: () => rolls[index++], newWinRef: () => refs[ref++] });
     const first = response(); await handler(request("POST", session.cookie), first);
-    expect(first.body).toMatchObject({ couponCode: null, gameOver: false, best: { discount: 10, winRef: "TR-TEN234" }, spinsLeft: 2 });
+    expect(first.body).toMatchObject({ gameOver: false, best: { discount: 10, winRef: "TR-TEN234" }, spinsLeft: 2 });
     const second = response(); await handler(request("POST", session.cookie), second);
-    expect(second.body).toMatchObject({ couponCode: null, gameOver: false, best: { discount: 15, winRef: "TR-FIF234" }, spinsLeft: 1 });
+    expect(second.body).toMatchObject({ gameOver: false, best: { discount: 15, winRef: "TR-FIF234" }, spinsLeft: 1 });
     const third = response(); await handler(request("POST", session.cookie), third);
-    expect(third.body).toMatchObject({ couponCode: "ROYALE15", gameOver: true, best: { discount: 15, winRef: "TR-FIF234" }, bonusAvailable: false });
+    expect(third.body).toMatchObject({ gameOver: true, best: { discount: 15, winRef: "TR-FIF234" }, bonusAvailable: false });
+    expect(third.body).not.toHaveProperty("couponCode");
   });
 
   it("never records more than four concurrent spins", async () => {

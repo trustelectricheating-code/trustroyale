@@ -9,7 +9,6 @@ const retry = {
   outcome: "retry",
   ruleId: null,
   discount: null,
-  couponCode: null,
   winRef: null,
   nearMiss: false,
   spinsLeft: 2,

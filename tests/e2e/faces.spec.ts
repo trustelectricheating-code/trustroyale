@@ -12,7 +12,7 @@ const faceResult = {
   spinId: "00000000-0000-4000-8000-000000000017", spinNo: 1,
   reels: ["scott", "keith", "fiona"],
   strip: [["seven", "cherry", "sweets"], ["scott", "keith", "fiona"], ["neos", "gia", "seven"]],
-  outcome: "retry", ruleId: null, discount: null, couponCode: null, winRef: null, best: null,
+  outcome: "retry", ruleId: null, discount: null, winRef: null, best: null,
   nearMiss: false, spinsLeft: 2, bonusAvailable: false, isBonus: false, gameOver: false,
 };
 

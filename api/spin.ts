@@ -6,7 +6,6 @@ import { spinReels as roll, type ReelSpin, type SpinOptions } from "./_lib/rng.j
 import { clientIp, getOrCreateSession } from "./_lib/session.js";
 import { newWinRef as makeWinRef } from "./_lib/winRef.js";
 import { evaluate } from "../src/game/evaluator.js";
-import { couponFor } from "./_lib/coupons.js";
 
 interface SpinDependencies {
   query?: Query;
@@ -53,7 +52,8 @@ export function createSpinHandler(dependencies: SpinDependencies = {}) {
           `, [sessionId])
         : await query<{ spins_used: number }>("SELECT spins_used FROM sessions WHERE id = $1", [sessionId]);
       if (cap > 0 && Number(sessionRows[0]?.count ?? 0) > cap) return error(response, 429, "rate_limited");
-      const rolled = spinReels({ bonus: Number(sessionRows[0]?.spins_used ?? 0) >= 3 });
+      const nextSpinNo = Number(sessionRows[0]?.spins_used ?? 0) + 1;
+      const rolled = spinReels({ bonus: nextSpinNo === 4, sessionId, spinNo: nextSpinNo });
       const { reels, strip } = rolled;
       if (strip[1].some((symbol, index) => symbol !== reels[index])) throw new Error("strip[1] must equal reels");
       const evaluation = evaluate(reels);
@@ -122,7 +122,6 @@ export function createSpinHandler(dependencies: SpinDependencies = {}) {
         outcome: evaluation.rule ? "win" : "retry",
         ruleId: evaluation.rule?.id ?? null,
         discount: evaluation.rule?.discount ?? null,
-        couponCode: gameOver && inserted[0].best_discount ? couponFor(inserted[0].best_discount as 10 | 15 | 20) : null,
         winRef,
         best,
         nearMiss: evaluation.nearMiss,

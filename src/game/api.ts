@@ -2,7 +2,7 @@ import type { Discount } from "../config/paytable";
 import type { SymbolId } from "../config/symbols";
 
 export type ServerState = "idle" | "last_chance" | "won" | "claimed" | "game_over";
-export interface WinSummary { spinId: string; winRef: string; ruleId: string; discount: Discount; couponCode: string; reels: [SymbolId, SymbolId, SymbolId] }
+export interface WinSummary { spinId: string; winRef: string; ruleId: string; discount: Discount; reels: [SymbolId, SymbolId, SymbolId] }
 export interface BestSummary { spinId: string; winRef: string; ruleId: string; discount: Discount }
 export interface SessionResponse { spinsLeft: number; bonusAvailable: boolean; state: ServerState; best: BestSummary | null; win: WinSummary | null }
 export interface SpinResponse {
@@ -13,7 +13,6 @@ export interface SpinResponse {
   outcome: "win" | "retry";
   ruleId: string | null;
   discount: Discount | null;
-  couponCode: string | null;
   winRef: string | null;
   best: BestSummary | null;
   nearMiss: boolean;
