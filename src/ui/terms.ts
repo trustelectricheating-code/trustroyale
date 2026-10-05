@@ -17,7 +17,7 @@ export function showTerms(link: HTMLElement): void {
         </li>
         <li>The discount applies to NEOS radiators only. It does not apply to delivery or installation.</li>
         <li>The Ocean range, and any other range of products, are not included in this offer.</li>
-        <li>After you win, claim your prize with a free quote request, and our chief chatters will contact you with the next steps to use your discount.</li>
+        <li>After you win, claim your prize by entering your details on the win screen, and our chief chatters will contact you with the next steps to use your discount.</li>
       </ol>`;
     dialog.querySelector("[data-close-terms]")?.addEventListener("click", () => dialog?.close());
     dialog.addEventListener("close", () => opener?.focus());

@@ -703,6 +703,37 @@ html[data-ready="true"] .spin__label { visibility: hidden; }
   .result-popup--win p { margin: .35rem 0; }
 }
 
+/* Claim form inside the win popup: the step scrolls in the dialog so Submit is always reachable. */
+.result-popup--win,
+.result-popup--claim,
+.result-popup--claimed { max-height: calc(100dvh - 16px); overflow-y: auto; overscroll-behavior: contain; }
+.result-popup--claim section,
+.result-popup--claimed section { display: flex; flex-direction: column; align-items: center; }
+.result-popup--claim h2,
+.result-popup--claimed h2 { font-size: clamp(1.5rem, 5vw, 2.2rem); }
+.result-popup--claim p,
+.result-popup--claimed p { font-size: 18px; }
+.claim-form { display: flex; flex-direction: column; gap: .7rem; width: min(100%, 420px); text-align: left; }
+.claim-field label { display: block; margin-bottom: .25rem; font: 700 18px/1.3 "Trust Royale UI", sans-serif; color: #ffe8a3; }
+.claim-field input { box-sizing: border-box; width: 100%; min-height: 48px; padding: .55rem .8rem; border: 2px solid #ffe8a3; border-radius: 12px; color: #26030a; background: #fff8e8; font: 600 18px/1.3 "Trust Royale UI", sans-serif; }
+.claim-field input:focus-visible { outline: 3px solid #59d7ff; outline-offset: 2px; }
+.claim-field input[aria-invalid] { border-color: #ff6b7d; }
+.claim-field__error { min-height: 0; margin: .25rem 0 0; color: #ffb3bd; font-size: 18px; }
+.claim-field__error:empty { display: none; }
+.claim-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.claim-consent { margin: .3rem 0 0; font-size: 18px; text-align: center; }
+.claim-consent a { color: #ffe8a3; }
+.claim-submit,
+.claim-back { width: 100%; }
+.claim-back { background: transparent; }
+.result-popup--claim > section > button[data-claim-retry] { width: min(100%, 360px); }
+@media (max-height: 520px) {
+  .result-popup--claim,
+  .result-popup--claimed { padding: 14px 16px; }
+  .result-popup--claim h2 { margin-bottom: .4rem; }
+  .claim-form { gap: .5rem; }
+}
+
 html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 
 /* Owner round: physical chip tray replaces abstract try lamps. */

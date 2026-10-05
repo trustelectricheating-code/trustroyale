@@ -3,7 +3,7 @@ import "pixi.js/unsafe-eval";
 import { gsap } from "gsap";
 import "./styles/main.css";
 import { loadDeferredAssets, loadInitialAssets } from "./assets";
-import { GameApiError, getSession, spin, type BestSummary, type SpinResponse, type WinSummary } from "./game/api";
+import { GameApiError, captureSsTracking, getSession, spin, type BestSummary, type SpinResponse, type WinSummary } from "./game/api";
 import { GameStateMachine, type GameState } from "./game/state";
 import { PAYTABLE } from "./config/paytable";
 import { SYMBOLS } from "./config/symbols";
@@ -87,6 +87,7 @@ async function boot(): Promise<void> {
   const loading = document.querySelector<HTMLElement>("#loading");
   if (!host || !marquee || !tracker || !introDialog || !prizesButton || !spinButton || !loading) throw new Error("Game shell is incomplete");
 
+  captureSsTracking();
   await loadInitialAssets();
   const initialSession = await getSession().catch(() => null);
   const controls = createControls(spinButton, sound.isMuted());
@@ -144,6 +145,7 @@ async function boot(): Promise<void> {
   let best: BestSummary | undefined;
   let deferredAssetsReady = Promise.resolve();
   let pendingSessionWin: WinSummary | null = null;
+  let pendingSessionClaimed = false;
   let pendingSessionLastChance = false;
   controls.setState(machine.state);
   controls.setProgress(spinsLeft, false);
@@ -152,11 +154,11 @@ async function boot(): Promise<void> {
     controls.setProgress(spinsLeft, current === "LAST_CHANCE" || (current === "SPINNING" && spinsLeft === 0), best?.discount);
   });
 
-  const displayWin = (win: WinSummary) => {
+  const displayWin = (win: WinSummary, claimed = false) => {
     localStorage.setItem("trustRoyaleWin", JSON.stringify(win));
     best = win;
     controls.setProgress(spinsLeft, false, win.discount);
-    popups.showWin(win);
+    if (claimed) popups.showClaimed(win); else popups.showWin(win);
   };
 
   const playSpin = async () => {
@@ -232,7 +234,7 @@ async function boot(): Promise<void> {
       if (introDialog.open) { introDialog.close(); document.documentElement.dataset.intro = "closed"; }
       chipsScene.settle();
       machine.send({ type: "SERVER_STATE", state: session.state });
-      if ((session.state === "won" || session.state === "claimed") && session.win) pendingSessionWin = session.win;
+      if ((session.state === "won" || session.state === "claimed") && session.win) { pendingSessionWin = session.win; pendingSessionClaimed = session.state === "claimed"; }
       else if (session.state === "last_chance") pendingSessionLastChance = true;
       else if (session.state === "game_over") popups.showGameOver();
     }
@@ -282,7 +284,7 @@ async function boot(): Promise<void> {
     const debug = (window as Window & { __trustRoyaleDebug?: { reelSymbols: typeof cabinet.reelSymbols; chipPositions: () => number[][]; missingReelTextures: string[] } }).__trustRoyaleDebug;
     if (debug) debug.missingReelTextures = Object.values(SYMBOLS).map(({ frames }) => frames.idle)
       .filter((key) => { const loaded = Assets.get<Texture>(key); return !loaded || loaded === Texture.EMPTY || loaded === Texture.WHITE; });
-    if (pendingSessionWin) displayWin(pendingSessionWin);
+    if (pendingSessionWin) displayWin(pendingSessionWin, pendingSessionClaimed);
     else if (pendingSessionLastChance) popups.showLastChance(playSpin);
   });
 }
