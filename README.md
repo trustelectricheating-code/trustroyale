@@ -15,6 +15,8 @@ vercel dev
 
 `vercel dev` serves the Vite pages and `/api` functions together. Never point local migrations or tests at the production database.
 
+**Before this branch deploys:** run `pnpm db:migrate` against production Neon. Migration `002_lead_region.sql` adds `leads.region` and makes `leads.postcode` nullable; `/api/lead` inserts `region`, so the deployed code fails until it has run.
+
 ## Environment variables
 
 Copy `.env.example` for the complete local list:
