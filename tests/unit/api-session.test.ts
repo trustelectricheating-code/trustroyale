@@ -35,7 +35,7 @@ describe("GET /api/session with PGlite", () => {
     const spinId = randomUUID();
     await setup.query("INSERT INTO spins (id, session_id, spin_no, reels, rule_id, discount, win_ref) VALUES ($1, $2, 1, $3, 'neos-3', 10, 'TR-XYZ789')", [spinId, session.id, ["neos", "neos", "neos"]]);
     await setup.query("UPDATE sessions SET spins_used = 3, won_spin_id = $1 WHERE id = $2", [spinId, session.id]);
-    await setup.query("INSERT INTO leads (id, spin_id, win_ref, discount, first_name, last_name, phone, email, postcode, consent_text, claimed_via) VALUES ($1, $2, 'TR-XYZ789', 10, 'Test', 'Player', '07123456789', 'test@example.com', 'SW1A 1AA', 'test consent', 'form')", [randomUUID(), spinId]);
+    await setup.query("INSERT INTO leads (id, spin_id, win_ref, discount, first_name, last_name, phone, email, region, consent_text, claimed_via) VALUES ($1, $2, 'TR-XYZ789', 10, 'Test', 'Player', '07123456789', 'test@example.com', 'London', 'test consent', 'form')", [randomUUID(), spinId]);
     const reply = response();
     await createSessionHandler({ query: setup.query })(request("GET", session.cookie), reply);
     expect(reply.body).toMatchObject({ state: "claimed", win: { spinId, winRef: "TR-XYZ789" } });

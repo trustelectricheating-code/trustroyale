@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { parseEntryFragment, readEntry, takeEntryFromLocation } from "../../src/game/entry";
 
-const VECTOR = "eyJmaXJzdE5hbWUiOiJTacOibiIsImxhc3ROYW1lIjoiTydOZWlsbCIsInBob25lIjoiMDc5MTEgMTIzNDU2IiwiZW1haWwiOiJzaWFuQGV4YW1wbGUuY29tIiwicG9zdGNvZGUiOiJMUzEgNEFQIn0";
-const expected = { firstName: "Siân", lastName: "O'Neill", phone: "07911 123456", email: "sian@example.com", postcode: "LS1 4AP" };
+const VECTOR = "eyJmaXJzdE5hbWUiOiJTacOibiIsImxhc3ROYW1lIjoiTydOZWlsbCIsInBob25lIjoiMDc5MTEgMTIzNDU2IiwiZW1haWwiOiJzaWFuQGV4YW1wbGUuY29tIiwicmVnaW9uIjoiWW9ya3NoaXJlIGFuZCB0aGUgSHVtYmVyIn0";
+const expected = { firstName: "Siân", lastName: "O'Neill", phone: "07911 123456", email: "sian@example.com", region: "Yorkshire and the Humber" };
 const encode = (value: unknown) => Buffer.from(JSON.stringify(value), "utf8").toString("base64url");
 
 describe("entry fragment", () => {
@@ -23,9 +23,14 @@ describe("entry fragment", () => {
     expect(parseEntryFragment(`#entry=${encode({ ...expected, email: "nope" })}`)).toEqual(rest);
   });
 
+  it("ignores a postcode key and drops a region that is not on the list", () => {
+    expect(parseEntryFragment(`#entry=${encode({ ...expected, postcode: "LS1 4AP" })}`)).toEqual(expected);
+    expect(parseEntryFragment(`#entry=${encode({ ...expected, region: "Atlantis" })}`)).not.toHaveProperty("region");
+  });
+
   it("keeps an empty last name out and returns null when nothing valid remains", () => {
     expect(parseEntryFragment(`#entry=${encode({ ...expected, lastName: "" })}`)).not.toHaveProperty("lastName");
-    expect(parseEntryFragment(`#entry=${encode({ firstName: "", lastName: "", phone: "1", email: "x", postcode: "y" })}`)).toBeNull();
+    expect(parseEntryFragment(`#entry=${encode({ firstName: "", lastName: "", phone: "1", email: "x", region: "Atlantis" })}`)).toBeNull();
   });
 });
 

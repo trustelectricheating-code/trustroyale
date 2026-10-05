@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import { PGlite } from "@electric-sql/pglite";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -6,7 +6,9 @@ let database: PGlite;
 
 beforeAll(async () => {
   database = new PGlite();
-  await database.exec(await readFile("db/migrations/001_init.sql", "utf8"));
+  for (const file of (await readdir("db/migrations")).filter((name) => /^\d+.*\.sql$/.test(name)).sort()) {
+    await database.exec(await readFile(`db/migrations/${file}`, "utf8"));
+  }
 });
 
 afterAll(async () => {
@@ -59,5 +61,12 @@ describe("initial PostgreSQL migration", () => {
       "SELECT condeferrable, condeferred FROM pg_constraint WHERE conname = 'sessions_won_spin_id_fkey'",
     );
     expect(constraint.rows).toEqual([{ condeferrable: true, condeferred: true }]);
+  });
+
+  it("adds a nullable region and relaxes postcode (002)", async () => {
+    const columns = await database.query<{ column_name: string; is_nullable: string }>(
+      "SELECT column_name, is_nullable FROM information_schema.columns WHERE table_name = 'leads' AND column_name IN ('region', 'postcode') ORDER BY column_name",
+    );
+    expect(columns.rows).toEqual([{ column_name: "postcode", is_nullable: "YES" }, { column_name: "region", is_nullable: "YES" }]);
   });
 });

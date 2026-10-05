@@ -15,7 +15,7 @@ interface ClaimedLead {
   last_name: string;
   phone: string;
   email: string;
-  postcode: string;
+  region: string;
   win_ref: string;
   discount: number;
   crm_attempts: number;
@@ -35,7 +35,7 @@ async function claim(query: Query, limit: number, leadId?: string): Promise<Clai
         ORDER BY crm_next_try_at
         LIMIT $1
         FOR UPDATE SKIP LOCKED)
-    RETURNING id, first_name, last_name, phone, email, postcode, win_ref, discount, crm_attempts
+    RETURNING id, first_name, last_name, phone, email, region, win_ref, discount, crm_attempts
   `, [limit, leadId ?? null]);
 }
 
@@ -60,7 +60,7 @@ async function deliver(query: Query, lead: ClaimedLead, url: string, send: Send,
   try {
     await send(url, buildPostback({
       firstName: lead.first_name, lastName: lead.last_name, phone: lead.phone, email: lead.email,
-      postcode: lead.postcode, winRef: lead.win_ref, discount: Number(lead.discount),
+      region: lead.region, winRef: lead.win_ref, discount: Number(lead.discount),
     }, context));
     await query("UPDATE leads SET crm_status = 'synced', crm_attempts = $2::smallint, crm_last_error = NULL WHERE id = $1", [lead.id, attempts]);
     return true;

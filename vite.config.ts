@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { defineConfig, type Plugin } from "vite";
 
@@ -15,7 +15,10 @@ function localApi(): Plugin {
       const ready = (async () => {
         const { PGlite } = await import("@electric-sql/pglite");
         const database = new PGlite();
-        await database.exec(await readFile(new URL("db/migrations/001_init.sql", import.meta.url), "utf8"));
+        const migrations = new URL("db/migrations/", import.meta.url);
+        for (const file of (await readdir(migrations)).filter((name) => /^\d+.*\.sql$/.test(name)).sort()) {
+          await database.exec(await readFile(new URL(file, migrations), "utf8"));
+        }
         const query = async (text: string, params: unknown[] = []) => (await database.query(text, params)).rows;
         const { createSessionHandler } = await server.ssrLoadModule("/api/session.ts");
         const { createSpinHandler } = await server.ssrLoadModule("/api/spin.ts");

@@ -54,11 +54,11 @@ export function createLeadHandler(dependencies: LeadDependencies = {}) {
       const leadId = randomUUID();
       // Point of no loss: the row commits before the player hears anything.
       const inserted = await query<{ id: string }>(`
-        INSERT INTO leads (id, spin_id, win_ref, discount, first_name, last_name, phone, email, postcode, marketing_consent, consent_text, claimed_via)
+        INSERT INTO leads (id, spin_id, win_ref, discount, first_name, last_name, phone, email, region, marketing_consent, consent_text, claimed_via)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, false, $10, 'form')
         ON CONFLICT (spin_id) DO NOTHING
         RETURNING id
-      `, [leadId, spin.id, spin.win_ref, spin.discount, lead.firstName, lead.lastName, lead.phone, lead.email, lead.postcode, CONSENT_TEXT]);
+      `, [leadId, spin.id, spin.win_ref, spin.discount, lead.firstName, lead.lastName, lead.phone, lead.email, lead.region, CONSENT_TEXT]);
       if (inserted.length === 0) return json(response, 200, { ok: true, winRef: spin.win_ref, duplicate: true });
 
       json(response, 201, { ok: true, winRef: spin.win_ref });

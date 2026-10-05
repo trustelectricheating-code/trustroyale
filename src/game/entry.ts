@@ -3,7 +3,7 @@ import { validateLead, type LeadField, type LeadInput } from "./leadValidation";
 
 export type EntryDetails = Partial<LeadInput>;
 export const ENTRY_KEY = "royale-entry";
-const FIELDS: LeadField[] = ["firstName", "lastName", "phone", "email", "postcode"];
+const FIELDS: LeadField[] = ["firstName", "lastName", "phone", "email", "region"];
 
 function decodeBase64Url(value: string): string | null {
   if (!/^[A-Za-z0-9_-]+$/.test(value)) return null;

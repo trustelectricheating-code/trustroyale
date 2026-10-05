@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { PGlite } from "@electric-sql/pglite";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
@@ -8,7 +8,9 @@ import { signSessionCookie } from "../../api/_lib/session";
 
 export async function testDatabase(): Promise<{ database: PGlite; query: Query }> {
   const database = new PGlite();
-  await database.exec(await readFile("db/migrations/001_init.sql", "utf8"));
+  for (const file of (await readdir("db/migrations")).filter((name) => /^\d+.*\.sql$/.test(name)).sort()) {
+    await database.exec(await readFile(`db/migrations/${file}`, "utf8"));
+  }
   return {
     database,
     query: async <T>(text: string, params: unknown[] = []) => (await database.query<T>(text, params)).rows,

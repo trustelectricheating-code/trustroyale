@@ -12,7 +12,7 @@ process.env.IP_HASH_SALT = "test-only-ip-hash-salt";
 delete process.env.SHARPSPRING_POSTBACK_URL;
 
 const FAKE_URL = "https://postback.invalid/receive";
-const details = { firstName: "Jane", lastName: "Smith", phone: "+44 (0)7911 123456", email: "jane@example.com", postcode: "ls1 4ap", website: "", marketingUrl: "https://game.example/?gclid=g1", ssTrackingId: "123456|0123456789abcdef01234567" };
+const details = { firstName: "Jane", lastName: "Smith", phone: "+44 (0)7911 123456", email: "jane@example.com", region: "Yorkshire and the Humber", website: "", marketingUrl: "https://game.example/?gclid=g1", ssTrackingId: "123456|0123456789abcdef01234567" };
 
 function post(cookie: string | undefined, body: unknown) {
   return Object.assign(request("POST", cookie), { body });
@@ -47,11 +47,13 @@ describe("POST /api/lead with PGlite", () => {
     expect(reply.body).toEqual({ ok: true, winRef: "TR-WIN234" });
     const rows = await setup.query<Record<string, unknown>>("SELECT * FROM leads");
     expect(rows).toHaveLength(1);
-    expect(rows[0]).toMatchObject({ first_name: "Jane", last_name: "Smith", phone: "07911123456", email: "jane@example.com", postcode: "LS1 4AP", marketing_consent: false, consent_text: CONSENT_TEXT, claimed_via: "form" });
+    expect(rows[0]).toMatchObject({ first_name: "Jane", last_name: "Smith", phone: "07911123456", email: "jane@example.com", region: "Yorkshire and the Humber", postcode: null, marketing_consent: false, consent_text: CONSENT_TEXT, claimed_via: "form" });
     await Promise.all(pending);
     expect(send).toHaveBeenCalledTimes(1);
     const sent = send.mock.calls[0][1];
     expect(sent.get("234")).toBe("g1");
+    expect(sent.get("296")).toBe("Yorkshire and the Humber");
+    expect(sent.has("postcode")).toBe(false);
     expect(sent.get("trackingid__sb")).toBe("123456|0123456789abcdef01234567");
     expect((await setup.query<{ crm_status: string; crm_attempts: number }>("SELECT crm_status, crm_attempts FROM leads"))[0]).toEqual({ crm_status: "synced", crm_attempts: 1 });
     const state = response();
@@ -139,8 +141,8 @@ describe("CRM retry with PGlite", () => {
     const ref = `TR-${randomUUID().slice(0, 6).toUpperCase()}`;
     await setup.query("INSERT INTO spins (id, session_id, spin_no, reels, rule_id, discount, win_ref) VALUES ($1, $2, 1, $3, 'keith-3', 15, $4)", [spinId, session.id, ["keith", "keith", "keith"], ref]);
     const id = randomUUID();
-    await setup.query(`INSERT INTO leads (id, spin_id, win_ref, discount, first_name, last_name, phone, email, postcode, consent_text, claimed_via, crm_status, crm_attempts, crm_next_try_at)
-      VALUES ($1, $2, $3, 15, 'Jane', 'Smith', '07911123456', 'j@example.com', 'LS1 4AP', 'c', 'form', $4, $5, ${overrides.nextTry ?? "now() - interval '1 minute'"})`,
+    await setup.query(`INSERT INTO leads (id, spin_id, win_ref, discount, first_name, last_name, phone, email, region, consent_text, claimed_via, crm_status, crm_attempts, crm_next_try_at)
+      VALUES ($1, $2, $3, 15, 'Jane', 'Smith', '07911123456', 'j@example.com', 'Wales', 'c', 'form', $4, $5, ${overrides.nextTry ?? "now() - interval '1 minute'"})`,
       [id, spinId, ref, overrides.status ?? "pending", overrides.attempts ?? 0]);
     return id;
   }

@@ -7,7 +7,7 @@ export interface PostbackLead {
   lastName: string;
   phone: string;
   email: string;
-  postcode: string;
+  region: string;
   winRef: string;
   discount: number;
 }
@@ -27,7 +27,7 @@ export function gclidFrom(marketingUrl: string): string {
   }
 }
 
-/** Same field ids as the landing page FORMS key `royale`, so one SharpSpring mapping serves both. */
+/** Same field ids as the landing page FORMS key `royale`, so one SharpSpring mapping serves both. 296 = region, as on the shared consultation form. */
 export function buildPostback(lead: PostbackLead, context: PostbackContext = {}): URLSearchParams {
   const marketingUrl = (context.marketingUrl ?? "").slice(0, 255);
   const body = new URLSearchParams();
@@ -37,7 +37,7 @@ export function buildPostback(lead: PostbackLead, context: PostbackContext = {})
   body.set("76", SOURCE_TAG);
   body.set("204", marketingUrl);
   body.set("234", gclidFrom(marketingUrl));
-  body.set("postcode", lead.postcode);
+  body.set("296", lead.region);
   body.set("win_ref", lead.winRef);
   body.set("discount", String(lead.discount));
   if (isValidSsTrackingId(context.ssTrackingId)) body.set("trackingid__sb", context.ssTrackingId);

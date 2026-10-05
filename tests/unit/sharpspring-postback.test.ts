@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { buildPostback, sendPostback } from "../../api/_lib/sharpspring";
 
-const lead = { firstName: "Jane", lastName: "Smith", phone: "07911123456", email: "jane@example.com", postcode: "LS1 4AP", winRef: "TR-7K3F", discount: 15 };
-const base = ["1", "3", "4", "76", "204", "234", "postcode", "win_ref", "discount"];
+const lead = { firstName: "Jane", lastName: "Smith", phone: "07911123456", email: "jane@example.com", region: "Yorkshire and the Humber", winRef: "TR-7K3F", discount: 15 };
+const base = ["1", "3", "4", "76", "204", "234", "296", "win_ref", "discount"];
 
 describe("SharpSpring postback builder", () => {
   it("posts exactly the agreed keys and values", () => {
@@ -11,7 +11,7 @@ describe("SharpSpring postback builder", () => {
     expect(Object.fromEntries(body)).toEqual({
       "1": "Jane Smith", "3": "07911123456", "4": "jane@example.com", "76": "2026 Trust Royale Game Claim",
       "204": "https://game.example/?gclid=abc123&utm_source=google", "234": "abc123",
-      postcode: "LS1 4AP", win_ref: "TR-7K3F", discount: "15",
+      "296": "Yorkshire and the Humber", win_ref: "TR-7K3F", discount: "15",
     });
   });
 
