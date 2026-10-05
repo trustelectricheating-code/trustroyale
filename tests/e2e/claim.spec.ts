@@ -138,3 +138,28 @@ for (const [width, height] of viewports) {
     await submit.click({ trial: true });
   });
 }
+
+const VECTOR = "eyJmaXJzdE5hbWUiOiJTacOibiIsImxhc3ROYW1lIjoiTydOZWlsbCIsInBob25lIjoiMDc5MTEgMTIzNDU2IiwiZW1haWwiOiJzaWFuQGV4YW1wbGUuY29tIiwicG9zdGNvZGUiOiJMUzEgNEFQIn0";
+
+test("details from the entry fragment prefill the claim form and are cleared after the claim", async ({ page }) => {
+  let posted: Record<string, unknown> = {};
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.route("**/api/session**", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(wonSession) }));
+  await page.route("**/api/lead", (route) => { posted = route.request().postDataJSON(); return created(route); });
+  await page.goto(`/#entry=${VECTOR}`);
+  await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
+  expect(await page.evaluate(() => location.hash)).toBe("");
+  expect(await page.evaluate(() => location.href.includes("entry="))).toBe(false);
+  await page.getByRole("button", { name: "Claim my 20% offer" }).click();
+  await expect(page.getByRole("heading", { name: "Confirm your 20% offer" })).toBeVisible();
+  await expect(page.getByText("We have filled in the details you gave us. Check them, then claim.")).toBeVisible();
+  await expect(page.getByLabel("First name")).toHaveValue("Siân");
+  await expect(page.getByLabel("Last name")).toHaveValue("O'Neill");
+  await expect(page.getByLabel("Phone number")).toHaveValue("07911 123456");
+  await expect(page.getByLabel("Postcode")).toHaveValue("LS1 4AP");
+  await expect(page.getByLabel("Email")).toHaveValue("sian@example.com");
+  await page.getByRole("button", { name: "Claim my 20% offer" }).click();
+  await expect(page.getByRole("heading", { name: "Your 20% offer is claimed" })).toBeVisible();
+  expect(posted).toMatchObject({ firstName: "Siân", lastName: "O'Neill", phone: "07911 123456", email: "sian@example.com", postcode: "LS1 4AP" });
+  expect(await page.evaluate(() => sessionStorage.getItem("royale-entry"))).toBeNull();
+});

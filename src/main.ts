@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import "./styles/main.css";
 import { loadDeferredAssets, loadInitialAssets } from "./assets";
 import { GameApiError, captureSsTracking, getSession, spin, type BestSummary, type SpinResponse, type WinSummary } from "./game/api";
+import { takeEntryFromLocation } from "./game/entry";
 import { GameStateMachine, type GameState } from "./game/state";
 import { PAYTABLE } from "./config/paytable";
 import { SYMBOLS } from "./config/symbols";
@@ -88,6 +89,7 @@ async function boot(): Promise<void> {
   if (!host || !marquee || !tracker || !introDialog || !prizesButton || !spinButton || !loading) throw new Error("Game shell is incomplete");
 
   captureSsTracking();
+  takeEntryFromLocation();
   await loadInitialAssets();
   const initialSession = await getSession().catch(() => null);
   const controls = createControls(spinButton, sound.isMuted());

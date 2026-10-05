@@ -1,6 +1,7 @@
 import { showTerms } from "./terms";
 import { ClaimError, claimLead, type WinSummary } from "../game/api";
 import { quoteUrl } from "../game/handoff";
+import { clearEntry, readEntry } from "../game/entry";
 import { CONSENT_TEXT, validateLead, type LeadField, type LeadFieldErrors } from "../game/leadValidation";
 
 const PRIVACY_URL = "https://www.trustelectricheating.co.uk/privacy-policy";
@@ -97,7 +98,8 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
   const renderClaim = (win: WinSummary, errors: LeadFieldErrors = {}) => {
     const fields = CLAIM_FIELDS.map(({ name, label, autocomplete, type, inputmode }) =>
       `<div class="claim-field"><label for="claim-${name}">${label}</label><input id="claim-${name}" name="${name}" type="${type}" autocomplete="${autocomplete}"${inputmode ? ` inputmode="${inputmode}"` : ""} maxlength="${name === "email" ? 254 : 80}" aria-describedby="claim-${name}-error"><p class="claim-field__error" id="claim-${name}-error" data-error-for="${name}"></p></div>`).join("");
-    swap(`<section aria-labelledby="result-title"><h2 id="result-title">Claim your ${win.discount}% offer</h2><form class="claim-form" novalidate data-claim-form>${fields}<div class="claim-trap" aria-hidden="true"><label>Website<input name="website" type="text" tabindex="-1" autocomplete="off"></label></div><p class="claim-consent">${CONSENT_TEXT} <a href="${PRIVACY_URL}" target="_blank" rel="noopener">Privacy policy</a></p><button type="submit" class="claim-submit" data-claim-submit>Claim my ${win.discount}% offer</button><button type="button" class="claim-back" data-claim-back>Back</button></form></section>`, "claim");
+    const prefilled = readEntry() !== null;
+    swap(`<section aria-labelledby="result-title"><h2 id="result-title">${prefilled ? "Confirm" : "Claim"} your ${win.discount}% offer</h2>${prefilled ? "<p class=\"claim-prefill-note\">We have filled in the details you gave us. Check them, then claim.</p>" : ""}<form class="claim-form" novalidate data-claim-form>${fields}<div class="claim-trap" aria-hidden="true"><label>Website<input name="website" type="text" tabindex="-1" autocomplete="off"></label></div><p class="claim-consent">${CONSENT_TEXT} <a href="${PRIVACY_URL}" target="_blank" rel="noopener">Privacy policy</a></p><button type="submit" class="claim-submit" data-claim-submit>Claim my ${win.discount}% offer</button><button type="button" class="claim-back" data-claim-back>Back</button></form></section>`, "claim");
     const form = dialog.querySelector<HTMLFormElement>("[data-claim-form]")!;
     const input = (name: LeadField) => form.elements.namedItem(name) as HTMLInputElement;
     for (const { name } of CLAIM_FIELDS) {
@@ -127,6 +129,7 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
       try {
         const honeypot = (form.elements.namedItem("website") as HTMLInputElement).value;
         await claimLead({ ...draft, spinId: win.spinId, website: honeypot });
+        clearEntry();
         renderClaimed(win, draft.firstName.trim(), draft.phone.trim());
       } catch (caught) {
         if (caught instanceof ClaimError && caught.kind === "invalid") {
@@ -154,7 +157,7 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
 
   return {
     showWin(win) {
-      Object.assign(draft, emptyDraft());
+      Object.assign(draft, emptyDraft(), readEntry() ?? {});
       renderWin(win, true);
     },
     showClaimed(win) {
