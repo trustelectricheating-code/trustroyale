@@ -975,7 +975,8 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 .intro__panel--prizes .intro-prizes { font-size: 18px; }
 .intro__panel--prizes .intro__actions button { width: auto; min-width: 180px; font-size: 18px; }
 
-.result-popup--win { inset: 0; width: 100dvw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); overflow: hidden; border: 0; border-radius: 0; background: radial-gradient(circle at 50% 35%, #7a1428, #1a0207 72%); }
+.result-popup--win { inset: 0; width: 100dvw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); overflow: hidden; border: 0; border-radius: 0; background: radial-gradient(ellipse at 50% 45%, #1a020766, #0d0104e6 78%), url("/assets/background/casino-hall-landscape.webp") center/cover no-repeat #1a0207; }
+@media (orientation: portrait) { .result-popup--win { background: radial-gradient(ellipse at 50% 45%, #1a020766, #0d0104e6 78%), url("/assets/background/casino-hall-portrait.webp") center/cover no-repeat #1a0207; } }
 .result-popup--win section { position: relative; z-index: 1; justify-content: center; width: min(520px, 100%); min-height: 100%; margin: auto; text-align: center; }
 .result-popup--win .result-popup__keith { width: clamp(84px, 17vh, 170px); height: clamp(84px, 17vh, 170px); margin: 0 auto 4px; object-fit: contain; filter: drop-shadow(0 10px 18px #000c); }
 .result-popup--win .result-popup__eyebrow { font-size: 18px; }
@@ -986,8 +987,8 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 .result-popup--win .result-popup__reference strong { display: inline; margin: 0; font-size: inherit; }
 .result-popup--win .result-popup__view-prizes { min-height: 60px; margin-top: 12px; color: var(--gold-light); background: #26030acc; border-color: var(--gold); font-size: 22px; }
 .result-popup__fx { position: fixed; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; }
-.result-popup__beam { position: absolute; inset: 0; background: url("/assets/fx/lightbeam.webp") center/cover no-repeat; opacity: .45; mix-blend-mode: screen; }
-.result-popup__confetti { position: absolute; inset: 0; background: url("/assets/fx/confetti.webp") top center/cover no-repeat; opacity: .8; }
+.result-popup__beam { position: absolute; inset: 0; background: url("/assets/fx/lightbeam.webp") center/cover no-repeat; opacity: .25; mix-blend-mode: screen; }
+.result-popup__confetti { display: none; }
 .result-popup__coin { position: absolute; bottom: -40px; width: 90px; opacity: .9; }
 .result-popup__coin--left { left: -40px; } .result-popup__coin--right { right: -40px; }
 .result-popup__firework { position: absolute; width: 0; height: 0; }
