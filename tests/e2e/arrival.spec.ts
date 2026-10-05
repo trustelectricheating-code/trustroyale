@@ -59,6 +59,6 @@ test("reduced motion can play and resolve a spin", async ({ page }) => {
   await page.getByRole("button", { name: "Let's play!" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-game-state", "idle");
   await page.getByRole("button", { name: "Spin the reels" }).click();
-  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
+  await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("data-game-state", "idle");
 });

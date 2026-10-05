@@ -101,17 +101,18 @@ test("only deliberate spin actions issue requests, including retry and Last Chan
 
   const button = page.locator("#spin");
   await button.click();
-  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
+  await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
   await page.waitForTimeout(10_000);
   expect(requests).toBe(1);
   await button.click();
   await expect(page.getByText("One symbol away")) .toBeVisible();
-  await page.getByRole("button", { name: "Continue" }).click();
   await button.click();
-  await expect(page.getByRole("heading", { name: "Last Chance!" })).toBeVisible();
+  await expect(page.locator("#spin-message").getByText("Last Chance!", { exact: true })).toBeVisible();
+  await expect(page.locator("#result-popup")).not.toBeVisible();
+  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
   await page.keyboard.press("Enter");
   expect(requests).toBe(3);
-  await page.getByRole("button", { name: "Spin now" }).click();
+  await button.click();
   await expect(page.getByRole("heading", { name: "Thanks for playing" })).toBeVisible();
   expect(requests).toBe(4);
 });
@@ -125,7 +126,7 @@ test("touch tap at 390x844 starts exactly one spin", async ({ browser }) => {
   await ready(page);
   await enterGame(page);
   await page.locator("#spin").tap();
-  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
+  await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
   expect(requests).toBe(1);
   await context.close();
 });
@@ -153,7 +154,7 @@ test("spin motion and sound start before a delayed API response", async ({ page 
   expect(timing.sound - timing.pressed).toBeLessThan(100);
   await page.waitForTimeout(250);
   await expect(page.locator("html")).toHaveAttribute("data-spinning", "true");
-  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible({ timeout: 10_000 });
 });
 
 test("failed spin restores the machine without stuck motion or sound", async ({ page }) => {
@@ -180,7 +181,7 @@ test("intro and popup menu buttons play the soft click, including the first gest
   };
   await page.emulateMedia({ reducedMotion: "reduce" });
   await mockSession(page);
-  await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(loss(1, 2)) }));
+  await page.route("**/api/spin", (route) => route.fulfill({ status: 500, contentType: "application/json", body: JSON.stringify({ error: "server_error" }) }));
   await ready(page);
   expect(await page.locator("html").getAttribute("data-sound-play-count")).toBeNull();
   await expectLarge(page.getByRole("button", { name: "Let's play!" }));
@@ -192,11 +193,11 @@ test("intro and popup menu buttons play the soft click, including the first gest
   await page.getByRole("button", { name: "Back to game" }).click();
   await expect.poll(async () => Number(await page.locator("html").getAttribute("data-sound-play-count"))).toBeGreaterThan(afterMenu);
   await page.locator("#spin").click();
-  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
-  await expectLarge(page.getByRole("button", { name: "Continue" }));
-  const beforeContinue = Number(await page.locator("html").getAttribute("data-sound-play-count"));
-  await page.getByRole("button", { name: "Continue" }).click();
-  await expect.poll(async () => Number(await page.locator("html").getAttribute("data-sound-play-count"))).toBeGreaterThan(beforeContinue);
+  await expect(page.getByRole("heading", { name: "Machine hiccup, try again" })).toBeVisible();
+  await expectLarge(page.getByRole("button", { name: "Close" }));
+  const beforeClose = Number(await page.locator("html").getAttribute("data-sound-play-count"));
+  await page.getByRole("button", { name: "Close" }).click();
+  await expect.poll(async () => Number(await page.locator("html").getAttribute("data-sound-play-count"))).toBeGreaterThan(beforeClose);
 });
 
 test("best-of-three waits for presses and reveals only the final win message", async ({ page }) => {
@@ -210,13 +211,13 @@ test("best-of-three waits for presses and reveals only the final win message", a
   await enterGame(page);
   const button = page.locator("#spin");
   await button.click();
-  await expect(page.getByRole("heading", { name: "15% banked!" })).toBeVisible();
+  await expect(page.getByText(/^You've banked 15% off! \d spins? left\.$/)).toBeVisible();
   await expect(page.locator("#tries-tracker")).toContainText("Best prize: 15%");
   await expect(page.getByText(/our chief chatters will be contacting you shortly/)).toHaveCount(0);
   await page.waitForTimeout(1_000);
   expect(requests).toBe(1);
   await button.click();
-  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
+  await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
   await button.click();
   await expect(page.getByRole("heading", { name: "20%" })).toBeVisible();
   await expect(page.getByText("You have won 20% off your order, our chief chatters will be contacting you shortly with the next steps")).toBeVisible();
@@ -260,7 +261,7 @@ test("non-face payline symbols contain artwork, never blank white discs", async 
   await page.route("**/api/spin", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(loss(1, 2)) }));
   await ready(page); await enterGame(page);
   await page.locator("#spin").click();
-  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
+  await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
   const screenshot = path.join(mkdtempSync(path.join(tmpdir(), "trust-royale-pixels-")), "payline.png");
   await page.screenshot({ path: screenshot });
   const viewport = page.viewportSize()!;

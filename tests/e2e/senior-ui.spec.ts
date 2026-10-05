@@ -35,7 +35,7 @@ test("phone controls and win message are senior friendly", async ({ page }) => {
   await fontSize(page.locator(".welcome__rules"), 18);
  const actions = page.locator(".welcome__actions button");
   for (let index = 0; index < await actions.count(); index += 1) await minimumSize(actions.nth(index));
- await minimumSize(page.locator(".welcome__sound"));
+  await expect(page.locator("#intro [data-intro-mute], #intro .welcome__sound")).toHaveCount(0);
 
   await press(page.getByRole("button", { name: "Let's play!" }));
   await expect(page.locator("#intro")).not.toBeVisible();

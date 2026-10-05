@@ -2,10 +2,11 @@ import { showTerms } from "./terms";
 import type { WinSummary } from "../game/api";
 
 export interface Popups {
+  message: HTMLElement;
   showWin(win: WinSummary): void;
   showRetry(nearMiss: boolean): void;
   showBanked(discount: number, spinsLeft: number): void;
-  showLastChance(onSpin: () => void): void;
+  showLastChance(): void;
   showGameOver(): void;
   showError(kind: "server" | "rate"): void;
   close(): void;
@@ -37,10 +38,36 @@ function dialogShell(): HTMLDialogElement {
 
 export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonClick: () => void): Popups {
   const dialog = dialogShell();
+  const message = document.createElement("div");
+  message.id = "spin-message";
+  message.className = "spin-message";
+  message.setAttribute("role", "status");
+  message.setAttribute("aria-live", "polite");
+  message.setAttribute("aria-atomic", "true");
+  document.body.appendChild(message);
+  let fadeTimer = 0;
+  let clearTimer = 0;
+  const hideMessage = (): void => {
+    window.clearTimeout(fadeTimer);
+    window.clearTimeout(clearTimer);
+    message.classList.remove("is-visible", "is-fading");
+    message.replaceChildren();
+  };
+  const showMessage = (text: string, detail?: string): void => {
+    hideMessage();
+    message.innerHTML = `<p>${text}</p>${detail ? `<p>${detail}</p>` : ""}`;
+    message.classList.add("is-visible");
+    fadeTimer = window.setTimeout(() => {
+      message.classList.remove("is-visible");
+      message.classList.add("is-fading");
+      clearTimer = window.setTimeout(hideMessage, 250);
+    }, 3_000);
+  };
   dialog.addEventListener("click", (event) => {
     if ((event.target as Element).closest("button")) onButtonClick();
   });
   const show = (content: string, kind: string, modal = true) => {
+    hideMessage();
     if (dialog.open) dialog.close();
     dialog.className = `result-popup result-popup--${kind}`;
     dialog.setAttribute("aria-modal", String(modal));
@@ -52,6 +79,7 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
   };
 
   return {
+    message,
     showWin(win) {
       const fireworks = Array.from({ length: 7 }, (_, burst) =>
         `<div class="result-popup__firework" style="left:${[18, 82, 50, 12, 88, 30, 70][burst]}%;top:${[16, 12, 8, 48, 44, 26, 30][burst]}%">${Array.from({ length: 18 }, (_, particle) =>
@@ -64,19 +92,13 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
       });
     },
     showRetry(nearMiss) {
-      show(`<section aria-labelledby="result-title"><h2 id="result-title">So close. Spin again!</h2>${nearMiss ? "<p>One symbol away. Your next spin could be the one.</p>" : ""}<button type="button" data-close-popup>Continue</button></section>`, "retry", false);
-      dialog.querySelector("[data-close-popup]")?.addEventListener("click", () => dialog.close(), { once: true });
+      showMessage("So close! Spin again.", nearMiss ? "One symbol away." : undefined);
     },
     showBanked(discount, spinsLeft) {
-      show(`<section aria-labelledby="result-title"><h2 id="result-title">${discount}% banked!</h2><p>${spinsLeft} ${spinsLeft === 1 ? "try" : "tries"} left to reach 20%.</p><button type="button" data-close-popup>Continue</button></section>`, "retry", false);
-      dialog.querySelector("[data-close-popup]")?.addEventListener("click", () => dialog.close(), { once: true });
+      showMessage(`You've banked ${discount}% off! ${spinsLeft} ${spinsLeft === 1 ? "spin" : "spins"} left.`);
     },
-    showLastChance(onSpin) {
-      show(`<section aria-labelledby="result-title"><div class="result-popup__bonus-badge"><img class="result-popup__keith result-popup__keith--small" src="/assets/keith/last-chance.webp" alt="Keith"><img class="result-popup__gold-chip" src="/assets/fx/chip-gold-face.webp" alt="Gold chip"></div><p class="result-popup__eyebrow">Bonus round</p><h2 id="result-title">Last Chance!</h2><p>Take one final spin.</p><button type="button" data-last-chance>Spin now</button></section>`, "last-chance");
-      dialog.querySelector("[data-last-chance]")?.addEventListener("click", () => {
-        dialog.close();
-        onSpin();
-      }, { once: true });
+    showLastChance() {
+      showMessage("Last Chance!", "Take one final spin.");
     },
     showGameOver() {
       show('<section aria-labelledby="result-title"><h2 id="result-title">Thanks for playing</h2><p>Your game is complete for today.</p></section>', "game-over");
@@ -87,6 +109,7 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
       dialog.querySelector("[data-close-popup]")?.addEventListener("click", () => dialog.close(), { once: true });
     },
     close() {
+      hideMessage();
       if (dialog.open) dialog.close();
     },
   };

@@ -1011,12 +1011,12 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 .welcome { display: grid; place-items: center; width: 100%; height: 100%; overflow: hidden; }
 .welcome__card { position: relative; display: grid; grid-template-columns: 32% 68%; align-items: center; width: clamp(760px, 62vw, 1180px); max-width: calc(100vw - 16px); max-height: calc(100vh - 16px); padding: clamp(20px, 2vw, 36px); border: 2px solid var(--gold); border-radius: 28px; color: #fff; background: radial-gradient(circle at 50% 0, #6d1026, #2a040c 75%); box-shadow: 0 20px 60px #000a; }
 .welcome__keith { grid-column: 1; grid-row: 1; align-self: center; justify-self: center; width: clamp(180px, 18vw, 320px); height: clamp(250px, 42vh, 460px); object-fit: contain; filter: drop-shadow(0 8px 14px #000b); }
-.welcome__content { position: relative; grid-column: 2; grid-row: 1; min-width: 0; padding-top: 64px; text-align: left; }
-.welcome__sound { position: absolute; top: 0; right: 0; min-width: 56px; min-height: 56px; padding: 0 16px; border: 1px solid var(--gold); border-radius: 999px; color: var(--gold-light); background: #26030a; font: 700 18px "Trust Royale UI", sans-serif; }
-.welcome h1 { margin: 0 0 18px; padding-right: 72px; color: var(--gold-light); font: 700 clamp(32px, 2.3vw, 52px)/1.1 "Trust Royale Display", serif; text-align: left; text-wrap: balance; }
+.welcome__content { position: relative; grid-column: 2; grid-row: 1; min-width: 0; padding-top: 0; text-align: left; }
+.welcome h1 { margin: 0 0 18px; color: var(--gold-light); font: 700 clamp(32px, 2.3vw, 52px)/1.1 "Trust Royale Display", serif; text-align: left; text-wrap: balance; }
 .welcome__rules { display: grid; gap: 10px; margin: 0 0 18px; padding: 0; list-style: none; font-size: 18px; }
 .welcome__rules li { display: grid; grid-template-columns: 48px 1fr; align-items: center; gap: 12px; font: 700 clamp(18px, 1.15vw, 24px)/1.3 "Trust Royale UI", sans-serif; }
-.welcome__rules img { width: 48px; height: 48px; }
+.welcome__rule-chip { position: relative; display: block; width: 48px; height: 48px; }
+.welcome__rule-chip > img:first-child, .welcome__handover-chip > img:first-child { display: block; width: 100%; height: 100%; object-fit: contain; }
 .welcome__prizes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
 .welcome__prizes > div { padding: 10px 6px; border: 1px solid #d4a43799; border-radius: 16px; background: #1a0207aa; text-align: center; }
 .welcome__prizes strong { display: block; color: var(--gold-light); font: 700 clamp(30px, 2.2vw, 46px)/1 "Trust Royale Display", serif; }
@@ -1038,13 +1038,12 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 .welcome-prize strong { color: var(--gold-light); white-space: nowrap; }
 .welcome--prizes .welcome__actions { justify-items: center; }
 .welcome--prizes .welcome__actions button { width: min(240px, 100%); border: 1px solid var(--gold); border-radius: 999px; color: #fff; background: #b20d29; font: 700 18px "Trust Royale UI", sans-serif; }
-/* Single-column welcome card for phones and portrait tablets. Sound sits in the card's top-right corner. */
+/* Single-column welcome card for phones and portrait tablets. */
 @media (max-width: 899px) {
   .welcome__card { display: block; width: min(620px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); padding: 16px; }
   .welcome__content { position: static; padding-top: 0; text-align: center; }
-  .welcome__sound { top: 12px; right: 12px; }
   .welcome__keith { display: block; width: auto; height: clamp(72px, 14vh, 200px); margin: 0 auto 6px; }
-  .welcome h1 { padding: 0 64px; text-align: center; }
+  .welcome h1 { padding: 0; text-align: center; }
   .welcome__rules { text-align: left; }
   .welcome--prizes .welcome__content { max-height: calc(100dvh - 48px); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; }
   .welcome--prizes .welcome__content > p { margin: 0; }
@@ -1053,11 +1052,10 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 }
 @media (max-width: 480px) {
   .welcome__card { padding: 12px; border-radius: 22px; }
-  .welcome__sound { top: 8px; right: 8px; }
-  .welcome h1 { margin-bottom: 10px; padding: 0 60px; font-size: clamp(24px, 7.5vw, 32px); }
+  .welcome h1 { margin-bottom: 10px; padding: 0; font-size: clamp(24px, 7.5vw, 32px); }
   .welcome__rules { gap: 6px; margin-bottom: 10px; }
   .welcome__rules li { grid-template-columns: 40px 1fr; gap: 8px; font-size: 18px; line-height: 1.25; }
-  .welcome__rules img { width: 40px; height: 40px; }
+  .welcome__rule-chip { width: 40px; height: 40px; }
   .welcome__prizes { gap: 6px; margin-bottom: 12px; }
   .welcome__prizes > div { padding: 6px 4px; }
   .welcome__prizes strong { font-size: 28px; }
@@ -1074,7 +1072,7 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 }
 @media (max-width: 480px) and (max-height: 600px) {
   .welcome__keith { display: none; }
-  .welcome h1 { min-height: 56px; margin-top: 2px; padding: 0 100px 0 4px; text-align: left; }
+  .welcome h1 { margin-top: 2px; }
 }
 @media (max-width: 359px) { }
 /* Chips shrink with the tracker column (1024x768 gives it under 130px) instead of spilling past its edge. */
@@ -1093,12 +1091,10 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
   .welcome__card { display: grid; grid-template-columns: 20% 80%; align-items: center; width: calc(100vw - 16px); max-height: calc(100dvh - 12px); padding: 8px 14px; overflow-y: auto; }
   .welcome__keith { display: block; width: 100%; height: min(72dvh, 260px); margin: 0; }
   .welcome__content { position: relative; padding-top: 0; text-align: left; }
-  .welcome h1 { min-height: 0; margin: 0 0 4px; padding: 0 96px 0 0; font-size: 24px; text-align: left; }
-  .welcome__sound { top: 0; right: 0; min-height: 44px; }
+  .welcome h1 { min-height: 0; margin: 0 0 4px; padding: 0; font-size: 24px; text-align: left; }
   .welcome__rules { gap: 2px; margin: 0 0 6px; }
   .welcome__rules li { grid-template-columns: 30px 1fr; gap: 8px; font-size: 18px; line-height: 1.15; }
-  .welcome__rules li:first-child { padding-right: 96px; }
-  .welcome__rules img { width: 30px; height: 30px; }
+  .welcome__rule-chip { width: 30px; height: 30px; }
   .welcome__prizes { gap: 6px; margin-bottom: 6px; }
   .welcome__prizes > div { padding: 3px 4px; }
   .welcome__prizes strong { font-size: 24px; }
@@ -1118,3 +1114,10 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 .terms-dialog__list { margin: 0; padding-left: 26px; }
 .terms-dialog__list > li + li { margin-top: 14px; }
 .terms-dialog__list ul { margin-top: 8px; padding-left: 22px; }
+
+/* Non-blocking results sit above the reels; their position follows the cabinet layout. */
+.spin-message { position: fixed; z-index: 4; padding: 10px 12px; border: 2px solid var(--gold); border-radius: 16px; color: var(--gold-light); background: #2a040c; box-shadow: 0 6px 20px #000a; font: 700 22px/1.2 "Trust Royale UI", sans-serif; text-align: center; opacity: 0; pointer-events: none; }
+.spin-message p { margin: 0; }
+.spin-message p + p { margin-top: 4px; }
+.spin-message.is-visible { opacity: 1; }
+.spin-message.is-fading { opacity: 0; transition: opacity .25s ease-out; }

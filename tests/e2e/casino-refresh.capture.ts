@@ -44,12 +44,10 @@ for (const [width, height] of [[390, 844], [844, 390], [932, 430], [1440, 900]] 
     await page.screenshot({ path: path.join(output, `${width}x${height}-intro.png`) });
     await page.getByRole("button", { name: "Let's play!" }).click();
     await page.locator("#spin").click();
-    await expect(page.getByRole("heading", { name: "15% banked!" })).toBeVisible();
-    await page.getByRole("button", { name: "Continue" }).click();
+    await expect(page.getByText(/^You've banked 15% off! \d spins? left\.$/)).toBeVisible();
     await page.screenshot({ path: path.join(output, `${width}x${height}-mid-game.png`) });
     await page.locator("#spin").click();
-    await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
-    await page.getByRole("button", { name: "Continue" }).click();
+    await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
     await page.locator("#spin").click();
     await expect(page.getByText("You have won 20% off your order, our chief chatters will be contacting you shortly with the next steps")).toBeVisible();
     await page.screenshot({ path: path.join(output, `${width}x${height}-win-message.png`) });
@@ -64,7 +62,6 @@ test("casino refresh rotate evidence", async ({ page }) => {
   await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
   await page.getByRole("button", { name: "Let's play!" }).click();
   await page.locator("#spin").click();
-  await page.getByRole("button", { name: "Continue" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-background-ready", "true");
   await page.screenshot({ path: path.join(output, "rotate-portrait-started.png") });
   await page.setViewportSize({ width: 844, height: 390 });

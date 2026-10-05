@@ -104,7 +104,7 @@ for (const viewport of [{ width: 1920, height: 1080 }, { width: 390, height: 844
       await page.screenshot({ path: path.join(output, "chip-vanish", `${viewport.width}x${viewport.height}-${String(frame + 1).padStart(2, "0")}.png`) });
       await page.waitForTimeout(90);
     }
-    await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
+    await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
     await page.screenshot({ path: path.join(output, `landed-loss-${viewport.width}x${viewport.height}.png`) });
     await page.screenshot({ path: path.join(output, `chip-tray-2-${viewport.width}x${viewport.height}.png`) });
 
@@ -114,13 +114,12 @@ for (const viewport of [{ width: 1920, height: 1080 }, { width: 390, height: 844
     await page.waitForFunction(() => document.documentElement.dataset.nearMiss === "true");
     await page.waitForTimeout(1_700);
     await page.screenshot({ path: path.join(output, `near-miss-${viewport.width}x${viewport.height}.png`) });
-    await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
+    await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
 
     session = fresh; results = [faceLine]; request = 0;
     await page.reload(); await page.waitForFunction(() => document.documentElement.dataset.ready === "true"); await enter(page);
     await press(page.locator("#spin"));
-    await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
-    await press(page.getByRole("button", { name: "Continue" }));
+    await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
     await page.screenshot({ path: path.join(output, `face-payline-scott-keith-t-${viewport.width}x${viewport.height}.png`), clip: reelClip(viewport.width, viewport.height) });
 
     session = fresh; results = [final20]; request = 0;
@@ -152,13 +151,11 @@ for (const viewport of [{ width: 1920, height: 1080 }, { width: 390, height: 844
     await page.reload(); await page.waitForFunction(() => document.documentElement.dataset.ready === "true"); await enter(page);
     await page.screenshot({ path: path.join(output, "best-of-three", `00-start-${viewport.width}x${viewport.height}.png`) });
     await press(page.locator("#spin"));
-    await expect(page.getByRole("heading", { name: "15% banked!" })).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/^You've banked 15% off! \d spins? left\.$/)).toBeVisible({ timeout: 15_000 });
     await page.screenshot({ path: path.join(output, "best-of-three", `01-banked-15-${viewport.width}x${viewport.height}.png`) });
-    await press(page.getByRole("button", { name: "Continue" }));
     await press(page.locator("#spin"));
-    await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible({ timeout: 15_000 });
     await page.screenshot({ path: path.join(output, "best-of-three", `02-loss-keeps-15-${viewport.width}x${viewport.height}.png`) });
-    await press(page.getByRole("button", { name: "Continue" }));
     await press(page.locator("#spin"));
  await expect(page.getByRole("heading", { name: "20%" })).toBeVisible({ timeout: 15_000 });
     await page.screenshot({ path: path.join(output, "best-of-three", `03-final-20-${viewport.width}x${viewport.height}.png`) });
@@ -178,7 +175,7 @@ test("ten-frame spin sequence and frame-rate sample", async ({ page }) => {
     const tick = (now: number) => { frames += 1; if (now - start >= 2_000) resolve(frames / ((now - start) / 1_000)); else requestAnimationFrame(tick); };
     requestAnimationFrame(tick);
   }));
-  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible({ timeout: 15_000 });
   await page.reload(); await page.waitForFunction(() => document.documentElement.dataset.ready === "true"); await enter(page);
   await press(page.locator("#spin"));
   for (let frame = 0; frame < 10; frame += 1) {

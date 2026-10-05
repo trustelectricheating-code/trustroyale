@@ -9,7 +9,7 @@ import { PAYTABLE } from "./config/paytable";
 import { SYMBOLS } from "./config/symbols";
 import { createBackground, drawBackground } from "./scene/background";
 import { animateCabinet, createCabinet, layoutCabinet } from "./scene/cabinet";
-import { DEFAULT_TITLE_PLACEMENT, type TitlePlacement } from "./scene/cabinetArt";
+import { CABINET_ART, DEFAULT_TITLE_PLACEMENT, type TitlePlacement } from "./scene/cabinetArt";
 import { celebrate } from "./scene/faces";
 import { burstWin, createChips } from "./scene/chips";
 import { createMarquee } from "./scene/marquee";
@@ -169,15 +169,23 @@ async function boot(): Promise<void> {
     sound.play("reel.loop");
     try {
       const result: SpinResponse = await spin();
+      // The decorative chip animation must never delay SPIN, even if the tracker is rebuilt before it finishes.
+      void controls.consumeChip().catch(() => {});
       await spinMotion.finish(result.strip, (reel) => sound.play(`reel.stop.${reel}`), result.nearMiss);
       sound.stop("reel.loop");
       sound.play("coin.use");
-      await controls.consumeChip();
       machine.send({ type: "RESULT" });
       spinsLeft = result.spinsLeft;
       if (result.best) best = result.best;
       controls.setProgress(spinsLeft, result.isBonus, best?.discount);
       if (result.outcome === "win" && result.ruleId && result.discount && result.winRef) {
+        if (!result.gameOver) {
+          for (const name of resultSoundNames("win", result.discount, result.nearMiss)) sound.play(name);
+          marqueeScene.setPattern("win");
+          machine.send({ type: "RESOLVE", outcome: "win", spinsLeft: result.spinsLeft, bonusAvailable: result.bonusAvailable, isBonus: result.isBonus, gameOver: result.gameOver });
+          popups.showBanked(result.best?.discount ?? result.discount, result.spinsLeft);
+          return;
+        }
         await deferredAssetsReady;
         const rule = PAYTABLE.find(({ id }) => id === result.ruleId);
         if (!rule) throw new Error(`Unknown paytable rule: ${result.ruleId}`);
@@ -201,9 +209,9 @@ async function boot(): Promise<void> {
         return;
       }
       marqueeScene.setPattern("idle");
-        for (const name of resultSoundNames("retry", result.discount, result.nearMiss)) sound.play(name);
+      for (const name of resultSoundNames("retry", result.discount, result.nearMiss)) sound.play(name);
       const resolvedState = machine.state as GameState;
-      if (resolvedState === "LAST_CHANCE") { await deferredAssetsReady; popups.showLastChance(playSpin); }
+      if (resolvedState === "LAST_CHANCE") popups.showLastChance();
       else if (resolvedState === "GAME_OVER") popups.showGameOver();
       else popups.showRetry(result.nearMiss);
     } catch (caught) {
@@ -255,6 +263,10 @@ async function boot(): Promise<void> {
     placeElement(marquee, layout.marquee);
     placeElement(tracker, layout.paytable);
     placeElement(spinButton, layout.spinButton);
+    const messageWidth = Math.min(520, layout.machine.width);
+    popups.message.style.left = `${layout.machine.x + (layout.machine.width - messageWidth) / 2}px`;
+    popups.message.style.width = `${messageWidth}px`;
+    popups.message.style.bottom = `${innerHeight - (layout.machine.y + CABINET_ART.reelWindow.y * layout.machine.scale - 8)}px`;
     drawBackground(environment, layout);
     layoutCabinet(cabinet, layout);
   };
@@ -283,7 +295,7 @@ async function boot(): Promise<void> {
     if (debug) debug.missingReelTextures = Object.values(SYMBOLS).map(({ frames }) => frames.idle)
       .filter((key) => { const loaded = Assets.get<Texture>(key); return !loaded || loaded === Texture.EMPTY || loaded === Texture.WHITE; });
     if (pendingSessionWin) displayWin(pendingSessionWin);
-    else if (pendingSessionLastChance) popups.showLastChance(playSpin);
+    else if (pendingSessionLastChance && machine.state === "LAST_CHANCE") popups.showLastChance();
   });
 }
 

@@ -96,17 +96,15 @@ for (const [width, height] of sizes) {
     await page.screenshot({ path: path.join(directory, `${width}x${height}-chips-3.png`) });
 
     await spin.click();
-    await expect(page.getByRole("heading", { name: "15% banked!" })).toBeVisible();
+    await expect(page.getByText(/^You've banked 15% off! \d spins? left\.$/)).toBeVisible();
     await expect(tracker).toHaveAttribute("aria-label", "2 chips left");
     await expect(tracker.locator(".tries-tracker__chip")).toHaveCount(2);
     await page.screenshot({ path: path.join(directory, `${width}x${height}-chips-2-banked.png`) });
-    await page.getByRole("button", { name: "Continue" }).click();
     await spin.click();
-    await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
+    await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
     await expect(tracker).toHaveAttribute("aria-label", "1 chip left");
     await expect(tracker.locator(".tries-tracker__chip")).toHaveCount(1);
     await page.screenshot({ path: path.join(directory, `${width}x${height}-chips-1.png`) });
-    await page.getByRole("button", { name: "Continue" }).click();
     await spin.click();
     await expect(page.getByRole("heading", { name: "20%" })).toBeVisible();
     await expect(tracker).toHaveAttribute("aria-label", "0 chips left");
