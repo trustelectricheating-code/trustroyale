@@ -72,7 +72,13 @@ for (const [width, height] of sizes) {
 
     await expect(page.getByRole("heading", { name: "Welcome to Trust Royale" })).toBeVisible();
     await expect(page.locator("#intro")).toHaveJSProperty("scrollWidth", width);
-    await expect(page.locator("#intro")).toHaveJSProperty("scrollHeight", height);
+    // The menu may be taller than a small screen; it must then scroll so every button is reachable
+    // (before 6 Oct the card clipped "See every winning line" at 320x568 and this asserted no overflow).
+    const more = page.getByRole("button", { name: "See every winning line" });
+    await more.scrollIntoViewIfNeeded();
+    const moreBox = (await more.boundingBox())!;
+    expect(moreBox.y + moreBox.height).toBeLessThanOrEqual(height);
+    await page.locator("#intro").evaluate((node) => node.scrollTo(0, 0));
     await page.screenshot({ path: path.join(directory, `${width}x${height}-menu.png`) });
     await page.getByRole("button", { name: "Let's play!" }).click();
     await expect(page.locator("#intro")).not.toBeVisible();
