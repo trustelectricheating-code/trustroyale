@@ -1,7 +1,7 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { CABINET_ART } from "../../src/scene/cabinetArt";
 import { computeLayout, type LayoutRect } from "../../src/scene/layout";
-import { flowRetry, flowWin, mockFlow } from "./helpers/flow";
+import { completeGate, flowRetry, flowWin, mockFlow, pressPlay, seedEntry } from "./helpers/flow";
 
 async function ready(page: Page): Promise<void> {
   await page.goto("/");
@@ -107,6 +107,7 @@ for (const [width, height] of [[390, 844], [667, 375], [844, 390], [932, 430], [
     const play = page.getByRole("button", { name: "Let's play!" });
     await onScreen(play, width, height);
     await play.click();
+    await completeGate(page);
     await expect(page.locator("#mute")).toBeVisible();
     await expect(page.locator("#tries-tracker .tries-tracker__chip:visible")).toHaveCount(3);
     await expect(page.locator(".welcome__handover-chip")).toHaveCount(0);
@@ -151,7 +152,7 @@ test("SPIN immediately clears a near-miss banner and old timers cannot clear the
   const requests = await mockFlow(page, [flowRetry(1, 2, true), flowWin(15, 2, 1)]);
   await ready(page);
   await trackBannerDurations(page);
-  await page.getByRole("button", { name: "Let's play!" }).click();
+  await pressPlay(page);
   await spinStopsReady(page);
   const message = page.locator("#spin-message");
   await expect(message.locator("p")).toHaveText(["So close! Spin again.", "One symbol away."]);
@@ -172,7 +173,7 @@ test("normal-motion banked reels unlock SPIN immediately and the banner cannot i
   await page.emulateMedia({ reducedMotion: "no-preference" });
   const requests = await mockFlow(page, [flowWin(15, 1, 2), flowRetry(2, 1)]);
   await ready(page);
-  await page.getByRole("button", { name: "Let's play!" }).click();
+  await pressPlay(page);
   await spinStopsReady(page);
   await expect(page.locator("#spin-message")).toHaveText("You've banked 15% off! 2 spins left.");
   await page.locator("#spin").click();
@@ -198,6 +199,7 @@ test("returning Last Chance session uses the same non-blocking banner and SPIN c
 test("branded flying chips replace hidden tracker chips and reveal them on landing", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
+  await seedEntry(page);
   await mockFlow(page, [flowRetry(1, 2)]);
   await ready(page);
   const start = await startHandover(page);
@@ -218,6 +220,7 @@ for (const interruption of ["resize", "early SPIN"] as const) {
   test(`handover interrupted by ${interruption} never leaves tracker chips hidden`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.emulateMedia({ reducedMotion: "no-preference" });
+    await seedEntry(page);
     await mockFlow(page, [flowRetry(1, 2)]);
     await ready(page);
     const start = await startHandover(page);
@@ -240,7 +243,7 @@ test("missing handover artwork and returning mid-game sessions leave tracker chi
   await mockFlow(page, [flowRetry(1, 2)]);
   await ready(page);
   await page.locator(".welcome__keith").evaluate((node) => node.remove());
-  await page.getByRole("button", { name: "Let's play!" }).click();
+  await pressPlay(page);
   await expect(page.locator(".welcome__handover-chip")).toHaveCount(0);
   await expect(page.locator("#tries-tracker .tries-tracker__chip:visible")).toHaveCount(3);
   await page.unroute("**/api/session**");

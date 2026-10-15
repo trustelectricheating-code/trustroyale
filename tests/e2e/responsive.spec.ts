@@ -1,6 +1,7 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import path from "node:path";
 import { computeLayout } from "../../src/scene/layout";
+import { pressPlay } from "./helpers/flow";
 import { CABINET_ART } from "../../src/scene/cabinetArt";
 
 const sizes = [
@@ -81,7 +82,7 @@ for (const [width, height] of sizes) {
     expect(moreBox.y + moreBox.height).toBeLessThanOrEqual(height + 1);
     await page.locator("#intro").evaluate((node) => node.scrollTo(0, 0));
     await page.screenshot({ path: path.join(directory, `${width}x${height}-menu.png`) });
-    await page.getByRole("button", { name: "Let's play!" }).click();
+    await pressPlay(page);
     await expect(page.locator("#intro")).not.toBeVisible();
 
     const tracker = page.locator("#tries-tracker");

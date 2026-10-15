@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { CABINET_ART } from "../../src/scene/cabinetArt";
 import { computeLayout } from "../../src/scene/layout";
+import { pressPlay } from "./helpers/flow";
 import { SYMBOLS } from "../../src/config/symbols";
 
 const session = { spinsLeft: 3, bonusAvailable: false, state: "idle", best: null, win: null };
@@ -34,7 +35,7 @@ test("every reel frame loads and face payline medallions render artwork", async 
   }))), frameUrls);
   expect(loaded).not.toContain(false);
 
-  await page.getByRole("button", { name: "Let's play!" }).click();
+  await pressPlay(page);
   await page.locator("#spin").click();
   await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
   const screenshot = path.join(mkdtempSync(path.join(tmpdir(), "trust-royale-faces-")), "payline.png");

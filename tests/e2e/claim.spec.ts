@@ -153,7 +153,9 @@ for (const [width, height] of viewports) {
   });
 }
 
-const VECTOR = "eyJmaXJzdE5hbWUiOiJTacOibiIsImxhc3ROYW1lIjoiTydOZWlsbCIsInBob25lIjoiMDc5MTEgMTIzNDU2IiwiZW1haWwiOiJzaWFuQGV4YW1wbGUuY29tIiwicmVnaW9uIjoiWW9ya3NoaXJlIGFuZCB0aGUgSHVtYmVyIn0";
+
+// A hand-off with no email is not a known player yet, so the win screen keeps the claim form and prefills it.
+const VECTOR = Buffer.from(JSON.stringify({ firstName: "Siân", lastName: "O'Neill", phone: "07911 123456", region: "Yorkshire and the Humber" })).toString("base64url");
 
 test("details from the entry fragment prefill the claim form and are cleared after the claim", async ({ page }) => {
   let posted: Record<string, unknown> = {};
@@ -171,10 +173,18 @@ test("details from the entry fragment prefill the claim form and are cleared aft
   await expect(page.getByLabel("Phone number")).toHaveValue("07911 123456");
   await expect(page.getByLabel("Region")).toHaveValue("Yorkshire and the Humber");
   await expect(page.getByLabel("Region").locator("option:checked")).toHaveText("Yorkshire and the Humber");
-  await expect(page.getByLabel("Email")).toHaveValue("sian@example.com");
+  await page.getByLabel("Email").fill("sian@example.com");
   await page.getByRole("button", { name: "Claim my 20% offer" }).click();
   await expect(page.getByRole("heading", { name: "Your 20% offer is claimed" })).toBeVisible();
   expect(posted).toMatchObject({ fullName: "Siân O'Neill", phone: "07911 123456", email: "sian@example.com", region: "Yorkshire and the Humber" });
   expect(posted).not.toHaveProperty("postcode");
   expect(await page.evaluate(() => sessionStorage.getItem("royale-entry"))).toBeNull();
+});
+
+test("a 400 that names no visible field (only spinId) shows the failure step, not a dead button", async ({ page }) => {
+  await openWin(page, (route) => route.fulfill({ status: 400, contentType: "application/json", body: JSON.stringify({ error: "invalid", fields: { spinId: "Missing or invalid spin." } }) }));
+  await fill(page);
+  await page.getByRole("button", { name: "Claim my 20% offer" }).click();
+  await expect(page.getByRole("heading", { name: "Something went wrong" })).toBeVisible();
+  await expect(page.getByText("call us free on 0800 5999 109")).toBeVisible();
 });

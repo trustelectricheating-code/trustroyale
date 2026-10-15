@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { pressPlay } from "./helpers/flow";
 
 const VIEWPORTS = [
   { name: "phone-small", width: 320, height: 568 },
@@ -25,7 +26,7 @@ test("full-screen game and prize overlay fit supported layouts", async ({ page }
   for (const viewport of VIEWPORTS) {
     await page.setViewportSize(viewport);
     await ready(page);
-    await page.getByRole("button", { name: "Let's play!" }).click();
+    await pressPlay(page);
 
     const result = await page.evaluate(() => {
       const canvas = document.querySelector("canvas")!.getBoundingClientRect();
@@ -82,7 +83,7 @@ test("full-screen game and prize overlay fit supported layouts", async ({ page }
 test("casino background remains rendered through portrait and landscape resizes", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await ready(page);
-  await page.getByRole("button", { name: "Let's play!" }).click();
+  await pressPlay(page);
   await expect(page.locator("html")).toHaveAttribute("data-background-orientation", "portrait");
   await expect(page.locator("html")).toHaveAttribute("data-background-ready", "true");
 

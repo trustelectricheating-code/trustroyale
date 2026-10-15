@@ -1,4 +1,5 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
+import { pressPlay } from "./helpers/flow";
 
 const session = { spinsLeft: 3, bonusAvailable: false, state: "idle", win: null };
 const retry = {
@@ -37,7 +38,7 @@ test("arrival animates in place, unlocks audio, and persists mute", async ({ pag
   expect(before).toBeDefined();
   expect(after).not.toEqual(before);
 
-  await page.getByRole("button", { name: "Let's play!" }).click();
+  await pressPlay(page);
   await expect(page.locator("html")).toHaveAttribute("data-game-state", "idle");
   await page.waitForTimeout(900);
   const chipsStayInside = await page.evaluate(() => ((window as Window & { __trustRoyaleDebug?: { chipPositions?: () => number[][] } }).__trustRoyaleDebug?.chipPositions?.() ?? [])
@@ -56,7 +57,7 @@ test("reduced motion can play and resolve a spin", async ({ page }) => {
   await mockApis(page);
   await page.goto("/");
   await ready(page);
-  await page.getByRole("button", { name: "Let's play!" }).click();
+  await pressPlay(page);
   await expect(page.locator("html")).toHaveAttribute("data-game-state", "idle");
   await page.getByRole("button", { name: "Spin the reels" }).click();
   await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();

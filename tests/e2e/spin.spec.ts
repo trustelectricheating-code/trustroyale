@@ -4,6 +4,7 @@ import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { computeLayout } from "../../src/scene/layout";
+import { pressPlay } from "./helpers/flow";
 import { CABINET_ART } from "../../src/scene/cabinetArt";
 
 const freshSession = { spinsLeft: 3, bonusAvailable: false, state: "idle", best: null, win: null };
@@ -45,7 +46,7 @@ async function ready(page: Page): Promise<void> {
 
 async function enterGame(page: Page): Promise<void> {
   await expect(page.getByRole("heading", { name: "Welcome to Trust Royale" })).toBeVisible();
-  await page.getByRole("button", { name: "Let's play!" }).click();
+  await pressPlay(page);
   await expect(page.locator("#intro")).not.toBeVisible();
 }
 
@@ -57,7 +58,7 @@ test("production CSP is present and fresh players see the single welcome menu", 
   await expect(page.getByRole("heading", { name: "Welcome to Trust Royale" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Let's play!" })).toBeVisible();
   await expect(page.getByRole("button", { name: "See every winning line" })).toBeVisible();
-  await page.getByRole("button", { name: "Let's play!" }).click();
+  await pressPlay(page);
   await expect(page.locator("#spin")).toBeEnabled();
   await expect(page.locator("#spin")).toHaveText("SPIN");
 });
@@ -186,7 +187,7 @@ test("intro and popup menu buttons play the soft click, including the first gest
   await ready(page);
   expect(await page.locator("html").getAttribute("data-sound-play-count")).toBeNull();
   await expectLarge(page.getByRole("button", { name: "Let's play!" }));
-  await page.getByRole("button", { name: "Let's play!" }).click();
+  await pressPlay(page);
   await expect(page.locator("html")).toHaveAttribute("data-last-sound", "button");
   const afterMenu = Number(await page.locator("html").getAttribute("data-sound-play-count"));
   await expectLarge(page.getByRole("button", { name: "Prizes" }));

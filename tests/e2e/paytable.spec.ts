@@ -1,4 +1,5 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
+import { pressPlay } from "./helpers/flow";
 import { PAYTABLE } from "../../src/config/paytable";
 
 const idleSession = { spinsLeft: 3, bonusAvailable: false, state: "idle", best: null, win: null };
@@ -54,7 +55,7 @@ test("final popup reopens prizes on the winning rule", async ({ page }) => {
   await page.route("**/api/spin", (route: Route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(finalWin) }));
   await page.goto("/");
   await ready(page);
-  await page.getByRole("button", { name: "Let's play!" }).click();
+  await pressPlay(page);
   await page.getByRole("button", { name: "Spin the reels" }).click({ force: true });
   await expect(page.getByRole("heading", { name: "15%" })).toBeVisible({ timeout: 15_000 });
   await page.getByRole("button", { name: "View prize table" }).click();

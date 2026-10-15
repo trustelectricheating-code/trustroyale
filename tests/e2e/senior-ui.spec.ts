@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
+import { completeGate } from "./helpers/flow";
 
 const fresh = { spinsLeft: 3, bonusAvailable: false, state: "idle", best: null, win: null };
 const best = { spinId: "00000000-0000-4000-8000-000000000020", ruleId: "scott-3", discount: 20, winRef: "TR-SENIOR20" };
@@ -38,6 +39,7 @@ test("phone controls and win message are senior friendly", async ({ page }) => {
   await expect(page.locator("#intro [data-intro-mute], #intro .welcome__sound")).toHaveCount(0);
 
   await press(page.getByRole("button", { name: "Let's play!" }));
+  await completeGate(page);
   await expect(page.locator("#intro")).not.toBeVisible();
   await minimumSize(page.locator("#mute"));
   await minimumSize(page.locator("#prizes"));

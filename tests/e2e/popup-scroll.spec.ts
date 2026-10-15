@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
+import { completeGate } from "./helpers/flow";
 
 // Harry 6 Oct: "the menu cta popup not scroll to bottom". On a short desktop window the welcome menu and the
 // claim step were taller than the window with overflow hidden, so their buttons could not be reached.
@@ -31,6 +32,7 @@ for (const [width, height] of SHORT_WINDOWS) {
     if (await page.locator("#intro").evaluate((node) => node.scrollHeight > node.clientHeight)) await wheelTo(page, play, height);
     else await expect(play).toBeInViewport();
     await play.click();
+    await completeGate(page);
     await expect(page.locator("#intro")).not.toHaveJSProperty("open", true);
   });
 

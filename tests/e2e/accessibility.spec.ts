@@ -1,4 +1,5 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
+import { pressPlay } from "./helpers/flow";
 
 const session = { spinsLeft: 3, bonusAvailable: false, state: "idle", best: null, win: null };
 const win = {
@@ -19,7 +20,7 @@ test("result dialog announces, traps focus, and shows keyboard focus", async ({ 
   await mockApis(page);
   await page.goto("/");
   await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
-  await page.getByRole("button", { name: "Let's play!" }).click();
+  await pressPlay(page);
   await page.getByRole("button", { name: "Spin the reels" }).click({ force: true });
 
   const dialog = page.getByRole("dialog");

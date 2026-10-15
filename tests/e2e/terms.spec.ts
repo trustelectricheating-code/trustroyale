@@ -1,4 +1,5 @@
 import { expect, test, type Locator } from "@playwright/test";
+import { completeGate } from "./helpers/flow";
 import { mockTermsGame } from "./helpers/terms";
 
 async function onScreen(locator: Locator, width: number, height: number): Promise<void> {
@@ -54,6 +55,7 @@ for (const [width, height] of [[390, 844], [667, 375], [844, 390], [932, 430], [
     await expect(terms).not.toBeVisible();
     await expect(welcomeLink).toBeFocused();
     await play.click();
+    await completeGate(page);
     await expect(page.locator("#intro")).not.toBeVisible();
     expect(requests.spinRequests).toBe(0);
     await page.locator("#spin").click();
