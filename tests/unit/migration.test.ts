@@ -79,3 +79,22 @@ describe("003_lead_full_name migration", () => {
     expect(sql).toMatch(/ADD CONSTRAINT leads_last_name_check CHECK \(char_length\(last_name\) <= 80\)/);
   });
 });
+
+describe("004_lead_phone_optional migration", () => {
+  it("lets a lead row be stored with no phone and no region", async () => {
+    const columns = await database.query<{ column_name: string; is_nullable: string }>(
+      "SELECT column_name, is_nullable FROM information_schema.columns WHERE table_name = 'leads' AND column_name IN ('phone', 'region') ORDER BY column_name",
+    );
+    expect(columns.rows).toEqual([{ column_name: "phone", is_nullable: "YES" }, { column_name: "region", is_nullable: "YES" }]);
+    const sessionId = "00000000-0000-4000-8000-000000000016";
+    const spinId = "00000000-0000-4000-8000-000000000017";
+    await database.transaction(async (transaction) => {
+      await transaction.query("INSERT INTO sessions (id, won_spin_id) VALUES ($1, $2)", [sessionId, spinId]);
+      await transaction.query("INSERT INTO spins (id, session_id, spin_no, reels, rule_id, discount, win_ref) VALUES ($1, $2, 1, ARRAY['neos', 'neos', 'neos'], 'neos-3', 10, 'TR-NOPHONE')", [spinId, sessionId]);
+    });
+    await database.query(
+      "INSERT INTO leads (id, spin_id, win_ref, discount, first_name, last_name, email, consent_text, claimed_via) VALUES ($1, $2, 'TR-NOPHONE', 10, 'Jane', '', 'j@example.com', 'c', 'form')",
+      ["00000000-0000-4000-8000-000000000018", spinId],
+    );
+  });
+});

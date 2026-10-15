@@ -4,7 +4,7 @@ import { gsap } from "gsap";
 import "./styles/main.css";
 import { loadDeferredAssets, loadInitialAssets } from "./assets";
 import { GameApiError, captureSsTracking, getSession, spin, type BestSummary, type SpinResponse, type WinSummary } from "./game/api";
-import { takeEntryFromLocation } from "./game/entry";
+import { completeEntry, takeEntryFromLocation } from "./game/entry";
 import { GameStateMachine, type GameState } from "./game/state";
 import { PAYTABLE } from "./config/paytable";
 import { SYMBOLS } from "./config/symbols";
@@ -100,7 +100,14 @@ async function boot(): Promise<void> {
     sound.play("button");
   };
   let introDismissed = false;
-  const intro = createIntro(introDialog, playMenuClick);
+  // Details-before-play: only a fresh game with no complete stored entry meets the gate.
+  const freshGame = !initialSession || (initialSession.state === "idle" && initialSession.spinsLeft === 3 && !initialSession.best);
+  const popups = createPopups((ruleId) => intro.showPrizes(ruleId), () => sound.play("button"));
+  const intro = createIntro(introDialog, playMenuClick, (proceed) => {
+    if (!freshGame || completeEntry()) return false;
+    popups.showGate(proceed);
+    return true;
+  });
   introDialog.addEventListener("close", () => { introDismissed = true; });
   if (!initialSession || (initialSession.state === "idle" && initialSession.spinsLeft === 3 && !initialSession.best) || loadingGesture) {
     intro.show(() => { introDismissed = true; });
@@ -140,7 +147,6 @@ async function boot(): Promise<void> {
   motionQuery.addEventListener("change", updateMotion);
   updateMotion();
   if (introDismissed) chipsScene.settle();
-  const popups = createPopups((ruleId) => intro.showPrizes(ruleId), () => sound.play("button"));
   prizesButton.addEventListener("click", () => { sound.play("button"); intro.showPrizes(); });
   const machine = new GameStateMachine("IDLE");
   let spinsLeft = 3;

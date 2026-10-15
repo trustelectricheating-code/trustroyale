@@ -35,7 +35,7 @@ export function createLeadHandler(dependencies: LeadDependencies = {}) {
 
       // Legacy bodies carry firstName/lastName; join them so older clients keep working.
       const legacyName = [input.firstName, input.lastName].filter((part): part is string => typeof part === "string").join(" ");
-      const checked = validateLead({ ...input, fullName: typeof input.fullName === "string" ? input.fullName : legacyName } as Parameters<typeof validateLead>[0]);
+      const checked = validateLead({ ...input, fullName: typeof input.fullName === "string" ? input.fullName : legacyName } as Parameters<typeof validateLead>[0], { optionalContact: true });
       const spinId = typeof input.spinId === "string" ? input.spinId : "";
       if (!checked.ok || !UUID.test(spinId)) {
         const fields: Record<string, string> = checked.ok ? {} : { ...checked.fields };
@@ -61,7 +61,7 @@ export function createLeadHandler(dependencies: LeadDependencies = {}) {
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, false, $10, 'form')
         ON CONFLICT (spin_id) DO NOTHING
         RETURNING id
-      `, [leadId, spin.id, spin.win_ref, spin.discount, firstName, lastName, lead.phone, lead.email, lead.region, CONSENT_TEXT]);
+      `, [leadId, spin.id, spin.win_ref, spin.discount, firstName, lastName, lead.phone || null, lead.email, lead.region || null, CONSENT_TEXT]);
       if (inserted.length === 0) return json(response, 200, { ok: true, winRef: spin.win_ref, duplicate: true });
 
       json(response, 201, { ok: true, winRef: spin.win_ref });

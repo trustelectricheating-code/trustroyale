@@ -11,7 +11,8 @@ function prize(rule: PaytableRule): string {
   return `<li class="welcome-prize" data-rule-id="${rule.id}" aria-label="${rule.ariaLabel}"><span class="welcome-prize__icons">${rule.symbols.map(icon).join("")}</span><span>${label.replaceAll("×", "x")}</span><strong>${rule.discount}% off</strong></li>`;
 }
 
-export function createIntro(dialog: HTMLDialogElement, onMenuClick: () => Promise<void>): IntroUi {
+/** gate(proceed) returns true when it took over (the play gate is open) and will call proceed once the player may start. */
+export function createIntro(dialog: HTMLDialogElement, onMenuClick: () => Promise<void>, gate?: (proceed: () => void) => boolean): IntroUi {
   let done = () => {};
   let prizesOnly = false;
   let fromGame = false;
@@ -71,7 +72,7 @@ export function createIntro(dialog: HTMLDialogElement, onMenuClick: () => Promis
     }
     if (winningRuleId) dialog.querySelector(`[data-rule-id="${CSS.escape(winningRuleId)}"]`)?.classList.add("is-winning");
     dialog.querySelector<HTMLElement>("[data-show-terms]")?.addEventListener("click", (event) => { event.preventDefault(); showTerms(event.currentTarget as HTMLElement); });
-    dialog.querySelector("[data-play]")?.addEventListener("click", () => { click(); close(); });
+    dialog.querySelector("[data-play]")?.addEventListener("click", () => { click(); if (gate?.(close)) return; close(); });
     dialog.querySelector("[data-show-prizes]")?.addEventListener("click", () => { click(); prizesOnly = true; render(); });
     dialog.querySelector("[data-back-to-menu]")?.addEventListener("click", () => { click(); back(); });
     dialog.querySelector<HTMLElement>("#welcome-title")?.focus();

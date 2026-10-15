@@ -45,3 +45,21 @@ describe("lead validation", () => {
     for (const invalid of ["", "_abc", "has space", "x".repeat(65), "a;b", 5, undefined]) expect(isValidSsTrackingId(invalid)).toBe(false);
   });
 });
+
+import { hasVisibleFieldErrors } from "../../src/game/leadValidation";
+describe("optional contact details", () => {
+  it("accepts an empty phone and region only when optionalContact is set, and still validates non-empty values", () => {
+    const member = { fullName: "Jane Smith", email: "jane@example.com", phone: "", region: "" };
+    expect(validateLead(member).ok).toBe(false);
+    expect(validateLead(member, { optionalContact: true })).toEqual({ ok: true, value: { fullName: "Jane Smith", phone: "", email: "jane@example.com", region: "" } });
+    expect(validateLead({ ...member, phone: "123" }, { optionalContact: true })).toMatchObject({ ok: false, fields: { phone: expect.any(String) } });
+    expect(validateLead({ ...member, region: "Atlantis" }, { optionalContact: true })).toMatchObject({ ok: false, fields: { region: expect.any(String) } });
+    expect(validateLead({ ...member, email: "" }, { optionalContact: true })).toMatchObject({ ok: false, fields: { email: expect.any(String) } });
+  });
+
+  it("treats an error on spinId alone as having no visible field", () => {
+    expect(hasVisibleFieldErrors({ spinId: "Missing or invalid spin." })).toBe(false);
+    expect(hasVisibleFieldErrors({})).toBe(false);
+    expect(hasVisibleFieldErrors({ spinId: "x", phone: "y" })).toBe(true);
+  });
+});

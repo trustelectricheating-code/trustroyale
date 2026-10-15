@@ -68,3 +68,25 @@ export function readEntry(): EntryDetails | null {
 export function clearEntry(): void {
   try { sessionStorage.removeItem(ENTRY_KEY); } catch { /* nothing to clear */ }
 }
+
+/** Stores the gate's details for this tab, in the shape readEntry reads. Empty optional fields are left out. */
+export function saveEntry(details: LeadInput): void {
+  const stored: EntryDetails = {};
+  for (const field of FIELDS) if (details[field].trim() !== "") stored[field] = details[field].trim();
+  try { sessionStorage.setItem(ENTRY_KEY, JSON.stringify(stored)); } catch { /* storage blocked: the claim form is the fallback */ }
+}
+
+/** The stored entry when it holds a valid full name and email (phone and region kept only when valid), else null. */
+export function completeEntry(): LeadInput | null {
+  const stored = readEntry();
+  if (!stored) return null;
+  const checked = validateLead(stored, { optionalContact: true });
+  if (checked.ok) return checked.value;
+  if (checked.fields.fullName || checked.fields.email) return null;
+  const lenient = validateLead({ ...stored, phone: checked.fields.phone ? "" : stored.phone, region: checked.fields.region ? "" : stored.region }, { optionalContact: true });
+  return lenient.ok ? lenient.value : null;
+}
+
+export function firstWord(fullName: string): string {
+  return fullName.trim().split(/\s+/)[0] ?? "";
+}

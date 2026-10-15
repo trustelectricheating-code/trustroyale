@@ -1,6 +1,8 @@
 // Lead claim rules, shared by the browser (inline errors) and /api/lead (source of truth).
 export const CONSENT_TEXT = "By claiming, you agree that Trust Electric Heating can contact you about your offer.";
 
+export const GATE_CONSENT_TEXT = "By playing, you agree that Trust Electric Heating can contact you about your offer.";
+
 export interface LeadInput { fullName: string; phone: string; email: string; region: string }
 export type LeadField = keyof LeadInput;
 export type LeadFieldErrors = Partial<Record<LeadField, string>>;
@@ -35,18 +37,29 @@ export function splitFullName(fullName: string): { firstName: string; lastName: 
   return { firstName, lastName: rest.join(" ") };
 }
 
-export function validateLead(input: Partial<Record<LeadField, unknown>> | null | undefined): LeadValidation {
+export interface ValidateOptions { optionalContact?: boolean }
+
+/** Server-side field names a claim form shows; an error on any other key (spinId) has nowhere to appear. */
+export const VISIBLE_LEAD_FIELDS: readonly LeadField[] = ["fullName", "phone", "region", "email"];
+export function hasVisibleFieldErrors(fields: Record<string, unknown> | null | undefined): boolean {
+  return Object.keys(fields ?? {}).some((key) => (VISIBLE_LEAD_FIELDS as readonly string[]).includes(key));
+}
+
+/** With optionalContact, phone and region are checked only when non-empty and come back as '' when absent. */
+export function validateLead(input: Partial<Record<LeadField, unknown>> | null | undefined, options: ValidateOptions = {}): LeadValidation {
   const source = input ?? {};
+  const optional = options.optionalContact === true;
   const fields: LeadFieldErrors = {};
   const fullName = name(source.fullName);
   const email = text(source.email);
-  const phone = normalisePhone(text(source.phone));
+  const rawPhone = text(source.phone);
+  const phone = normalisePhone(rawPhone);
   const region = text(source.region);
 
   if (fullName.length < 1 || fullName.length > 80) fields.fullName = "Please enter your full name.";
-  if (!phone) fields.phone = "Please enter a UK phone number, for example 07911 123456.";
-  if (!(REGIONS as readonly string[]).includes(region)) fields.region = "Please choose your region.";
+  if (!(optional && rawPhone === "") && !phone) fields.phone = "Please enter a UK phone number, for example 07911 123456.";
+  if (!(optional && region === "") && !(REGIONS as readonly string[]).includes(region)) fields.region = "Please choose your region.";
   if (!EMAIL.test(email) || email.length > 254) fields.email = "Please enter a valid email address.";
   if (Object.keys(fields).length > 0) return { ok: false, fields };
-  return { ok: true, value: { fullName, phone: phone!, email, region } };
+  return { ok: true, value: { fullName, phone: phone ?? "", email, region } };
 }

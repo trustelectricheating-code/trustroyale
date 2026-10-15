@@ -13,9 +13,9 @@ interface ClaimedLead {
   id: string;
   first_name: string;
   last_name: string;
-  phone: string;
+  phone: string | null;
   email: string;
-  region: string;
+  region: string | null;
   win_ref: string;
   discount: number;
   crm_attempts: number;

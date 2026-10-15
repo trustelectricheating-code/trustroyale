@@ -97,3 +97,16 @@ export async function claimLead(details: ClaimDetails): Promise<ClaimResult> {
   if (!response.ok || typeof body.winRef !== "string") throw new ClaimError("failed");
   return { winRef: body.winRef, duplicate: body.duplicate === true };
 }
+
+/** Play gate hand-off to the CRM. Fire and forget: a failure here must never stop the game. */
+export function sendEntry(details: LeadInput, website = ""): void {
+  try {
+    void fetch("/api/entry", {
+      method: "POST",
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({ ...details, website, marketingUrl: location.href, ssTrackingId: storedSsTracking() }),
+    }).catch(() => undefined);
+  } catch {
+    // Nothing to do: entry capture is best effort.
+  }
+}

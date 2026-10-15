@@ -1,15 +1,19 @@
 import { isValidSsTrackingId } from "../../src/game/leadValidation.js";
 
 export const SOURCE_TAG = "2026 Trust Royale Game Claim";
+export const ENTRY_SOURCE_TAG = "2026 Trust Royale Game Entry";
+// SharpSpring custom field for the Black Friday discount (Harry 15 Oct 2026; field id 400000066793474).
+export const DISCOUNT_FIELD = "black_friday_2026_400000066793474";
 
 export interface PostbackLead {
   firstName: string;
   lastName: string;
-  phone: string;
+  phone?: string | null;
   email: string;
-  region: string;
-  winRef: string;
-  discount: number;
+  region?: string | null;
+  /** Both set for a claim; both left out for a game entry. */
+  winRef?: string;
+  discount?: number;
 }
 
 export interface PostbackContext { marketingUrl?: string | null; ssTrackingId?: unknown }
@@ -32,14 +36,17 @@ export function buildPostback(lead: PostbackLead, context: PostbackContext = {})
   const marketingUrl = (context.marketingUrl ?? "").slice(0, 255);
   const body = new URLSearchParams();
   body.set("1", `${lead.firstName} ${lead.lastName}`.trim());
-  body.set("3", lead.phone);
+  if (lead.phone) body.set("3", lead.phone);
   body.set("4", lead.email);
-  body.set("76", SOURCE_TAG);
+  body.set("76", lead.discount === undefined ? ENTRY_SOURCE_TAG : SOURCE_TAG);
   body.set("204", marketingUrl);
   body.set("234", gclidFrom(marketingUrl));
-  body.set("296", lead.region);
-  body.set("win_ref", lead.winRef);
-  body.set("discount", String(lead.discount));
+  if (lead.region) body.set("296", lead.region);
+  if (lead.winRef !== undefined) body.set("win_ref", lead.winRef);
+  if (lead.discount !== undefined) {
+    body.set("discount", String(lead.discount));
+    body.set(DISCOUNT_FIELD, String(lead.discount));
+  }
   if (isValidSsTrackingId(context.ssTrackingId)) body.set("trackingid__sb", context.ssTrackingId);
   return body;
 }
