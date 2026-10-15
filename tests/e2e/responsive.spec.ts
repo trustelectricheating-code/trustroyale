@@ -77,7 +77,8 @@ for (const [width, height] of sizes) {
     const more = page.getByRole("button", { name: "See every winning line" });
     await more.scrollIntoViewIfNeeded();
     const moreBox = (await more.boundingBox())!;
-    expect(moreBox.y + moreBox.height).toBeLessThanOrEqual(height);
+    // 1px for sub-pixel layout (568.34 at 320x568 after the 918f6df welcome chips).
+    expect(moreBox.y + moreBox.height).toBeLessThanOrEqual(height + 1);
     await page.locator("#intro").evaluate((node) => node.scrollTo(0, 0));
     await page.screenshot({ path: path.join(directory, `${width}x${height}-menu.png`) });
     await page.getByRole("button", { name: "Let's play!" }).click();
@@ -102,17 +103,15 @@ for (const [width, height] of sizes) {
     await page.screenshot({ path: path.join(directory, `${width}x${height}-chips-3.png`) });
 
     await spin.click();
-    await expect(page.getByRole("heading", { name: "15% banked!" })).toBeVisible();
+    await expect(page.getByText(/^You've banked 15% off! \d spins? left\.$/)).toBeVisible();
     await expect(tracker).toHaveAttribute("aria-label", "2 chips left");
     await expect(tracker.locator(".tries-tracker__chip")).toHaveCount(2);
     await page.screenshot({ path: path.join(directory, `${width}x${height}-chips-2-banked.png`) });
-    await page.getByRole("button", { name: "Continue" }).click();
     await spin.click();
-    await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
+    await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
     await expect(tracker).toHaveAttribute("aria-label", "1 chip left");
     await expect(tracker.locator(".tries-tracker__chip")).toHaveCount(1);
     await page.screenshot({ path: path.join(directory, `${width}x${height}-chips-1.png`) });
-    await page.getByRole("button", { name: "Continue" }).click();
     await spin.click();
     await expect(page.getByRole("heading", { name: "20%" })).toBeVisible();
     await expect(tracker).toHaveAttribute("aria-label", "0 chips left");

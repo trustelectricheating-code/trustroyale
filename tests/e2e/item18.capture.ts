@@ -72,7 +72,7 @@ for (const [width, height] of sizes) {
       await page.emulateMedia({ reducedMotion: "no-preference" });
       spinStatus = 200; spinBody = reply; spinDelay = 0;
       await load(nextSession);
-      if (lastChance) await press(page.getByRole("button", { name: "Spin now" }));
+      if (lastChance) await press(page.locator("#spin"));
       else { await enter(); await press(page.locator("#spin")); }
       await page.waitForFunction(() => document.documentElement.dataset.spinning === "true");
       await page.waitForFunction(() => document.documentElement.dataset.spinning !== "true");
@@ -90,10 +90,10 @@ for (const [width, height] of sizes) {
     await press(page.locator("#spin"));
     await page.waitForFunction(() => document.documentElement.dataset.spinning === "true");
     await shot("07-mid-spin.png");
-    await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible({ timeout: 15_000 });
 
     await spinAndCaptureVanish(fresh, loss(1, 2), "08-chip-vanish-white.png");
-    await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible({ timeout: 15_000 });
     await shot("12-retry-so-close.png");
     await spinAndCaptureVanish(idle(2), loss(2, 1), "09-chip-vanish-red.png");
     await spinAndCaptureVanish(idle(1), loss(3, 0, true), "10-chip-vanish-navy.png");
@@ -101,12 +101,12 @@ for (const [width, height] of sizes) {
 
     spinStatus = 200; spinBody = win(10, best10, 2, false); spinDelay = 0;
     await load(fresh); await enter(); await press(page.locator("#spin"));
-    await expect(page.getByRole("heading", { name: "10% banked!" })).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/^You've banked 10% off! \d spins? left\.$/)).toBeVisible({ timeout: 15_000 });
     await shot("13-banked-10.png");
 
     spinBody = win(15, best15, 1, false);
     await load(idle(2)); await press(page.locator("#spin"));
-    await expect(page.getByRole("heading", { name: "15% banked!" })).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/^You've banked 15% off! \d spins? left\.$/)).toBeVisible({ timeout: 15_000 });
     await shot("14-banked-15.png");
 
     spinBody = final20;
@@ -115,7 +115,7 @@ for (const [width, height] of sizes) {
     await shot("15-win-20-message.png");
 
     await load({ spinsLeft: 0, bonusAvailable: true, state: "last_chance", best: null, win: null });
-    await expect(page.getByRole("heading", { name: "Last Chance!" })).toBeVisible();
+    await expect(page.locator("#spin-message").getByText("Last Chance!", { exact: true })).toBeVisible();
     await shot("16-last-chance-gold.png");
     await load({ spinsLeft: 0, bonusAvailable: false, state: "game_over", best: null, win: null });
     await expect(page.getByRole("heading", { name: "Thanks for playing" })).toBeVisible();

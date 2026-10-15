@@ -26,8 +26,10 @@ for (const [width, height] of SHORT_WINDOWS) {
     await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
     const play = page.getByRole("button", { name: "Let's play!" });
     await expect(play).toBeAttached();
-    expect(await page.locator("#intro").evaluate((node) => node.scrollHeight > node.clientHeight)).toBe(true);
-    await wheelTo(page, play, height);
+    // Since 918f6df (welcome chips) the menu fits some short windows outright; when it does not,
+    // it must scroll inside itself. Either way "Let's play!" has to be reachable.
+    if (await page.locator("#intro").evaluate((node) => node.scrollHeight > node.clientHeight)) await wheelTo(page, play, height);
+    else await expect(play).toBeInViewport();
     await play.click();
     await expect(page.locator("#intro")).not.toHaveJSProperty("open", true);
   });

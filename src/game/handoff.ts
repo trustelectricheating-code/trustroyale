@@ -3,7 +3,10 @@
 // The landing page reads `prize` (win reference) and `discount` to prefill its
 // quote form, and its own tracking reads the attribution keys we pass back.
 // VITE_QUOTE_URL points a local game at a local landing page; production builds leave it unset.
-export const QUOTE_URL: string = import.meta.env.VITE_QUOTE_URL || "https://ty.trustelectricheating.co.uk/trust-royale/";
+// The Trust Royale landing page (ty./trust-royale/) is not live yet (trust-lp feat/trust-royale-lp,
+// unmerged; 404 on 15 Oct 2026), so the default is the live night storage heater quote page.
+// Switch back to "https://ty.trustelectricheating.co.uk/trust-royale/" when that page ships.
+export const QUOTE_URL: string = import.meta.env.VITE_QUOTE_URL || "https://ty.trustelectricheating.co.uk/night-storage-heater/";
 
 export const ATTRIBUTION_KEYS = [
   "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",

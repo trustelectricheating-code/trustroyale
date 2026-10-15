@@ -36,7 +36,7 @@ test("every reel frame loads and face payline medallions render artwork", async 
 
   await page.getByRole("button", { name: "Let's play!" }).click();
   await page.locator("#spin").click();
-  await expect(page.getByRole("heading", { name: "So close. Spin again!" })).toBeVisible();
+  await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
   const screenshot = path.join(mkdtempSync(path.join(tmpdir(), "trust-royale-faces-")), "payline.png");
   await page.screenshot({ path: screenshot });
   const viewport = page.viewportSize()!;
