@@ -42,17 +42,17 @@ for (const [width, height] of SHORT_WINDOWS) {
     await page.goto("/");
     await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
     await page.getByRole("button", { name: "Claim my 20% offer" }).click();
-    await page.getByLabel("First name").fill("Jane");
-    await page.getByLabel("Last name").fill("Smith");
+    await page.getByLabel("Full name").fill("Jane Smith");
     await page.getByLabel("Phone number").fill("07911 123456");
     await page.getByLabel("Region").selectOption("London");
     await page.getByLabel("Email").fill("jane@example.com");
     // Scroll the popup back to the top so the wheel has to do the work.
     await page.locator("dialog.result-popup").evaluate((node) => { node.scrollTop = 0; });
     const dialog = page.locator("dialog.result-popup");
-    expect(await dialog.evaluate((node) => node.scrollHeight > node.clientHeight)).toBe(true);
     const submit = page.locator("[data-claim-submit]");
-    await wheelTo(page, submit, height);
+    // With one name field the form fits some short windows outright; when it does not, it must scroll inside itself.
+    if (await dialog.evaluate((node) => node.scrollHeight > node.clientHeight)) await wheelTo(page, submit, height);
+    else await expect(submit).toBeInViewport();
     await submit.click();
     await expect(page.getByRole("heading", { name: "Your 20% offer is claimed" })).toBeVisible();
   });

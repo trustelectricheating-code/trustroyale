@@ -15,6 +15,10 @@ describe("SharpSpring postback builder", () => {
     });
   });
 
+  it("sends a one-word name with no trailing space", () => {
+    expect(buildPostback({ ...lead, firstName: "Cher", lastName: "" }).get("1")).toBe("Cher");
+  });
+
   it("adds trackingid__sb only for a valid id and drops an invalid one", () => {
     const valid = buildPostback(lead, { marketingUrl: "https://game.example/", ssTrackingId: "123456|0123456789abcdef01234567" });
     expect([...valid.keys()].sort()).toEqual([...base, "trackingid__sb"].sort());

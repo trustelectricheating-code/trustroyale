@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { isValidSsTrackingId, normalisePhone, REGIONS, validateLead } from "../../src/game/leadValidation";
+import { isValidSsTrackingId, normalisePhone, REGIONS, splitFullName, validateLead } from "../../src/game/leadValidation";
 
-const good = { firstName: "Jane", lastName: "Smith", phone: "07911 123456", email: "jane@example.com", region: "Yorkshire and the Humber" };
+const good = { fullName: "Jane Smith", phone: "07911 123456", email: "jane@example.com", region: "Yorkshire and the Humber" };
 
 describe("lead validation", () => {
   it.each(["07911 123456", "+447911123456", "+44 7911 123456", "+44 (0)7911 123456"])("accepts the UK phone format %s", (phone) => {
@@ -21,12 +21,23 @@ describe("lead validation", () => {
 
   it("no longer asks for or returns a postcode", () => {
     const legacy: Record<string, unknown> = { ...good, postcode: "LS1 4AP" };
-    expect(validateLead(legacy)).toEqual({ ok: true, value: { firstName: "Jane", lastName: "Smith", phone: "07911123456", email: "jane@example.com", region: "Yorkshire and the Humber" } });
+    expect(validateLead(legacy)).toEqual({ ok: true, value: { fullName: "Jane Smith", phone: "07911123456", email: "jane@example.com", region: "Yorkshire and the Humber" } });
+  });
+
+  it("accepts a one-word full name and collapses internal whitespace", () => {
+    expect(validateLead({ ...good, fullName: "  Cher " })).toMatchObject({ ok: true, value: { fullName: "Cher" } });
+    expect(validateLead({ ...good, fullName: " Mary \t  Ann\n Smith " })).toMatchObject({ ok: true, value: { fullName: "Mary Ann Smith" } });
+    expect(validateLead({ ...good, fullName: "   " })).toMatchObject({ ok: false, fields: { fullName: expect.any(String) } });
+  });
+
+  it("splits a full name into first word and the rest", () => {
+    expect(splitFullName("Cher")).toEqual({ firstName: "Cher", lastName: "" });
+    expect(splitFullName("Mary Ann Smith")).toEqual({ firstName: "Mary", lastName: "Ann Smith" });
   });
 
   it("reports every bad field and never trusts non-strings", () => {
-    const result = validateLead({ firstName: "", lastName: "x".repeat(81), phone: 7, email: "nope", region: null });
-    expect(result).toEqual({ ok: false, fields: expect.objectContaining({ firstName: expect.any(String), lastName: expect.any(String), phone: expect.any(String), email: expect.any(String), region: expect.any(String) }) });
+    const result = validateLead({ fullName: "x".repeat(81), phone: 7, email: "nope", region: null });
+    expect(result).toEqual({ ok: false, fields: expect.objectContaining({ fullName: "Please enter your full name.", phone: expect.any(String), email: expect.any(String), region: expect.any(String) }) });
   });
 
   it("accepts the trust-lp tracking id rule only", () => {

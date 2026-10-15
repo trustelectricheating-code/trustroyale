@@ -70,3 +70,12 @@ describe("initial PostgreSQL migration", () => {
     expect(columns.rows).toEqual([{ column_name: "postcode", is_nullable: "YES" }, { column_name: "region", is_nullable: "YES" }]);
   });
 });
+
+import { readFileSync as readMigration } from "node:fs";
+describe("003_lead_full_name migration", () => {
+  it("drops and re-adds the last_name check so a one-word name can be stored", () => {
+    const sql = readMigration(new URL("../../db/migrations/003_lead_full_name.sql", import.meta.url), "utf8");
+    expect(sql).toContain("DROP CONSTRAINT IF EXISTS leads_last_name_check");
+    expect(sql).toMatch(/ADD CONSTRAINT leads_last_name_check CHECK \(char_length\(last_name\) <= 80\)/);
+  });
+});

@@ -31,7 +31,7 @@ export function gclidFrom(marketingUrl: string): string {
 export function buildPostback(lead: PostbackLead, context: PostbackContext = {}): URLSearchParams {
   const marketingUrl = (context.marketingUrl ?? "").slice(0, 255);
   const body = new URLSearchParams();
-  body.set("1", `${lead.firstName} ${lead.lastName}`);
+  body.set("1", `${lead.firstName} ${lead.lastName}`.trim());
   body.set("3", lead.phone);
   body.set("4", lead.email);
   body.set("76", SOURCE_TAG);

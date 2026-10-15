@@ -7,14 +7,13 @@ import { CONSENT_TEXT, REGIONS, validateLead, type LeadField, type LeadFieldErro
 const PRIVACY_URL = "https://www.trustelectricheating.co.uk/privacy-policy";
 const FREEPHONE = "0800 5999 109";
 const CLAIM_FIELDS: Array<{ name: LeadField; label: string; autocomplete: string; type: string; inputmode?: string }> = [
-  { name: "firstName", label: "First name", autocomplete: "given-name", type: "text" },
-  { name: "lastName", label: "Last name", autocomplete: "family-name", type: "text" },
+  { name: "fullName", label: "Full name", autocomplete: "name", type: "text" },
   { name: "phone", label: "Phone number", autocomplete: "tel", type: "tel", inputmode: "tel" },
   { name: "region", label: "Region", autocomplete: "address-level1", type: "select" },
   { name: "email", label: "Email", autocomplete: "email", type: "email", inputmode: "email" },
 ];
 type Draft = Record<LeadField, string>;
-const emptyDraft = (): Draft => ({ firstName: "", lastName: "", phone: "", region: "", email: "" });
+const emptyDraft = (): Draft => ({ fullName: "", phone: "", region: "", email: "" });
 
 export interface Popups {
   message: HTMLElement;
@@ -161,7 +160,7 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
         const honeypot = (form.elements.namedItem("website") as HTMLInputElement).value;
         await claimLead({ ...draft, spinId: win.spinId, website: honeypot });
         clearEntry();
-        renderClaimed(win, draft.firstName.trim(), draft.phone.trim());
+        renderClaimed(win, draft.fullName.trim().split(/\s+/)[0], draft.phone.trim());
       } catch (caught) {
         if (caught instanceof ClaimError && caught.kind === "invalid") {
           submit.disabled = false;

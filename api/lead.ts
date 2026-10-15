@@ -5,7 +5,7 @@ import { sendLeadNow, type RetryDeps } from "./_lib/crmRetry.js";
 import { query as databaseQuery, type Query } from "./_lib/db.js";
 import { error, json, methodNotAllowed } from "./_lib/http.js";
 import { readSessionId } from "./_lib/session.js";
-import { CONSENT_TEXT, isValidSsTrackingId, validateLead } from "../src/game/leadValidation.js";
+import { CONSENT_TEXT, isValidSsTrackingId, splitFullName, validateLead } from "../src/game/leadValidation.js";
 
 interface LeadDependencies { query?: Query; waitUntil?: (work: Promise<unknown>) => void; send?: RetryDeps["send"]; url?: RetryDeps["url"] }
 
@@ -33,7 +33,9 @@ export function createLeadHandler(dependencies: LeadDependencies = {}) {
       // Honeypot: a bot gets the same answer as a person, and nothing is stored.
       if (typeof input.website === "string" && input.website.trim() !== "") return json(response, 201, { ok: true });
 
-      const checked = validateLead(input as Parameters<typeof validateLead>[0]);
+      // Legacy bodies carry firstName/lastName; join them so older clients keep working.
+      const legacyName = [input.firstName, input.lastName].filter((part): part is string => typeof part === "string").join(" ");
+      const checked = validateLead({ ...input, fullName: typeof input.fullName === "string" ? input.fullName : legacyName } as Parameters<typeof validateLead>[0]);
       const spinId = typeof input.spinId === "string" ? input.spinId : "";
       if (!checked.ok || !UUID.test(spinId)) {
         const fields: Record<string, string> = checked.ok ? {} : { ...checked.fields };
@@ -51,6 +53,7 @@ export function createLeadHandler(dependencies: LeadDependencies = {}) {
       if (!spin) return error(response, 403, "not_a_win");
 
       const lead = checked.value;
+      const { firstName, lastName } = splitFullName(lead.fullName);
       const leadId = randomUUID();
       // Point of no loss: the row commits before the player hears anything.
       const inserted = await query<{ id: string }>(`
@@ -58,7 +61,7 @@ export function createLeadHandler(dependencies: LeadDependencies = {}) {
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, false, $10, 'form')
         ON CONFLICT (spin_id) DO NOTHING
         RETURNING id
-      `, [leadId, spin.id, spin.win_ref, spin.discount, lead.firstName, lead.lastName, lead.phone, lead.email, lead.region, CONSENT_TEXT]);
+      `, [leadId, spin.id, spin.win_ref, spin.discount, firstName, lastName, lead.phone, lead.email, lead.region, CONSENT_TEXT]);
       if (inserted.length === 0) return json(response, 200, { ok: true, winRef: spin.win_ref, duplicate: true });
 
       json(response, 201, { ok: true, winRef: spin.win_ref });

@@ -1,7 +1,7 @@
 // Lead claim rules, shared by the browser (inline errors) and /api/lead (source of truth).
 export const CONSENT_TEXT = "By claiming, you agree that Trust Electric Heating can contact you about your offer.";
 
-export interface LeadInput { firstName: string; lastName: string; phone: string; email: string; region: string }
+export interface LeadInput { fullName: string; phone: string; email: string; region: string }
 export type LeadField = keyof LeadInput;
 export type LeadFieldErrors = Partial<Record<LeadField, string>>;
 export type LeadValidation = { ok: true; value: LeadInput } | { ok: false; fields: LeadFieldErrors };
@@ -27,21 +27,26 @@ export function normalisePhone(raw: string): string | null {
 }
 
 const text = (value: unknown): string => (typeof value === "string" ? value.trim() : "");
+const name = (value: unknown): string => (typeof value === "string" ? value.trim().replace(/\s+/g, " ") : "");
+
+/** Splits a full name into the stored pair: first word, then the remaining words ('' for a one-word name). */
+export function splitFullName(fullName: string): { firstName: string; lastName: string } {
+  const [firstName = "", ...rest] = fullName.trim().split(/\s+/);
+  return { firstName, lastName: rest.join(" ") };
+}
 
 export function validateLead(input: Partial<Record<LeadField, unknown>> | null | undefined): LeadValidation {
   const source = input ?? {};
   const fields: LeadFieldErrors = {};
-  const firstName = text(source.firstName);
-  const lastName = text(source.lastName);
+  const fullName = name(source.fullName);
   const email = text(source.email);
   const phone = normalisePhone(text(source.phone));
   const region = text(source.region);
 
-  if (firstName.length < 1 || firstName.length > 80) fields.firstName = "Please enter your first name.";
-  if (lastName.length < 1 || lastName.length > 80) fields.lastName = "Please enter your last name.";
+  if (fullName.length < 1 || fullName.length > 80) fields.fullName = "Please enter your full name.";
   if (!phone) fields.phone = "Please enter a UK phone number, for example 07911 123456.";
   if (!(REGIONS as readonly string[]).includes(region)) fields.region = "Please choose your region.";
   if (!EMAIL.test(email) || email.length > 254) fields.email = "Please enter a valid email address.";
   if (Object.keys(fields).length > 0) return { ok: false, fields };
-  return { ok: true, value: { firstName, lastName, phone: phone!, email, region } };
+  return { ok: true, value: { fullName, phone: phone!, email, region } };
 }

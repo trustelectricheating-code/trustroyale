@@ -3,7 +3,7 @@ import { validateLead, type LeadField, type LeadInput } from "./leadValidation";
 
 export type EntryDetails = Partial<LeadInput>;
 export const ENTRY_KEY = "royale-entry";
-const FIELDS: LeadField[] = ["firstName", "lastName", "phone", "email", "region"];
+const FIELDS: LeadField[] = ["fullName", "phone", "email", "region"];
 
 function decodeBase64Url(value: string): string | null {
   if (!/^[A-Za-z0-9_-]+$/.test(value)) return null;
@@ -25,13 +25,17 @@ export function parseEntryFragment(hash: string): EntryDetails | null {
   let raw: unknown;
   try { raw = JSON.parse(json); } catch { return null; }
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return null;
-  const source = raw as Record<string, unknown>;
+  const source = { ...(raw as Record<string, unknown>) };
+  if (typeof source.fullName !== "string" || source.fullName.trim() === "") {
+    const parts = [source.firstName, source.lastName].filter((part): part is string => typeof part === "string");
+    source.fullName = parts.join(" ").trim();
+  }
   const checked = validateLead(source);
   const invalid = checked.ok ? {} : checked.fields;
   const details: EntryDetails = {};
   for (const name of FIELDS) {
     const value = source[name];
-    if (typeof value === "string" && !(name in invalid) && value.trim() !== "") details[name] = value.trim();
+    if (typeof value === "string" && !(name in invalid) && value.trim() !== "") details[name] = name === "fullName" ? value.trim().replace(/\s+/g, " ") : value.trim();
   }
   return Object.keys(details).length > 0 ? details : null;
 }

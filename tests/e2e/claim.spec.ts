@@ -18,8 +18,7 @@ async function openWin(page: Page, lead: (route: import("@playwright/test").Rout
 
 async function fill(page: Page): Promise<void> {
   await page.getByRole("button", { name: "Claim my 20% offer" }).click();
-  await page.getByLabel("First name").fill("Jane");
-  await page.getByLabel("Last name").fill("Smith");
+  await page.getByLabel("Full name").fill("Jane Smith");
   await page.getByLabel("Phone number").fill("+44 (0)7911 123456");
   await page.getByLabel("Region").selectOption("Yorkshire and the Humber");
   await page.getByLabel("Email").fill("jane@example.com");
@@ -39,14 +38,14 @@ test("a winner claims the offer and sees the success step", async ({ page }) => 
   const href = await more.getAttribute("href");
   expect(href).toContain("gclid=g1");
   expect(href).not.toContain("prize=");
-  expect(posted).toMatchObject({ spinId: win.spinId, firstName: "Jane", lastName: "Smith", email: "jane@example.com", website: "", ssTrackingId: "123456|abcdef0123456789abcdef01" });
+  expect(posted).toMatchObject({ spinId: win.spinId, fullName: "Jane Smith", email: "jane@example.com", website: "", ssTrackingId: "123456|abcdef0123456789abcdef01" });
   expect(String(posted.marketingUrl)).toContain("gclid=g1");
 });
 
 test("the claim step offers labels, autocomplete, large inputs and a privacy link", async ({ page }) => {
   await openWin(page, created);
   await page.getByRole("button", { name: "Claim my 20% offer" }).click();
-  for (const [label, autocomplete] of [["First name", "given-name"], ["Last name", "family-name"], ["Phone number", "tel"], ["Region", "address-level1"], ["Email", "email"]]) {
+  for (const [label, autocomplete] of [["Full name", "name"], ["Phone number", "tel"], ["Region", "address-level1"], ["Email", "email"]]) {
     const input = page.getByLabel(label);
     await expect(input).toHaveAttribute("autocomplete", autocomplete);
     const box = await input.evaluate((node) => ({ height: node.getBoundingClientRect().height, font: parseFloat(getComputedStyle(node).fontSize) }));
@@ -66,9 +65,9 @@ test("empty and invalid fields show inline errors and focus the first one", asyn
   await openWin(page, (route) => { posts += 1; return created(route); });
   await page.getByRole("button", { name: "Claim my 20% offer" }).click();
   await page.getByRole("button", { name: "Claim my 20% offer" }).click();
-  await expect(page.getByText("Please enter your first name.")).toBeVisible();
+  await expect(page.getByText("Please enter your full name.")).toBeVisible();
   await expect(page.getByText("Please enter a valid email address.")).toBeVisible();
-  await expect(page.getByLabel("First name")).toBeFocused();
+  await expect(page.getByLabel("Full name")).toBeFocused();
   expect(posts).toBe(0);
 });
 
@@ -102,7 +101,7 @@ test("a 500 shows the error step and Try again returns to the filled form", asyn
   await page.getByRole("button", { name: "Claim my 20% offer" }).click();
   await expect(page.getByText("We could not save your claim. Please try again, or call us free on 0800 5999 109.")).toBeVisible();
   await page.getByRole("button", { name: "Try again" }).click();
-  await expect(page.getByLabel("First name")).toHaveValue("Jane");
+  await expect(page.getByLabel("Full name")).toHaveValue("Jane Smith");
   await expect(page.getByLabel("Email")).toHaveValue("jane@example.com");
 });
 
@@ -168,15 +167,14 @@ test("details from the entry fragment prefill the claim form and are cleared aft
   await page.getByRole("button", { name: "Claim my 20% offer" }).click();
   await expect(page.getByRole("heading", { name: "Confirm your 20% offer" })).toBeVisible();
   await expect(page.getByText("We have filled in the details you gave us. Check them, then claim.")).toBeVisible();
-  await expect(page.getByLabel("First name")).toHaveValue("Siân");
-  await expect(page.getByLabel("Last name")).toHaveValue("O'Neill");
+  await expect(page.getByLabel("Full name")).toHaveValue("Siân O'Neill");
   await expect(page.getByLabel("Phone number")).toHaveValue("07911 123456");
   await expect(page.getByLabel("Region")).toHaveValue("Yorkshire and the Humber");
   await expect(page.getByLabel("Region").locator("option:checked")).toHaveText("Yorkshire and the Humber");
   await expect(page.getByLabel("Email")).toHaveValue("sian@example.com");
   await page.getByRole("button", { name: "Claim my 20% offer" }).click();
   await expect(page.getByRole("heading", { name: "Your 20% offer is claimed" })).toBeVisible();
-  expect(posted).toMatchObject({ firstName: "Siân", lastName: "O'Neill", phone: "07911 123456", email: "sian@example.com", region: "Yorkshire and the Humber" });
+  expect(posted).toMatchObject({ fullName: "Siân O'Neill", phone: "07911 123456", email: "sian@example.com", region: "Yorkshire and the Humber" });
   expect(posted).not.toHaveProperty("postcode");
   expect(await page.evaluate(() => sessionStorage.getItem("royale-entry"))).toBeNull();
 });

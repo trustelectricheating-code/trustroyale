@@ -12,7 +12,7 @@ process.env.IP_HASH_SALT = "test-only-ip-hash-salt";
 delete process.env.SHARPSPRING_POSTBACK_URL;
 
 const FAKE_URL = "https://postback.invalid/receive";
-const details = { firstName: "Jane", lastName: "Smith", phone: "+44 (0)7911 123456", email: "jane@example.com", region: "Yorkshire and the Humber", website: "", marketingUrl: "https://game.example/?gclid=g1", ssTrackingId: "123456|0123456789abcdef01234567" };
+const details = { fullName: "Jane Smith", phone: "+44 (0)7911 123456", email: "jane@example.com", region: "Yorkshire and the Humber", website: "", marketingUrl: "https://game.example/?gclid=g1", ssTrackingId: "123456|0123456789abcdef01234567" };
 
 function post(cookie: string | undefined, body: unknown) {
   return Object.assign(request("POST", cookie), { body });
@@ -61,12 +61,41 @@ describe("POST /api/lead with PGlite", () => {
     expect(state.body).toMatchObject({ state: "claimed" });
   });
 
+  it("stores a one-word full name with an empty last_name", async () => {
+    const session = await winningSession();
+    const { run, pending } = handler();
+    const reply = response();
+    await run(post(session.cookie, { ...details, fullName: "  Cher ", spinId: session.spinId }), reply);
+    expect(reply.statusCode).toBe(201);
+    expect(await setup.query("SELECT first_name, last_name FROM leads")).toEqual([{ first_name: "Cher", last_name: "" }]);
+    await Promise.all(pending);
+  });
+
+  it("splits a multi-word name and collapses whitespace", async () => {
+    const session = await winningSession();
+    const { run, pending } = handler();
+    await run(post(session.cookie, { ...details, fullName: "Mary   Ann  Smith", spinId: session.spinId }), response());
+    expect(await setup.query("SELECT first_name, last_name FROM leads")).toEqual([{ first_name: "Mary", last_name: "Ann Smith" }]);
+    await Promise.all(pending);
+  });
+
+  it("still accepts a legacy firstName/lastName body", async () => {
+    const session = await winningSession();
+    const { run, pending } = handler();
+    const { fullName: _omit, ...rest } = details;
+    const reply = response();
+    await run(post(session.cookie, { ...rest, firstName: "Jane", lastName: "Smith", spinId: session.spinId }), reply);
+    expect(reply.statusCode).toBe(201);
+    expect(await setup.query("SELECT first_name, last_name FROM leads")).toEqual([{ first_name: "Jane", last_name: "Smith" }]);
+    await Promise.all(pending);
+  });
+
   it("answers 200 duplicate and sends only once", async () => {
     const session = await winningSession();
     const { run, pending, send } = handler();
     await run(post(session.cookie, { ...details, spinId: session.spinId }), response());
     const again = response();
-    await run(post(session.cookie, { ...details, firstName: "Other", spinId: session.spinId }), again);
+    await run(post(session.cookie, { ...details, fullName: "Other Person", spinId: session.spinId }), again);
     await Promise.all(pending);
     expect(again.statusCode).toBe(200);
     expect(again.body).toEqual({ ok: true, winRef: "TR-WIN234", duplicate: true });
@@ -77,9 +106,9 @@ describe("POST /api/lead with PGlite", () => {
   it("returns 400 with the failing fields and stores nothing", async () => {
     const session = await winningSession();
     const reply = response();
-    await handler().run(post(session.cookie, { ...details, spinId: session.spinId, phone: "123", email: "bad", firstName: "" }), reply);
+    await handler().run(post(session.cookie, { ...details, spinId: session.spinId, phone: "123", email: "bad", fullName: "" }), reply);
     expect(reply.statusCode).toBe(400);
-    expect(reply.body).toMatchObject({ error: "invalid", fields: { phone: expect.any(String), email: expect.any(String), firstName: expect.any(String) } });
+    expect(reply.body).toMatchObject({ error: "invalid", fields: { phone: expect.any(String), email: expect.any(String), fullName: expect.any(String) } });
     expect(await setup.query("SELECT 1 FROM leads")).toHaveLength(0);
   });
 
