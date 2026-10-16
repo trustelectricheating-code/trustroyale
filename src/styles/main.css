@@ -1122,8 +1122,9 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 /* Win screen: Keith holds a sign with the prize. The board in prizes.webp spans 9.6-89.7% of the width and 44.5-63.1% of the height. */
 .result-popup--win .result-popup__board { position: relative; flex: none; height: clamp(200px, 52dvh, 520px); aspect-ratio: 2 / 3; margin: 0 auto 6px; container-type: size; filter: drop-shadow(0 12px 22px #000c); }
 .result-popup--win .result-popup__board img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.result-popup--win .result-popup__board .result-popup__discount { position: absolute; left: 9.6%; width: 80.1%; top: 44.5%; height: 18.6%; display: flex; align-items: center; justify-content: center; gap: .18em; margin: 0; color: #ffe8a3; font: 700 11cqh/1 "Trust Royale Display", serif; text-shadow: 0 0 2.4cqh #ffbe38aa, 0 .5cqh 0 #7a4a08, 0 1cqh 2cqh #000c; }
+.result-popup--win .result-popup__board .result-popup__discount { position: absolute; left: 9.6%; width: 80.1%; top: 44.5%; height: 13%; display: flex; align-items: center; justify-content: center; gap: .18em; margin: 0; color: #ffe8a3; font: 700 11cqh/1 "Trust Royale Display", serif; text-shadow: 0 0 2.4cqh #ffbe38aa, 0 .5cqh 0 #7a4a08, 0 1cqh 2cqh #000c; }
 .result-popup--win .result-popup__board .result-popup__discount span { font-size: .5em; letter-spacing: .06em; color: #fff; }
+.result-popup--win .result-popup__board .result-popup__ocean { position: absolute; left: 9.6%; width: 80.1%; top: 57.3%; height: 5.4%; display: flex; align-items: center; justify-content: center; margin: 0; color: #fff; font: 700 3.1cqh/1 "Trust Royale Display", serif; letter-spacing: .04em; text-transform: uppercase; text-shadow: 0 .3cqh 0 #7a4a08, 0 .6cqh 1.4cqh #000c; white-space: nowrap; }
 
 /* Phone landscape: the stacked welcome card is taller than the screen, which pushed "Let's play!" off the bottom. Put Keith beside the content and tighten the spacing so everything fits. */
 @media (orientation: landscape) and (max-height: 500px) {

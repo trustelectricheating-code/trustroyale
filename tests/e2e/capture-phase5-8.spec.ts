@@ -44,13 +44,13 @@ test("capture Phase 5–8 review states", async ({ page }) => {
     await page.getByRole("button", { name: "Play" }).click();
     await page.getByRole("button", { name: "Spin the reels" }).click();
     await expect(page.getByRole("heading", { name: "15%" })).toBeVisible();
-    await expect(page.getByText("You have won 15% off your order. Claim it now, and our chief chatters will contact you with the next steps.")).toBeVisible();
+    await expect(page.getByText("You have won 15% off your heating, plus 10% off Ocean hot water. Claim your offer now, and our chief chatters will contact you with the next steps.")).toBeVisible();
     await page.screenshot({ path: path.join(output, `win-message-${viewport.width}x${viewport.height}.png`) });
 
     returning = true;
     await page.reload();
     await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
-    await expect(page.getByText("You have won 15% off your order. Claim it now, and our chief chatters will contact you with the next steps.")).toBeVisible();
+    await expect(page.getByText("You have won 15% off your heating, plus 10% off Ocean hot water. Claim your offer now, and our chief chatters will contact you with the next steps.")).toBeVisible();
     await page.screenshot({ path: path.join(output, `returning-winner-${viewport.width}x${viewport.height}.png`) });
 
     await page.getByRole("button", { name: "View prize table" }).click();
@@ -63,7 +63,7 @@ test("capture Phase 5–8 review states", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 568 });
   await page.goto("/");
   await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
-  await expect(page.getByText("You have won 15% off your order. Claim it now, and our chief chatters will contact you with the next steps.")).toBeVisible();
+  await expect(page.getByText("You have won 15% off your heating, plus 10% off Ocean hot water. Claim your offer now, and our chief chatters will contact you with the next steps.")).toBeVisible();
   const fit = await page.evaluate(() => {
     const popup = document.querySelector("#result-popup")!.getBoundingClientRect();
     return { pageScroll: document.documentElement.scrollHeight <= innerHeight, popupFits: popup.top >= 0 && popup.bottom <= innerHeight };
