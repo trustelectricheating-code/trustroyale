@@ -33,7 +33,7 @@ test("a winner claims the offer and sees the success step", async ({ page }) => 
   await expect(page.getByRole("heading", { name: "Claim your 20% offer" })).toBeVisible();
   await page.getByRole("button", { name: "Claim my 20% offer" }).click();
   await expect(page.getByRole("heading", { name: "Your 20% offer is claimed" })).toBeVisible();
-  await expect(page.getByText("Thank you, Jane. Our chief chatters will call you on +44 (0)7911 123456 with the next steps. Your offer is 20% off your heating, plus 10% off Ocean hot water. Keep your win reference: TR-FINAL20.")).toBeVisible();
+  await expect(page.getByText("Thank you, Jane. Our chief chatters will call you on +44 (0)7911 123456 with the next steps. Your offer is 20% off your heating. Keep your win reference: TR-FINAL20.")).toBeVisible();
   const more = page.getByRole("link", { name: "Find out more about NEOS radiators" });
   const href = await more.getAttribute("href");
   expect(href).toContain("gclid=g1");
@@ -57,7 +57,7 @@ test("the claim step offers labels, autocomplete, large inputs and a privacy lin
   await expect(privacy).toHaveAttribute("target", "_blank");
   await expect(privacy).toHaveAttribute("rel", /noopener/);
   await page.getByRole("button", { name: "Back" }).click();
-  await expect(page.getByText("You have won 20% off your heating, plus 10% off Ocean hot water.")).toBeVisible();
+  await expect(page.getByText("You have won 20% off your heating.")).toBeVisible();
 });
 
 test("empty and invalid fields show inline errors and focus the first one", async ({ page }) => {

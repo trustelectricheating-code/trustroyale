@@ -1,7 +1,6 @@
 import { showTerms } from "./terms";
 import { ClaimError, claimLead, sendEntry, type WinSummary } from "../game/api";
 import { quoteUrl } from "../game/handoff";
-import { OCEAN_DISCOUNT } from "../config/paytable";
 import { clearEntry, completeEntry, firstWord, readEntry, saveEntry } from "../game/entry";
 import { CONSENT_TEXT, GATE_CONSENT_TEXT, REGIONS, hasVisibleFieldErrors, validateLead, type LeadField, type LeadFieldErrors } from "../game/leadValidation";
 
@@ -161,7 +160,7 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
       const fireworks = Array.from({ length: 7 }, (_, burst) =>
         `<div class="result-popup__firework" style="left:${[18, 82, 50, 12, 88, 30, 70][burst]}%;top:${[16, 12, 8, 48, 44, 26, 30][burst]}%">${Array.from({ length: 18 }, (_, particle) =>
           `<i style="--a:${particle * 20}deg;--r:${60 + (particle % 3) * 25}px;--d:${[0, 1, 1.3, .7][burst % 4]}s;--c:${["#ffd54a", "#ff445c", "#fff4ba", "#59d7ff", "#ff9f2f"][particle % 5]}"></i>`).join("")}</div>`).join("");
-      (first ? show : swap)(`<div class="result-popup__fx" aria-hidden="true"><div class="result-popup__beam"></div><div class="result-popup__confetti"></div><img class="result-popup__coin result-popup__coin--left" src="/assets/fx/coin.webp" alt=""><img class="result-popup__coin result-popup__coin--right" src="/assets/fx/coin.webp" alt="">${fireworks}</div><section aria-labelledby="result-title"><p class="result-popup__eyebrow">Congratulations, you won</p><div class="result-popup__board"><img src="/assets/keith/prizes.webp" alt=""><h2 id="result-title" class="result-popup__discount" aria-label="${win.discount}% off your heating, plus ${OCEAN_DISCOUNT}% off Ocean hot water">${win.discount}%<span>OFF</span></h2><p class="result-popup__ocean" aria-hidden="true">+ ${OCEAN_DISCOUNT}% off Ocean hot water</p></div><p class="result-popup__instruction">You have won ${win.discount}% off your heating, plus ${OCEAN_DISCOUNT}% off Ocean hot water. Claim your offer now, and our chief chatters will contact you with the next steps.</p><button type="button" class="result-popup__claim" data-claim>Claim my ${win.discount}% offer</button><p class="result-popup__reference">Win reference <strong data-win-ref></strong></p><button type="button" class="result-popup__view-prizes" data-view-prizes>View prize table</button><a class="terms-link result-popup__terms" href="#terms-dialog" data-show-terms>Terms and conditions</a></section>`, "win");
+      (first ? show : swap)(`<div class="result-popup__fx" aria-hidden="true"><div class="result-popup__beam"></div><div class="result-popup__confetti"></div><img class="result-popup__coin result-popup__coin--left" src="/assets/fx/coin.webp" alt=""><img class="result-popup__coin result-popup__coin--right" src="/assets/fx/coin.webp" alt="">${fireworks}</div><section aria-labelledby="result-title"><p class="result-popup__eyebrow">Congratulations, you won</p><div class="result-popup__board"><img src="/assets/keith/prizes.webp" alt=""><h2 id="result-title" class="result-popup__discount" aria-label="${win.discount}% off your heating">${win.discount}%<span>OFF</span></h2></div><p class="result-popup__instruction">You have won ${win.discount}% off your heating. Claim your offer now, and our chief chatters will contact you with the next steps.</p><button type="button" class="result-popup__claim" data-claim>Claim my ${win.discount}% offer</button><p class="result-popup__reference">Win reference <strong data-win-ref></strong></p><button type="button" class="result-popup__view-prizes" data-view-prizes>View prize table</button><a class="terms-link result-popup__terms" href="#terms-dialog" data-show-terms>Terms and conditions</a></section>`, "win");
       dialog.querySelector<HTMLElement>("[data-win-ref]")!.textContent = win.winRef;
       const known = completeEntry();
       const claim = dialog.querySelector<HTMLButtonElement>("[data-claim]")!;
@@ -225,7 +224,7 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
 
   const renderClaimed = (win: WinSummary, firstName?: string, phone?: string) => {
     swap(`<section aria-labelledby="result-title"><h2 id="result-title">Your ${win.discount}% offer is claimed</h2><p data-claimed-message></p><a class="result-popup__claim" href="#" data-more-link>Find out more about NEOS radiators</a></section>`, "claimed");
-    const reference = `Your offer is ${win.discount}% off your heating, plus ${OCEAN_DISCOUNT}% off Ocean hot water. Keep your win reference: ${win.winRef}.`;
+    const reference = `Your offer is ${win.discount}% off your heating. Keep your win reference: ${win.winRef}.`;
     dialog.querySelector<HTMLElement>("[data-claimed-message]")!.textContent = firstName && phone
       ? `Thank you, ${firstName}. Our chief chatters will call you on ${phone} with the next steps. ${reference}`
       : `Thank you. Our chief chatters will contact you with the next steps. ${reference}`;

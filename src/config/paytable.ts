@@ -1,8 +1,6 @@
 import type { SymbolId } from "./symbols.js";
 
 export type Discount = 10 | 15 | 20;
-/** Every winner also gets this off the Ocean hot water range, on top of the heating prize. */
-export const OCEAN_DISCOUNT = 10;
 export type Celebration = "blink" | "pulse" | "glow";
 export type PrizeSymbol = SymbolId;
 export type PaytablePattern =

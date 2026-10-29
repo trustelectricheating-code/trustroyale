@@ -49,7 +49,7 @@ for (const [width, height] of [[390, 844], [844, 390], [932, 430], [1440, 900]] 
     await page.locator("#spin").click();
     await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
     await page.locator("#spin").click();
-    await expect(page.getByText("You have won 20% off your heating, plus 10% off Ocean hot water. Claim your offer now, and our chief chatters will contact you with the next steps.")).toBeVisible();
+    await expect(page.getByText("You have won 20% off your heating. Claim your offer now, and our chief chatters will contact you with the next steps.")).toBeVisible();
     await page.screenshot({ path: path.join(output, `${width}x${height}-win-message.png`) });
   });
 }

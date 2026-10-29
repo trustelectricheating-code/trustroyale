@@ -54,7 +54,7 @@ test("a new player gives details before the first spin, then claims a won prize 
   await expect(page.getByLabel("Full name")).toHaveCount(0);
   await claim.click();
   await expect(page.getByRole("heading", { name: "Your 20% offer is claimed" })).toBeVisible();
-  await expect(page.getByText("Thank you, Jane. Our chief chatters will call you on 07911123456 with the next steps. Your offer is 20% off your heating, plus 10% off Ocean hot water. Keep your win reference: TR-FLOW20.")).toBeVisible();
+  await expect(page.getByText("Thank you, Jane. Our chief chatters will call you on 07911123456 with the next steps. Your offer is 20% off your heating. Keep your win reference: TR-FLOW20.")).toBeVisible();
 
   expect(calls.entry).toHaveLength(1);
   expect(calls.entry[0]).toMatchObject({ fullName: "Jane Smith", phone: "07911123456", email: "jane@example.com", region: "Yorkshire and the Humber", website: "", ssTrackingId: "123456|abcdef0123456789abcdef01" });
