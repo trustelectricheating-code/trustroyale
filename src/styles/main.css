@@ -713,6 +713,21 @@ html[data-ready="true"] .spin__label { visibility: hidden; }
 .result-popup--claimed h2 { font-size: clamp(1.5rem, 5vw, 2.2rem); }
 .result-popup--claim p,
 .result-popup--claimed p { font-size: 18px; }
+.result-popup--claimed [data-claimed-message] { margin: 0 0 .9rem; }
+/* Claimed screen: the two offers sit on one gold card, the win reference below as a ticket. */
+.claimed-offers { display: grid; grid-template-columns: 1fr 1fr; gap: 0; width: min(100%, 420px); margin: 0 0 .9rem; padding: 0; list-style: none; border: 1px solid #d4a437; border-radius: 18px; background: rgba(8, 0, 3, .35); box-shadow: inset 0 0 24px #0006; }
+.claimed-offers__item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; padding: .95rem .75rem 1rem; }
+.claimed-offers__item + .claimed-offers__item { border-left: 1px solid rgba(212, 164, 55, .55); }
+.claimed-offers__item em { font: 700 .78rem/1 "Trust Royale UI", sans-serif; font-style: normal; letter-spacing: .15em; text-transform: uppercase; color: #ffb746; }
+.claimed-offers__item strong { font: 700 clamp(1.3rem, 4vw, 1.5rem)/1.05 "Trust Royale Display", serif; color: #ffe8a3; text-wrap: balance; }
+.claimed-offers__item span { font: 700 15px/1.3 "Trust Royale UI", sans-serif; color: #fff8e8; text-wrap: balance; }
+.result-popup--claimed .claimed-ref { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .35rem .6rem; margin: 0 0 1.1rem; padding: .5rem 1rem; border: 1px dashed rgba(255, 232, 163, .7); border-radius: 999px; font-size: 16px; }
+.claimed-ref strong { font-size: 1.15rem; letter-spacing: .12em; color: #ffe8a3; }
+.result-popup--claimed .result-popup__claim { width: min(100%, 360px); }
+@media (max-width: 360px) {
+  .claimed-offers { grid-template-columns: 1fr; }
+  .claimed-offers__item + .claimed-offers__item { border-left: 0; border-top: 1px solid rgba(212, 164, 55, .55); }
+}
 .claim-form { display: flex; flex-direction: column; gap: .7rem; width: min(100%, 420px); text-align: left; }
 .claim-field label { display: block; margin-bottom: .25rem; font: 700 18px/1.3 "Trust Royale UI", sans-serif; color: #ffe8a3; }
 .claim-field input,

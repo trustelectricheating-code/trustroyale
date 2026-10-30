@@ -249,7 +249,7 @@ test("returning claimed player sees the success step and no form", async ({ page
   await page.goto("/");
   await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
   await expect(page.getByRole("heading", { name: "Your 20% offer is claimed" })).toBeVisible();
-  await expect(page.getByText("Keep your win reference: TR-FINAL20.")).toBeVisible();
+  await expect(page.getByText("Keep your win reference TR-FINAL20")).toBeVisible();
   await expect(page.locator("[data-claim-form]")).toHaveCount(0);
   const more = page.getByRole("link", { name: "Find out more about NEOS radiators" });
   await expect(more).toHaveAttribute("href", /^https:\/\/ty\.trustelectricheating\.co\.uk\/night-storage-heater\/#quote$/);

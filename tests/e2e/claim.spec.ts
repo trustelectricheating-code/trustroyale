@@ -33,7 +33,9 @@ test("a winner claims the offer and sees the success step", async ({ page }) => 
   await expect(page.getByRole("heading", { name: "Claim your 20% offer" })).toBeVisible();
   await page.getByRole("button", { name: "Claim my 20% offer" }).click();
   await expect(page.getByRole("heading", { name: "Your 20% offer is claimed" })).toBeVisible();
-  await expect(page.getByText("Thank you, Jane. Our chief chatters will call you on +44 (0)7911 123456 with the next steps. Your offer is 20% off your heating. Keep your win reference: TR-FINAL20.")).toBeVisible();
+  await expect(page.getByText("Thank you, Jane. Our chief chatters will call you on +44 (0)7911 123456 with the next steps.")).toBeVisible();
+  await expect(page.getByRole("list", { name: "Your offers" }).getByRole("listitem")).toHaveText(["You won20% offyour NEOS heating", "PlusUp to £250 offan Ocean Hot Water Solution"]);
+  await expect(page.getByText("Keep your win reference TR-FINAL20")).toBeVisible();
   const more = page.getByRole("link", { name: "Find out more about NEOS radiators" });
   const href = await more.getAttribute("href");
   expect(href).toContain("gclid=g1");

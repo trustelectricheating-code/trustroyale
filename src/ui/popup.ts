@@ -223,11 +223,10 @@ export function createPopups(onViewPrizes: (ruleId?: string) => void, onButtonCl
   };
 
   const renderClaimed = (win: WinSummary, firstName?: string, phone?: string) => {
-    swap(`<section aria-labelledby="result-title"><h2 id="result-title">Your ${win.discount}% offer is claimed</h2><p data-claimed-message></p><a class="result-popup__claim" href="#" data-more-link>Find out more about NEOS radiators</a></section>`, "claimed");
-    const reference = `Your offer is ${win.discount}% off your heating. Keep your win reference: ${win.winRef}.`;
+    swap(`<section aria-labelledby="result-title"><h2 id="result-title">Your ${win.discount}% offer is claimed</h2><p data-claimed-message></p><ul class="claimed-offers" aria-label="Your offers"><li class="claimed-offers__item"><em>You won</em><strong>${win.discount}% off</strong><span>your NEOS heating</span></li><li class="claimed-offers__item claimed-offers__item--bonus"><em>Plus</em><strong>Up to £250 off</strong><span>an Ocean Hot Water Solution</span></li></ul><p class="claimed-ref">Keep your win reference <strong>${win.winRef}</strong></p><a class="result-popup__claim" href="#" data-more-link>Find out more about NEOS radiators</a></section>`, "claimed");
     dialog.querySelector<HTMLElement>("[data-claimed-message]")!.textContent = firstName && phone
-      ? `Thank you, ${firstName}. Our chief chatters will call you on ${phone} with the next steps. ${reference}`
-      : `Thank you. Our chief chatters will contact you with the next steps. ${reference}`;
+      ? `Thank you, ${firstName}. Our chief chatters will call you on ${phone} with the next steps.`
+      : `Thank you. Our chief chatters will contact you with the next steps.`;
     dialog.querySelector<HTMLAnchorElement>("[data-more-link]")!.href = quoteUrl(location.search);
   };
 
