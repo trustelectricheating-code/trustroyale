@@ -16,7 +16,7 @@ export function showTerms(link: HTMLElement): void {
           <ul><li>20% off: 1 in 10 games (10%)</li><li>15% off: 5 in 10 games (50%)</li><li>10% off: 4 in 10 games (40%)</li></ul>
         </li>
         <li>The heating discount applies to NEOS radiators only. It does not apply to delivery or installation.</li>
-        <li>Every winner also gets up to £250 off an Ocean Hot Water Solution, on top of the heating discount. It does not apply to delivery or installation.</li>
+        <li>Every winner also gets £250 off an Ocean Hot Water Solution, on top of the heating discount. It does not apply to delivery or installation.</li>
         <li>No other range of products is included in this offer.</li>
         <li>After you win, claim your prize on the win screen, and our chief chatters will contact you with the next steps to use your discounts.</li>
       </ol>`;

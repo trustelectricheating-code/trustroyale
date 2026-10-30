@@ -34,7 +34,7 @@ for (const [width, height] of [[390, 844], [667, 375], [844, 390], [932, 430], [
       "Each game gives you 3 spins. Every completed game wins a discount, and only your best prize counts.",
       "Win probability. Each game's prize is picked at random by our system, and how or when you press SPIN does not change it: 20% off: 1 in 10 games (10%)15% off: 5 in 10 games (50%)10% off: 4 in 10 games (40%)",
       "The heating discount applies to NEOS radiators only. It does not apply to delivery or installation.",
-      "Every winner also gets up to £250 off an Ocean Hot Water Solution, on top of the heating discount. It does not apply to delivery or installation.",
+      "Every winner also gets £250 off an Ocean Hot Water Solution, on top of the heating discount. It does not apply to delivery or installation.",
       "No other range of products is included in this offer.",
       "After you win, claim your prize on the win screen, and our chief chatters will contact you with the next steps to use your discounts.",
     ]);
