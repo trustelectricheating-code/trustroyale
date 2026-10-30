@@ -675,7 +675,7 @@ html[data-ready="true"] .spin__label { visibility: hidden; }
 .result-popup--last-chance button,
 .result-popup--error button { min-width: 132px; min-height: 52px; padding: .65rem 1rem; }
 .result-popup__instruction { margin: .7rem 0; }
-.result-popup__bonus { display: inline-flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: .25rem .4rem; margin: .4rem auto 0; padding: .45rem 1rem; border: 1px solid #d4a437; border-radius: 999px; background: rgba(8, 0, 3, .45); box-shadow: inset 0 0 14px #0006; font: 700 15px/1.3 "Trust Royale UI", sans-serif; color: #fff8e8; }
+.result-popup__bonus { display: inline-flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: .25rem .4rem; margin: 0 auto 10px; padding: .45rem 1rem; border: 1px solid #d4a437; border-radius: 999px; background: rgba(8, 0, 3, .45); box-shadow: inset 0 0 14px #0006; font: 700 15px/1.3 "Trust Royale UI", sans-serif; color: #fff8e8; }
 .result-popup__bonus em { font-style: normal; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: #ffb746; }
 .result-popup__bonus strong { font: 700 1.2rem/1 "Trust Royale Display", serif; color: #ffe8a3; }
 
@@ -1138,7 +1138,7 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 @media (max-height: 700px) { }
 
 /* Win screen: Keith holds a sign with the prize. The board in prizes.webp spans 9.6-89.7% of the width and 44.5-63.1% of the height. */
-.result-popup--win .result-popup__board { position: relative; flex: none; height: clamp(200px, 52dvh, 520px); aspect-ratio: 2 / 3; margin: 0 auto 6px; container-type: size; filter: drop-shadow(0 12px 22px #000c); }
+.result-popup--win .result-popup__board { position: relative; flex: none; height: clamp(200px, 43dvh, 520px); aspect-ratio: 2 / 3; margin: 0 auto 6px; container-type: size; filter: drop-shadow(0 12px 22px #000c); }
 .result-popup--win .result-popup__board img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .result-popup--win .result-popup__board .result-popup__discount { position: absolute; left: 9.6%; width: 80.1%; top: 44.5%; height: 18.6%; display: flex; align-items: center; justify-content: center; gap: .18em; margin: 0; color: #ffe8a3; font: 700 11cqh/1 "Trust Royale Display", serif; text-shadow: 0 0 2.4cqh #ffbe38aa, 0 .5cqh 0 #7a4a08, 0 1cqh 2cqh #000c; }
 .result-popup--win .result-popup__board .result-popup__discount span { font-size: .5em; letter-spacing: .06em; color: #fff; }
@@ -1174,9 +1174,10 @@ html[data-spinning="true"] #canvas-host canvas { filter: saturate(1.08); }
 
 /* Landscape phones: the claim button and terms must stay on screen, so the prize board sits beside the message. */
 @media (orientation: landscape) and (max-height: 500px) {
-  .result-popup--win section { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "board eyebrow" "board instruction" "board claim" "board reference" "board terms"; align-content: center; justify-items: start; column-gap: 24px; width: min(780px, 100%); text-align: left; }
+  .result-popup--win section { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "board eyebrow" "board bonus" "board instruction" "board claim" "board reference" "board terms"; align-content: center; justify-items: start; column-gap: 24px; width: min(780px, 100%); text-align: left; }
   .result-popup--win .result-popup__eyebrow { grid-area: eyebrow; margin: 0 0 4px; }
   .result-popup--win .result-popup__board { grid-area: board; align-self: center; height: min(300px, calc(100dvh - 32px)); margin: 0; }
+  .result-popup--win .result-popup__bonus { grid-area: bonus; margin: 0 0 8px; padding: .3rem .8rem; }
   .result-popup--win .result-popup__instruction { grid-area: instruction; margin: 0 0 10px; font-size: 17px; }
   .result-popup--win .result-popup__claim { grid-area: claim; width: 100%; min-height: 56px; margin: 0 0 8px; font-size: 21px; }
   .result-popup--win .result-popup__reference { grid-area: reference; margin: 0 0 2px; }
