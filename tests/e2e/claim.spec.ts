@@ -59,7 +59,7 @@ test("the claim step offers labels, autocomplete, large inputs and a privacy lin
   await expect(privacy).toHaveAttribute("target", "_blank");
   await expect(privacy).toHaveAttribute("rel", /noopener/);
   await page.getByRole("button", { name: "Back" }).click();
-  await expect(page.getByText("You have won 20% off your heating.")).toBeVisible();
+  await expect(page.getByText("You have won 20% off your heating, plus up to £250 off an Ocean Hot Water Solution.")).toBeVisible();
 });
 
 test("empty and invalid fields show inline errors and focus the first one", async ({ page }) => {
