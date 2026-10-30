@@ -222,7 +222,7 @@ test("best-of-three waits for presses and reveals only the final win message", a
   await expect(page.getByText("So close! Spin again.", { exact: true })).toBeVisible();
   await button.click();
   await expect(page.getByRole("heading", { name: "20%" })).toBeVisible();
-  await expect(page.getByText("You have won 20% off your heating, plus up to £250 off an Ocean Hot Water Solution. Claim your offer now, and our chief chatters will contact you with the next steps.")).toBeVisible();
+  await expect(page.getByText("You have won 20% off your heating. Claim your offer now, and our chief chatters will contact you with the next steps.")).toBeVisible();
   expect(requests).toBe(3);
   await page.getByRole("button", { name: "View prize table" }).click();
   await expect(page.locator('[data-rule-id="scott-3"]')).toHaveClass(/is-winning/);
@@ -237,7 +237,7 @@ test("returning won player sees the win popup with a claim button", async ({ pag
   await mockSession(page, returningSession("won"));
   await page.goto("/");
   await page.waitForFunction(() => document.documentElement.dataset.ready === "true");
-  await expect(page.getByText("You have won 20% off your heating, plus up to £250 off an Ocean Hot Water Solution. Claim your offer now, and our chief chatters will contact you with the next steps.")).toBeVisible();
+  await expect(page.getByText("You have won 20% off your heating. Claim your offer now, and our chief chatters will contact you with the next steps.")).toBeVisible();
   await expect(page.locator(".coupon-ticket, [data-copy-code]")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Claim my 20% offer" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Claim my 20% offer" })).toHaveCount(0);

@@ -139,7 +139,7 @@ for (const [width, height] of [[390, 844], [667, 375], [844, 390], [932, 430], [
     await page.locator("#spin").click();
     await expect(page.locator(".result-popup--win")).toBeVisible();
     // The claim flow (feat/quote-handoff) replaced the contact-only message with a claim step.
-    await expect(page.getByText("You have won 20% off your heating, plus up to £250 off an Ocean Hot Water Solution. Claim your offer now, and our chief chatters will contact you with the next steps.")).toBeVisible();
+    await expect(page.getByText("You have won 20% off your heating. Claim your offer now, and our chief chatters will contact you with the next steps.")).toBeVisible();
     await expect(page.getByRole("button", { name: "Claim my 20% offer" })).toBeVisible();
     await expect(message).toBeEmpty();
     expect(requests.spinRequests).toBe(3);
